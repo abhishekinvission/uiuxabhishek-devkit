@@ -1,17 +1,20 @@
-"""Repository validation for the uiuxabhishek-devkit skill.
+"""Repository validation for the uiuxabhishek-devkit skill and its Claude Code plugin.
 
 Standard library only. Run from anywhere:  python3 tests/validate.py [--cli]
 
 Checks: single-skill discovery and frontmatter, Markdown links, SOURCES.md
-checksums and inventory, license/notice mirrors, router parsing and
-reference coverage, routing scenarios, context budget, a basic
-secret/executable scan, README install commands, the Claude upload ZIP
-(built to a temporary folder), the Git workflow commands against throwaway
-repositories with a mock remote (tests/git_sandbox.py), the optional updater
-against a mock GitHub API and mock Skills CLI (tests/updater_sandbox.py), and
-leftover references to the pre-2.0 skill ID. --cli also migrates an isolated
-HOME from the old skill ID and installs, updates and removes per agent. --cli also runs `npx skills add . --list` and
-a real global install for every documented agent into a throwaway HOME.
+checksums and inventory (skill and agents), license/notice mirrors, router
+parsing and reference coverage, script-calling files routed with the Impeccable
+adapter, routing scenarios with their expected agent plan, the plugin agents
+(frontmatter, one agent per capability, read-only tools, no guidance copies),
+context budget, a basic secret/executable scan, README install commands, both
+release ZIPs and the plugin and marketplace manifests (built to a temporary
+folder), the Git workflow commands against throwaway repositories with a mock
+remote (tests/git_sandbox.py), the optional updater against a mock GitHub API
+and mock Skills CLI (tests/updater_sandbox.py), and leftover references to the
+pre-2.0 skill ID. --cli also runs `npx skills add . --list`, a real global
+install for every documented agent into a throwaway HOME, and a migration from
+the old skill ID.
 
 Routing scenarios use a deterministic keyword simulation of SKILL.md's
 signal tables. It checks that the router's signals, conditions and file
@@ -38,8 +41,10 @@ OLD_ID_COMMIT = "82f5367"  # last commit that shipped the old ID
 OLD_ID_ALLOWED = ("CHANGELOG.md", "README.md", "INSTALL.md", "NOTICE.md", "SOURCES.md", "CLAUDE.md",
                   "skills/uiuxabhishek-devkit/NOTICE.md", "tests/", "tools/updater/")
 AGENTS = ("claude-code", "codex", "gemini-cli", "github-copilot", "antigravity")
+SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater pins; newer CLIs change install paths
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
 SKILL_MD_MAX_CHARS = 12000
+MAX_CONTEXT_GROWTH = 10  # percent over the pre-router baseline, averaged over all scenarios
 GUIDE_MAX_CHARS = 5000
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 
@@ -90,7 +95,7 @@ def check_discovery():
 
 def check_cli():
     try:
-        out = subprocess.run(["npx", "--yes", "skills", "add", ".", "--list"], cwd=ROOT,
+        out = subprocess.run(["npx", "--yes", SKILLS_CLI, "add", ".", "--list"], cwd=ROOT,
                              capture_output=True, text=True, timeout=180).stdout
     except (OSError, subprocess.TimeoutExpired) as e:
         check(False, f"skills CLI unavailable: {e}")
@@ -102,7 +107,7 @@ def check_cli():
         env = dict(os.environ, HOME=home, DISABLE_TELEMETRY="1", DO_NOT_TRACK="1")
         env.pop("CLAUDE_CONFIG_DIR", None)
         env.pop("CODEX_HOME", None)
-        cmd = ["npx", "--yes", "skills", "add", ROOT, "--skill", "uiuxabhishek-devkit", "-g", "-y"]
+        cmd = ["npx", "--yes", SKILLS_CLI, "add", ROOT, "--skill", "uiuxabhishek-devkit", "-g", "-y"]
         for a in AGENTS:
             cmd += ["-a", a]
         try:
@@ -136,7 +141,7 @@ def check_migration():
         agents = [x for a in AGENTS for x in ("-a", a)]
 
         def cli(*args):
-            r = subprocess.run(["npx", "--yes", "skills", *args], cwd=home, env=env,
+            r = subprocess.run(["npx", "--yes", SKILLS_CLI, *args], cwd=home, env=env,
                                capture_output=True, text=True, timeout=300)
             return r.returncode
         other = os.path.join(home, ".agents", "skills", "other-skill", "SKILL.md")
@@ -187,13 +192,14 @@ def check_integrity():
     third, _, original = sources.partition("## Original project content")
     entries = [(os.path.join(SKILL, "references", p), h)
                for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", third, re.M)]
-    entries += [(os.path.join(SKILL, p), h)
+    entries += [(os.path.join(ROOT if p.startswith("agents/") else SKILL, p), h)
                 for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", original, re.M)]
     for path, digest in entries:
         if check(os.path.exists(path), f"SOURCES.md lists missing file {rel(path)}"):
             check(sha256(path) == digest, f"checksum mismatch {rel(path)}")
     on_disk = {os.path.join(r, f) for d in ("references", "templates")
                for r, _, fs in os.walk(os.path.join(SKILL, d)) for f in fs}
+    on_disk |= {os.path.join(ROOT, "agents", f) for f in os.listdir(os.path.join(ROOT, "agents"))}
     listed = {p for p, _ in entries}
     check(on_disk == listed, f"inventory drift: unlisted {sorted(rel(p) for p in on_disk - listed)}")
     for name in ("LICENSE", "NOTICE.md"):
@@ -215,6 +221,8 @@ def words(text):
             tok = tok[:-1]
         if tok:
             out.add(tok)
+            if tok.count(".") >= 2:  # acme.atlassian.net also matches the signal atlassian.net
+                out.add(".".join(tok.split(".")[-2:]))
     return out
 
 
@@ -242,11 +250,19 @@ def parse_router():
             sig, _, targets = seg.lstrip("+").partition(" → ")
             files = [p for p in re.findall(r"\]\(([^)]+)\)", targets)]
             files += [base + p for p in re.findall(r"(?<!\()`([\w./-]+\.md)`", targets)]
+            if "†" in targets:
+                files.append(CLI_ADAPTER)  # † = also load the Impeccable script adapter
             check(files, f"router row {row.group(1)} segment has no files: {seg}")
             for f in files:
                 check(os.path.exists(os.path.join(SKILL, f)), f"router target missing: {f}")
-            segments.append({"cond": cond, "signals": sig, "files": files})
+            segments.append({"cond": cond, "signals": sig, "files": files, "raw": targets})
         caps[row.group(1)] = segments
+    for cap, segs in caps.items():  # "all of `tickets`": the row also loads that capability's whole route
+        for seg in list(segs):
+            m = re.search(r"all of `([\w-]+)`", seg.get("raw", ""))
+            if m and m.group(1) in caps:
+                seg["files"] += caps[m.group(1)][0]["files"]
+                segs += [dict(x) for x in caps[m.group(1)][1:]]
     never = re.search(r"\*\*Never load\*\*[^:]*:(.*)", text).group(1)
     never = {"references/impeccable/reference/" + n.rstrip("*")
              for n in re.findall(r"`([\w/.*-]+)`", never)}
@@ -262,15 +278,30 @@ def is_never(path, never):
     return any(path == n or (n.endswith("/") and path.startswith(n)) for n in never)
 
 
+CLI_ADAPTER = "references/adapters/impeccable-without-cli.md"
+AGENT_PLANS = "references/workflows/agent-plans.md"
+SHARED_COMPANIONS = ("references/adapters/",  # loaded beside several capabilities' primary files
+                     "references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md")  # tickets + ado
+
+
 def check_coverage(caps, never):
     routed = {f for segs in caps.values() for s in segs for f in s["files"]}
     expected = set()
-    for d in ("references/frontend", "references/workflows", "templates", "references/impeccable/reference"):
+    for d in ("references/frontend", "references/workflows", "references/adapters", "templates",
+              "references/impeccable/reference"):
         for r, _, fs in os.walk(os.path.join(SKILL, d)):
             expected |= {rel(os.path.join(r, f)) for f in fs if f.endswith(".md")}
     expected.add("references/apple-design/SOURCE_SKILL.md")
     expected -= {p for p in expected if is_never(p, never)}
     expected.discard("references/impeccable/reference/craft-floor.md")  # loaded by the shared UI-edit rule
+    skill_text = read(os.path.join(SKILL, "SKILL.md"))
+    check(f"]({AGENT_PLANS})" in skill_text.split("## 5.")[-1], f"SKILL.md §5 must link {AGENT_PLANS}")
+    routed = routed | {AGENT_PLANS}  # loaded from §5 when the head plans agents
+    plans = read(os.path.join(SKILL, AGENT_PLANS)).lower()
+    for phrase in ("end your turn", "approves the plan in a later message", "don't approve the plan", "parallel",
+                   "one at a time", "writes last", "absolute paths", "combine duplicates", "agents never start agents"):
+        check(phrase in plans, f"{AGENT_PLANS} lacks the dispatch rule {phrase!r}")
+    check("stop until the user approves it" in skill_text.lower(), "SKILL.md §5 must stop for plan approval")
     check(not (expected - routed), f"unrouted references: {sorted(expected - routed)}")
     check(not {p for p in routed if is_never(p, never)}, "a never-load file is routed")
     primary = {}
@@ -279,19 +310,27 @@ def check_coverage(caps, never):
             if not s["cond"]:
                 for f in s["files"]:
                     primary.setdefault(f, set()).add(cap)
-    dup = {f: c for f, c in primary.items() if len(c) > 1}
+    dup = {f: c for f, c in primary.items() if len(c) > 1 and not f.startswith(SHARED_COMPANIONS)}
     check(not dup, f"files routed as primary by several capabilities: {dup}")
-    print(f"coverage: {len(routed)} routed files, {len(never)} never-load entries, no duplicate primaries")
+    # A routable file that tells the agent to run an unbundled Impeccable script must
+    # always load together with the adapter that replaces those steps.
+    script_call = re.compile(r"scripts/[\w.-]+\.mjs")
+    unadapted = sorted({f"{cap}: {f}" for cap, segs in caps.items() for s in segs for f in s["files"]
+                        if script_call.search(read(os.path.join(SKILL, f))) and CLI_ADAPTER not in s["files"]})
+    check(not unadapted, f"script-calling files routed without {CLI_ADAPTER}: {unadapted}")
+    print(f"coverage: {len(routed)} routed files, {len(never)} never-load entries, no duplicate primaries, "
+          f"script steps always adapted")
 
 
 LIMIT_AUDIT = "read-only, dry run, report only, don't change"
 LIMIT_IMPLEMENT = "don't push, no pr, locally"
 LIMIT_NO_FETCH = "don't fetch, do not fetch"
 LIMIT_OFFLINE = "offline, no network"
-ADO_OWNS_GIT = "when `ado` is selected, don't select `git` separately"
+ADO_OWNS_GIT = "when either is selected, don't select `git` separately"
 BACKEND_RULE = "the backend part of a full-stack or `ado` task"
 STRICT_AUDIT = "`audit` and `plan` never fetch or write refs"
 # Prompts that name backend work and no UI select no Design or Engineering row (SKILL.md §1 Scope)
+TRACKER_WORDS = {"github", "jira", "linear", "linear.app", "atlassian.net"}
 BACKEND_WORDS = {"backend", "database", "sql", "migration", "microservice", "postgre", "net"}
 
 
@@ -318,11 +357,15 @@ def route(prompt, modes, caps, craft_floor, groups):
         if hit and not (backend_only and cap in frontend):
             selected.append(cap)
             files += [f for s in hit for f in s["files"]]
-    if "ado" in selected and "git" in selected:
-        selected.remove("git")  # ADO_OWNS_GIT
+    if "ado" in selected and "tickets" in selected:
+        selected.remove("tickets")  # ado wins when both match; keep the lifecycle files ado loads itself
+        ado_files = {f for s in caps["ado"] for f in s["files"]}
+        files = [f for f in files if f in ado_files or f not in {f for s in caps["tickets"] for f in s["files"]}]
+    if {"ado", "tickets"} & set(selected) and "git" in selected:
+        selected.remove("git")  # ADO_OWNS_GIT: both load git themselves
         files = [f for f in files if f not in {f for s in caps["git"] for f in s["files"]}]
-    if "ado" in selected and mode is None:
-        mode = "audit"  # a bare work-item ID or URL is a dry run
+    if {"ado", "tickets"} & set(selected) and mode is None:
+        mode = "audit"  # a bare ticket or work-item ID or URL is a dry run
     mode = mode or "implement"
     for cap in selected:
         for s in caps[cap]:
@@ -337,6 +380,8 @@ def route(prompt, modes, caps, craft_floor, groups):
     if not selected:
         outcome = "guide" if mode == "answer" else ("clarify" if w & UI_WORDS else "skip")
         files = ["GUIDE.md"] if outcome == "guide" else []
+    elif "tickets" in selected and not (w & TRACKER_WORDS):
+        outcome = "ask-tracker"  # "a ticket" with no tracker named
     else:
         outcome = "route"
     if matches(LIMIT_OFFLINE, w) and not set(selected) & groups["Design"]:
@@ -362,7 +407,7 @@ def baseline_tokens(old_skill_chars, files, selected):
     return old_skill_chars // 4 + tokens(sorted(base))
 
 
-def check_scenarios(modes, caps, never, craft_floor, groups, text):
+def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
     data = json.loads(read(os.path.join(ROOT, "tests", "routing_scenarios.json")))
     try:
         old = subprocess.run(["git", "show", f"{BASELINE_COMMIT}:skills/{OLD_ID}/SKILL.md"],
@@ -379,6 +424,9 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text):
         errs = []
         if "net" in sc and net != sc["net"]:
             errs.append(f"network {net} != {sc['net']}")
+        planned = plan_agents(selected, mode, roster, groups, caps)
+        if planned != sc.get("agent"):
+            errs.append(f"agent {planned} != {sc.get('agent')}")
         if selected != set(sc["caps"]):
             errs.append(f"caps {sorted(selected)} != {sorted(sc['caps'])}")
         if mode != sc["mode"]:
@@ -390,7 +438,7 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text):
         errs += [f"loaded never-load {f}" for f in files if is_never(f, never)]
         if "ado" not in sc["caps"]:
             errs += [f"loaded ADO file {f}" for f in files if f in ado_files]
-        new = skill_tokens + tokens(files)
+        new = skill_tokens + tokens(files + ([AGENT_PLANS] if planned != "inline" else []))
         before = baseline_tokens(len(old), files, selected) if old else 0
         total_new += new
         total_old += before
@@ -400,9 +448,96 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text):
     n = len(data["scenarios"])
     check(n >= 12, "need at least 12 routing scenarios")
     if total_old:
+        growth = 100 * total_new / total_old - 100
         print(f"{n} scenarios: ~{total_new // n} tokens/scenario vs ~{total_old // n} before "
-              f"({abs(100 - 100 * total_new // total_old)}% "
-              f"{'less' if total_new <= total_old else 'more'} context than the pre-router baseline)")
+              f"({growth:+.1f}% context vs the pre-router baseline; budget +{MAX_CONTEXT_GROWTH}%)")
+        check(growth <= MAX_CONTEXT_GROWTH, f"context growth {growth:.1f}% exceeds {MAX_CONTEXT_GROWTH}%")
+
+
+# ------------------------------------------------------------------- agents
+AGENT_KEYS = {"name", "description", "tools", "disallowedTools", "model", "color", "maxTurns", "skills",
+              "memory", "background", "effort", "isolation"}  # documented for plugin agents (code.claude.com/docs/en/sub-agents)
+WRITE_TOOLS = {"Edit", "Write", "NotebookEdit", "MultiEdit"}
+AGENT_BODY_MAX_LINES = 45
+
+
+def parse_roster(text, caps):
+    """SKILL.md §5 list: "- `agent` (access): cap, cap" -> {agent: (access, [capability IDs])}."""
+    section = text.split("## 5.")[1] if "## 5." in text else ""
+    return {name: (access.strip(), [c.strip() for c in cells.split(",") if c.strip()])
+            for name, access, cells in re.findall(r"^- `([\w-]+)` \(([^)]+)\): (.+)$", section, re.M)}
+
+
+def frontmatter_fields(text):
+    m = re.match(r"---\n(.*?)\n---\n", text, re.S)
+    if not m:
+        return None, text
+    fields = {}
+    for line in m.group(1).splitlines():
+        km = re.match(r"^([A-Za-z]+): (.*)$", line)
+        if not km:
+            return None, text
+        key, value = km.groups()
+        if value.startswith('"'):
+            try:
+                value = json.loads(value)
+            except ValueError:
+                return None, text
+        elif re.search(r":\s|\s#", value):
+            return None, text  # unquoted YAML value with ": " or " #" doesn't parse
+        fields[key] = value
+    return fields, text[m.end():]
+
+
+def check_agents(text, caps, groups):
+    roster = parse_roster(text, caps)
+    agent_dir = os.path.join(ROOT, "agents")
+    files = sorted(f[:-3] for f in os.listdir(agent_dir) if f.endswith(".md")) if os.path.isdir(agent_dir) else []
+    check(files == sorted(roster), f"agents/ files {files} != SKILL.md §5 roster {sorted(roster)}")
+    owners = {}
+    for name, (_, owned) in roster.items():
+        for c in owned:
+            owners.setdefault(c, []).append(name)
+    check(not [c for c in owners if c not in caps], f"roster names unknown capabilities {[c for c in owners if c not in caps]}")
+    check(not [c for c in caps if len(owners.get(c, [])) != 1],
+          f"capabilities without exactly one agent: {[(c, owners.get(c, [])) for c in caps if len(owners.get(c, [])) != 1]}")
+    for name in files:
+        path = os.path.join(agent_dir, name + ".md")
+        fields, body = frontmatter_fields(read(path))
+        if not check(fields is not None, f"agents/{name}.md frontmatter doesn't parse"):
+            continue
+        check(set(fields) <= AGENT_KEYS, f"agents/{name}.md has undocumented keys {set(fields) - AGENT_KEYS}")
+        check(fields.get("name") == name and ":" not in name, f"agents/{name}.md name must match its file name")
+        check(0 < len(fields.get("description", "")) <= 1024, f"agents/{name}.md description missing or too long")
+        tools = {t.strip() for t in fields.get("tools", "").split(",") if t.strip()}
+        denied = {t.strip() for t in fields.get("disallowedTools", "").split(",") if t.strip()}
+        if tools:
+            check("Agent" not in tools, f"agents/{name}.md may start other agents")
+        else:
+            check("Agent" in denied, f"agents/{name}.md inherits tools, so it must disallow Agent")
+        if roster.get(name, ("",))[0] == "read-only":
+            ok = not (tools & WRITE_TOOLS) if tools else WRITE_TOOLS - {"MultiEdit"} <= denied
+            check(ok, f"read-only agent {name} has write tools")
+        lines = body.strip().splitlines()
+        check(len(lines) <= AGENT_BODY_MAX_LINES, f"agents/{name}.md body has {len(lines)} lines")
+        check(not re.search(r"references/|templates/", body), f"agents/{name}.md contains guidance paths")
+        check(not [l for l in lines if l.lstrip().startswith("|") or "→" in l], f"agents/{name}.md contains a routing table")
+    print(f"agents: {len(files)} agents, {len(owners)} capabilities each owned by exactly one agent")
+    return roster
+
+
+def plan_agents(selected, mode, roster, groups, caps):
+    """Agents the head would dispatch; "inline" when one responsibility covers the task (SKILL.md §5)."""
+    owner = {c: n for n, (_, owned) in roster.items() for c in owned}
+    read_only = {n for n, (access, _) in roster.items() if access == "read-only"}
+    workflows = (set(caps) - groups["Design"] - groups["Engineering"]) | {"ado"}
+    chosen = set()
+    for c in selected:
+        agent = owner.get(c)
+        if mode in ("answer", "audit", "plan") and agent not in read_only:
+            agent = "design-auditor" if c in groups["Design"] else "delivery-agent" if c in workflows else "code-reviewer"
+        chosen.add(agent)
+    return "inline" if len(chosen) <= 1 else sorted(chosen)
 
 
 # ------------------------------------------------------------------- budget
@@ -469,6 +604,7 @@ def check_package():
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     sys.dont_write_bytecode = True
     import package_skill as pkg
+    never = pkg.never_load()
     with tempfile.TemporaryDirectory() as out:
         path, digest = pkg.build(out)
         check(pkg.build(os.path.join(out, "again"))[1] == digest, "upload ZIP build is not deterministic")
@@ -480,6 +616,9 @@ def check_package():
             check(all((i.external_attr >> 16) & 0o777 == 0o644 for i in infos), "ZIP entries must be 0644 files")
             expected = {f"uiuxabhishek-devkit/{r}" for _, r in pkg.files()}
             check(set(names) == expected, f"ZIP contents drift: {sorted(set(names) ^ expected)[:5]}")
+            inner = [n.split("/", 1)[1] for n in names]
+            check(not [n for n in inner if pkg.omitted(n, never)], "upload ZIP contains a Never load file")
+            check(not [n for n in inner if n.startswith("agents/")], "upload ZIP must stay skill-only (no agents/)")
             for req in ("SKILL.md", "GUIDE.md", "LICENSE", "NOTICE.md", "LICENSES/IMPECCABLE_NOTICE.md",
                         "references/impeccable/SOURCE_SKILL.md", "templates/pr-description.md"):
                 check(f"uiuxabhishek-devkit/{req}" in names, f"ZIP lacks {req}")
@@ -498,7 +637,59 @@ def check_package():
                     with open(src, "rb") as f:
                         check(f.read() == data, f"ZIP copy of {n} differs")
         print(f"package: {os.path.basename(path)}, {len(names)} files, {os.path.getsize(path) // 1024} KB, "
-              f"upload description {len(pkg.UPLOAD_DESCRIPTION)} chars")
+              f"upload description {len(pkg.UPLOAD_DESCRIPTION)} chars, {len(never)} Never load entries left out")
+
+        ppath, pdigest = pkg.build_plugin(out)
+        check(pkg.build_plugin(os.path.join(out, "again"))[1] == pdigest, "plugin ZIP build is not deterministic")
+        with zipfile.ZipFile(ppath) as z:
+            pnames = z.namelist()
+            tops = {n.split("/", 1)[0] for n in pnames}
+            check(tops <= {".claude-plugin", "agents", "skills"}, f"plugin ZIP has unexpected top-level entries {tops}")
+            check(".claude-plugin/plugin.json" in pnames and ".claude-plugin/marketplace.json" not in pnames,
+                  "plugin ZIP must carry plugin.json and not marketplace.json")
+            agents_in = sorted(n for n in pnames if n.startswith("agents/"))
+            check(agents_in == sorted(f"agents/{f}" for f in os.listdir(os.path.join(ROOT, "agents"))
+                                     if f.endswith(".md")), "plugin ZIP agents differ from agents/")
+            skill_in = {n[len("skills/uiuxabhishek-devkit/"):] for n in pnames if n.startswith("skills/")}
+            check(skill_in == {r for _, r in pkg.files()}, "plugin ZIP skill files differ from the shipped set")
+            check(z.read("skills/uiuxabhishek-devkit/SKILL.md") == open(os.path.join(SKILL, "SKILL.md"), "rb").read(),
+                  "plugin ZIP SKILL.md must be the repository copy (full description)")
+            for n in pnames:
+                src = os.path.join(ROOT, n) if not n.startswith("skills/") else os.path.join(SKILL, n.split("/", 2)[2])
+                with open(src, "rb") as f:
+                    check(f.read() == z.read(n), f"plugin ZIP copy of {n} differs")
+        print(f"package: {os.path.basename(ppath)}, {len(pnames)} files, {len(agents_in)} agents, top level {sorted(tops)}")
+    check_plugin_manifests(pkg, pdigest)
+
+
+def check_plugin_manifests(pkg, plugin_digest):
+    try:
+        manifest = json.loads(read(pkg.PLUGIN_MANIFEST))
+        market = json.loads(read(pkg.MARKETPLACE))
+    except (OSError, ValueError) as e:
+        check(False, f"plugin manifests unreadable: {e}")
+        return
+    for key in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords"):
+        check(manifest.get(key), f"plugin.json lacks {key}")
+    check(manifest.get("name") == "uiuxabhishek-devkit", "plugin.json name must be uiuxabhishek-devkit")
+    check(manifest.get("version") == pkg.version(), f"plugin.json version {manifest.get('version')} != SKILL.md {pkg.version()}")
+    check(isinstance(manifest.get("author"), dict) and manifest["author"].get("name"), "plugin.json author needs a name")
+    check(isinstance(manifest.get("keywords"), list), "plugin.json keywords must be a list")
+    for key in ("homepage", "repository"):
+        check(str(manifest.get(key, "")).startswith(f"https://github.com/{REPO}"), f"plugin.json {key} must be the repository URL")
+    check(not set(manifest) & {"agents", "skills", "commands"}, "plugin.json should rely on the default agents/ and skills/ layout")
+    check(market.get("name") and market.get("owner", {}).get("name"), "marketplace.json needs name and owner.name")
+    entries = [p for p in market.get("plugins", []) if p.get("name") == "uiuxabhishek-devkit"]
+    if not check(len(entries) == 1 and len(market["plugins"]) == 1, "marketplace.json must list exactly this plugin"):
+        return
+    src = entries[0].get("source", {})
+    check("version" not in entries[0], "marketplace entry must not set version (plugin.json owns it)")
+    check(isinstance(src, dict) and src.get("source") == "archive", "marketplace source must be the release archive")
+    check(src.get("url") == pkg.plugin_release_url(), f"marketplace URL {src.get('url')} != {pkg.plugin_release_url()}")
+    check(src.get("sha256") == plugin_digest,
+          "marketplace sha256 doesn't match the plugin ZIP; run python3 tools/package_skill.py --update-marketplace")
+    print(f"plugin: manifest {manifest.get('version')}, marketplace pins {os.path.basename(src.get('url', ''))} "
+          f"sha256 {str(src.get('sha256'))[:12]}")
 
 
 # -------------------------------------------------------------- git sandbox
@@ -557,7 +748,8 @@ def main():
     check_git_sandbox()
     check_updater()
     check_old_id()
-    check_scenarios(modes, caps, never, craft_floor, groups, text)
+    roster = check_agents(text, caps, groups)
+    check_scenarios(modes, caps, never, craft_floor, groups, text, roster)
     if failures:
         print(f"\nFAILED ({len(failures)}):")
         for f in failures:

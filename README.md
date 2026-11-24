@@ -2,13 +2,13 @@
 
 > **Design. Build. Automate. Deliver.**
 
-UIUX Abhishek DevKit is one installable Agent Skill, `uiuxabhishek-devkit`, that gives AI coding agents senior-level judgment for UI/UX design, motion, frontend engineering, Git and repository workflows, and Azure DevOps delivery. It works with Claude Code, Codex, Gemini CLI, GitHub Copilot and Antigravity. For each task it loads only the guidance that task needs.
+UIUX Abhishek DevKit is one installable Agent Skill, `uiuxabhishek-devkit`, that gives AI coding agents senior-level judgment for UI/UX design, motion, frontend engineering, Figma to code, frontend security, Git and repository workflows, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. It works with Claude Code, Codex, Gemini CLI, GitHub Copilot and Antigravity. For each task it loads only the guidance that task needs. In Claude Code, an optional plugin adds specialist agents that the main session can plan and dispatch.
 
 Created and maintained by **Abhishek Rampal ([uiuxAbhishek](https://github.com/abhishekinvission))**.
 
 - **Repository:** [abhishekinvission/uiuxabhishek-devkit](https://github.com/abhishekinvission/uiuxabhishek-devkit)
 - **Skill ID:** `uiuxabhishek-devkit` (formerly `uiuxabhishek-design`; see [upgrading](#upgrading-from-uiuxabhishek-design))
-- **Current version:** 2.0.1 ([changelog](CHANGELOG.md))
+- **Current version:** 2.1.0 ([changelog](CHANGELOG.md))
 
 ## Install UIUX Abhishek DevKit
 
@@ -32,6 +32,17 @@ Or install for a single agent:
 
 **Local agents vs. Claude Chat.** The commands above install files on your computer for local coding agents. **Claude.ai and Claude Desktop Chat** use skills stored in your Claude account instead, so a terminal install doesn't enable the skill there. For Chat, download `uiuxabhishek-devkit-v<version>.zip` from the [latest release](https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/latest) and upload it under **Customize → Skills → + → Create skill → Upload a skill**.
 
+### Claude Code plugin (skill plus agents)
+
+`npx skills` installs the skill only. To also get the specialist agents in Claude Code, install the plugin from this repository's marketplace instead:
+
+```text
+/plugin marketplace add abhishekinvission/uiuxabhishek-devkit
+/plugin install uiuxabhishek-devkit@uiuxabhishek
+```
+
+The plugin is the release's `uiuxabhishek-devkit-plugin-v<version>.zip`, pinned by SHA-256: `.claude-plugin/`, `agents/` and `skills/` only, without the repository's maintainer files. Use the plugin or the Claude Code `npx` install, not both, so Claude Code doesn't load two copies of the skill.
+
 The bundled capabilities belong to this one skill. Install only `uiuxabhishek-devkit`. **[INSTALL.md](INSTALL.md)** covers requirements, project installs, verification, updates, removal, reloading, migration, Chat uploads and troubleshooting.
 
 ### Upgrading from `uiuxabhishek-design`
@@ -43,7 +54,7 @@ npx skills remove uiuxabhishek-design -g -y
 npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a claude-code -a codex -a gemini-cli -a github-copilot -a antigravity -y
 ```
 
-Then restart your agents. In Claude Chat, delete the old skill and upload the 2.0.0 ZIP. See [INSTALL.md](INSTALL.md#migrate-from-uiuxabhishek-design) for details.
+Then restart your agents. In Claude Chat, delete the old skill and upload the latest release ZIP. See [INSTALL.md](INSTALL.md#migrate-from-uiuxabhishek-design) for details.
 
 ## What's included
 
@@ -51,22 +62,25 @@ Then restart your agents. In Claude Chat, delete the old skill and upload the 2.
 | --- | --- |
 | **Visual craft** | Design direction, visual hierarchy, layout, spacing, typography, color, theming, design tokens and design-system consistency |
 | **UX review** | Critiques, audits, information architecture, UX copy, empty and error states, onboarding, i18n and edge cases |
-| **Accessibility and platforms** | WCAG audits, keyboard and focus behavior, contrast, responsive web, iOS and Android conventions |
+| **Accessibility and platforms** | WCAG audits, keyboard and focus behavior, contrast, responsive web, iOS and Android conventions, React Native, Expo and Flutter apps |
 | **Fluid motion** | Purposeful animation, gestures, drag and flick, interruptible spring motion, sheets and drawers, reduced motion |
-| **Frontend engineering** | Pages and routing, API integration, admin CRUD, data reports and exports, state management, testing, code review and release readiness, shared packages and components, microfrontends |
+| **Frontend engineering** | Pages and routing, API integration, forms, admin CRUD, data reports and exports, state management, testing, code review and release readiness, shared packages and components, microfrontends, SEO and page metadata |
+| **Figma to code** | Reading frames, variables, components and auto-layout through a Figma MCP or from screenshots, mapping to your tokens and components, missing states, assets and a visual diff |
+| **Frontend security** | XSS sinks and sanitization, CSP, token storage, CSRF, third-party scripts and SRI, secrets in bundles, open redirects, `postMessage`, dependency audits |
 | **Git and repositories** | Status and diff, clone, fetch/pull, branches and sync, safe commits, push, PR/MR creation and review, merges, conflicts, revert and recovery, tags and releases on GitHub, GitLab, Azure Repos, Bitbucket or plain Git |
-| **Azure DevOps delivery** | Azure Boards work item → live ticket read → PR reconciliation → clarification and dependency gates → safe Git preflight → implementation → ordered verification → authorized **draft** PR → structured report, for frontend, backend, full-stack or infrastructure work |
+| **Ticket delivery** | GitHub Issues, Jira, Linear and Azure Boards: live ticket read → existing-PR check → clarification and dependency gates → safe Git preflight → implementation → ordered verification → authorized **draft** PR → structured report, for frontend, backend, full-stack or infrastructure work |
+| **Agents (Claude Code plugin)** | `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer` and `delivery-agent`, planned by the main session and started only after you approve the plan |
 
 ### How it picks what to load
 
 `SKILL.md` is a short, agent-neutral router. For each request it:
 
-1. **checks scope:** UI and frontend guidance is for UI work, while Git and Azure DevOps workflows apply to any repository and stack. Other backend-only work loads nothing;
+1. **checks scope:** UI and frontend guidance is for UI work, while Git and ticket delivery apply to any repository and stack. Other backend-only work loads nothing;
 2. **picks a mode** (`answer`, `audit`, `plan`, `implement` or `deliver`) that caps what the agent may change. "Read-only" or "dry run" means no edits; "don't push" means no publishing;
 3. **matches capabilities** and loads only their files, in phases when several apply, with one owner per responsibility;
 4. **follows your project:** its stack, design system, conventions and checks take priority over reference examples.
 
-Merges, destructive resets, force-pushes, branch or tag deletion, published-history rewrites, releases, deployments and ticket writes always need your explicit approval for that exact operation. Owning the repository doesn't count as approval. Routing relies only on plain Markdown, with no hooks, subagents, MCP servers or vendor-specific tools.
+Merges, destructive resets, force-pushes, branch or tag deletion, published-history rewrites, releases, deployments and ticket writes always need your explicit approval for that exact operation. Owning the repository doesn't count as approval. Routing itself is plain Markdown, with no hooks, MCP servers or vendor-specific tools. In Claude Code with the plugin, the main session can also plan a task across specialist subagents and dispatch them once you approve the plan. Everywhere else it runs the same plan itself, one step at a time, with the same results.
 
 ## Using it
 
@@ -83,14 +97,21 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 | Testing | "Write Playwright end-to-end tests for the login flow." |
 | Git | "My branch is behind main; sync it without losing my work." · "Commit only the login fix and push the branch." · "Open a draft merge request on GitLab." · "Resolve the merge conflicts after my rebase." |
 | Releases | "Plan a v2.1.0 tag and GitHub release." Plans only; publishing needs your go-ahead |
-| Azure DevOps | "Dry-run Azure Boards work item 12345." · "Implement item 12345 locally, don't push." · "Deliver item 12345 and open a draft PR; you're authorized to push the task branch." |
+| Forms | "Add a multi-step claim form with autosave, file upload and accessible errors." |
+| Figma | "Implement this Figma frame using our existing tokens and components." |
+| Security | "Check the comment widget for XSS and add a CSP." |
+| SEO | "Add Open Graph metadata, canonical URLs and a sitemap to the marketing pages." |
+| Cross-platform | "Fix keyboard handling on the React Native login screen." |
+| Tickets | "Dry-run GitHub issue acme/shop#88." · "Implement Jira issue PROJ-31 locally, don't push." · "Dry-run Azure Boards work item 12345." · "Deliver item 12345 and open a draft PR; you're authorized to push the task branch." |
+| Agents (Claude Code) | "Build the settings page from this Figma frame, test it, review it and open a draft PR." The head shows a plan and waits for your approval |
 
-**Azure DevOps** runs only for Azure DevOps/Azure Boards work. It needs an approved, signed-in Azure DevOps connector or the `az devops` CLI, and it never guesses the organization, project, repository or target branch. **Git** provider actions use `gh`, `glab` or `az` only when they're installed and signed in. Otherwise the agent does the local Git part and gives you the remaining manual steps.
+**Ticket delivery** reads the live ticket with `gh`, a signed-in Jira, Linear or Azure DevOps connector, or the `az devops` CLI. Without one, it asks you to paste the ticket. It never guesses the organization, project, repository or target branch, and never changes a ticket's state unless you ask. **Git** provider actions use `gh`, `glab` or `az` only when they're installed and signed in. Otherwise the agent does the local Git part and gives you the remaining manual steps.
 
 ## Updates and versions
 
 - **Stable releases** are tagged `vX.Y.Z` on GitHub with a Claude upload ZIP and its SHA-256 checksum. See [CHANGELOG.md](CHANGELOG.md).
-- **Update a local install:** `npx skills update uiuxabhishek-devkit -g -y`. An install made with the commands above follows `main`, which only receives validated changes. To stay on stable releases only, install a tag (`abhishekinvission/uiuxabhishek-devkit#v2.0.1`) or use the optional updater.
+- **Update a local install:** `npx skills update uiuxabhishek-devkit -g -y`. An install made with the commands above follows `main`, which only receives validated changes. To stay on stable releases only, install a tag (`abhishekinvission/uiuxabhishek-devkit#v2.1.0`) or use the optional updater.
+- **Update the Claude Code plugin:** `/plugin marketplace update uiuxabhishek`, then update the plugin from `/plugin`.
 - **Update notifications (optional):** the [updater](INSTALL.md#optional-update-notifications-and-automatic-updates) checks GitHub once a day for a newer stable release and notifies you. It never changes anything unless you opt in with `enable-auto-update --yes`. It runs on macOS, Linux and Windows and touches only `uiuxabhishek-devkit`.
 - **Claude Chat uploads** are always updated by hand: delete the old skill and upload the new ZIP.
 - **Remove:** `npx skills remove uiuxabhishek-devkit -g -y`.
@@ -103,20 +124,23 @@ skills/uiuxabhishek-devkit/
 ├── GUIDE.md            # User-facing capability and usage guide
 ├── NOTICE.md, LICENSE  # In-skill attribution and license (travel with installs)
 ├── LICENSES/           # In-skill copies of required third-party licenses and notices
-├── templates/          # PR description and ADO delivery report templates
+├── templates/          # PR description and ticket delivery report templates
 └── references/         # Guidance, loaded only when relevant
     ├── impeccable/     # Visual craft (third-party)
     ├── apple-design/   # Interaction and motion (third-party)
+    ├── adapters/       # Manual substitutes for Impeccable's unbundled scripts (original)
     ├── frontend/       # Frontend engineering guides (original)
-    └── workflows/      # Git workflow and Azure DevOps delivery (original)
+    └── workflows/      # Git workflow and ticket delivery, including Azure DevOps (original)
+agents/                 # Claude Code plugin agents (plugin only)
+.claude-plugin/         # plugin.json and marketplace.json
 INSTALL.md              # Installation, migration, updates, removal and troubleshooting
 CHANGELOG.md            # Versions and releases
-tools/                  # Upload ZIP builder and the optional updater (not installed)
+tools/                  # ZIP builder (Chat upload and plugin) and the optional updater (not installed)
 tests/                  # Validation, routing, Git, updater and migration tests (not installed)
 LICENSE, NOTICE.md, SOURCES.md, LICENSES/, CLAUDE.md
 ```
 
-This is a **guidance-only** skill. The installed skill doesn't include CLIs, binaries, hooks, scripts or credentials. The optional updater lives in `tools/` and is never installed with the skill.
+This is a **guidance-only** skill. The installed skill doesn't include CLIs, binaries, hooks, scripts or credentials, and the plugin adds only Markdown agent definitions. The optional updater lives in `tools/` and is never installed with the skill.
 
 ## Maintenance
 
@@ -124,17 +148,19 @@ This is a **guidance-only** skill. The installed skill doesn't include CLIs, bin
   - discovery and routing scenarios;
   - the Git and updater sandboxes;
   - links, checksums, license mirrors and the security scan;
-  - the upload ZIP;
+  - both ZIPs, `plugin.json` and the marketplace pin;
+  - the agents and their capability mapping;
   - leftover references to the old skill ID.
 - **Release:**
   1. Bump `metadata.version` in `SKILL.md` and add a `CHANGELOG.md` entry.
-  2. Run `python3 tools/package_skill.py`.
-  3. Attach the files from `dist/` to a `v<version>` GitHub Release.
+  2. Set the same version in `.claude-plugin/plugin.json`.
+  3. Run `python3 tools/package_skill.py --update-marketplace` and commit the updated `marketplace.json` before tagging.
+  4. Attach the files from `dist/` (both ZIPs, the updater and their `.sha256` files) to a `v<version>` GitHub Release.
 - **Add a source:** follow [CLAUDE.md](CLAUDE.md). Every bundled third-party file is checksummed in [SOURCES.md](SOURCES.md).
 
 ## Third-Party Licenses & Credits
 
-UIUX Abhishek DevKit's original work is © Abhishek Rampal and licensed under the [MIT License](LICENSE). That covers the routing, architecture, documentation, frontend, Git and Azure DevOps guides, templates and tooling. Bundled third-party material is **not** owned by Abhishek Rampal. It stays the work of its authors and is redistributed under its original licenses:
+UIUX Abhishek DevKit's original work is © Abhishek Rampal and licensed under the [MIT License](LICENSE). That covers the routing, architecture, documentation, frontend, Git and ticket-delivery guides, the Impeccable adapter, the plugin agents, templates and tooling. Bundled third-party material is **not** owned by Abhishek Rampal. It stays the work of its authors and is redistributed under its original licenses:
 
 - **[Impeccable](https://github.com/pbakaus/impeccable)** by Paul Bakaus: [Apache License 2.0](LICENSES/IMPECCABLE_APACHE-2.0.txt), with its [upstream NOTICE](LICENSES/IMPECCABLE_NOTICE.md).
 - **[platform-design-skills](https://github.com/ehmo/platform-design-skills)** by ehmo: [MIT](LICENSES/PLATFORM_DESIGN_SKILLS_MIT.txt). Impeccable's iOS and Android references are derived from it.

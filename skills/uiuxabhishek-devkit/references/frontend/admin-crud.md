@@ -1,20 +1,34 @@
 # Accessible admin CRUD
 
-**Use for:** reusable management screens with list, search, add, edit, archive/deactivate or delete.
+**Use for:** management screens that list, search, create, edit, archive or delete records.
 
-## Decisions
-- Define entity, identifier, backend contract, list columns, filters, searchable fields, defaults, sortable fields, pagination mode and authorization matrix.
-- Decide create vs edit behavior, immutable fields, uniqueness, validation, draft/dirty form policy and delete semantics (archive, soft delete, hard delete).
-- Reuse `data-reports.md` for table mechanics and `api-integration.md` for request lifecycle.
+## Decide before building
+- **Entity contract.** Identifier, fields that become read-only after create, uniqueness rules, server-filled defaults, and what "delete" means here: archive, soft delete, hard delete or deactivate. If the request doesn't say, ask. Never guess delete semantics.
+- **Permission matrix.** Per action (view, create, edit, delete, export, bulk). The UI hides or disables what the server would refuse.
+- **Concurrency.** Last write wins, a version or ETag check, or a lock. Use what the API supports; if it supports none, report the risk.
+- **Reuse.** List mechanics come from [data-reports.md](data-reports.md), the request lifecycle from [api-integration.md](api-integration.md), and validation timing, errors, drafts and double submission from [forms.md](forms.md).
 
-## UI behavior
-- List: accessible table/grid, meaningful labels, sorting indicators, column visibility, pagination, loading/empty/error states, and actions with discernible names.
-- Form: validated typed values, inline accessible error messaging, clearly distinguished required/optional fields, blocked duplicate submission and safe focus placement.
-- Edit: populate from verified ID, distinguish missing/forbidden, prevent data loss with unsaved-changes confirmation, honor backend constraints.
-- Destructive action: explicit impact, confirmation appropriate to risk, server-side checks, successful state refresh and audit trail if required.
-- Role/access management must prevent privilege escalation and verify on server; test unavailable actions, not just hidden controls.
-- Prefer reusable field components and schema-driven validation only when consistent with existing project conventions.
+## Behavior
+- One form component with a create/edit mode, not two copies that drift apart. Edit loads the record by ID from the server, not from the list row, which may be stale or partial.
+- Not found and forbidden are different screens: a 404 says the record doesn't exist, a 403 says you lack access. Neither shows an empty form.
+- After a save or delete, refresh only what changed (refetch the row or invalidate the list) and keep the user's filters, sort and page.
+- Destructive actions name the record and the consequence, and the button names the action:
+
+  | Bad | Good |
+  | --- | --- |
+  | "Are you sure?" with **OK** | "Delete invoice INV-2041? Its 3 payments are deleted too." with **Delete invoice** |
+
+  For irreversible, high-impact deletes, ask the user to type the record name. For routine reversible ones, prefer an undo over a dialog.
+- Bulk actions show how many items are selected, apply only to the selection unless "all matching" is explicit, and report failures per record.
+- Role editors prevent self-lockout (removing your own last admin role) and never offer roles the current user can't grant.
+
+## Failure modes to design for
+- An optimistic delete the server rejects leaves a gap in the list: roll back and announce the failure.
+- Saving over a record someone else changed silently loses their work: show the conflict with both values.
+- Deleting the last row on the last page lands on an empty page: step back one page.
+- A new record that doesn't match the current filter seems to vanish: confirm the save with a link to it.
 
 ## Tests
-- List loads/filters/pages; create/edit payload; invalid form blocks API; double-submit prevented; unsaved changes; permission checks; error recovery; accessible keyboard flow; audit behavior where configured.
-- Check concurrent edits/conflict versioning when relevant.
+- List, filter and page; create and edit payloads; invalid input blocks the request; not found vs forbidden; delete confirmation and rollback on failure.
+- Permission-denied actions are refused by the API, not only hidden; bulk partial failure; conflict on concurrent edit when the API supports versions.
+- Keyboard-only flow through list, form and dialog, with focus returning to the triggering control.

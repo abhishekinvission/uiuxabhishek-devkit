@@ -27,6 +27,8 @@ The same files are mirrored in `skills/uiuxabhishek-devkit/LICENSES/` so they tr
 
 Paths are relative to `skills/uiuxabhishek-devkit/references/`.
 
+All files below stay in the repository and in Skills CLI installs. The release ZIPs (Claude Chat upload and Claude Code plugin), built by `tools/package_skill.py`, leave out the nine "Never load" files from `SKILL.md`: `impeccable/reference/live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md` and `degraded/` (four files). They only drive Impeccable tooling that isn't bundled. Shipping a subset of an Apache-2.0 work is permitted (Section 4), and every ZIP keeps `LICENSE`, `NOTICE.md` and `LICENSES/`, including Impeccable's NOTICE.
+
 - `apple-design/SOURCE_SKILL.md  77bb63b7043bb93aca2ff4ab040c249484eef35682bb6ff7163433c31d30adc7`
 - `impeccable/SOURCE_SKILL.md  246464ef6b115235791f5683922092f5d5e0ce95d6f6a94ed140d2eb0f8c4f82`
 - `impeccable/reference/adapt.md  ec58806f16fc7ba29bccef08f2e158cd00be077ce05d45e943a59bd26dc6dc55`
@@ -75,6 +77,11 @@ Paths are relative to `skills/uiuxabhishek-devkit/references/`.
 | --- | --- | --- |
 | `references/frontend/` (9 guides), `references/workflows/` (2 guides), `templates/` (2 templates) | *UIUX Abhishek Design Frontend Engineering Expansion* pack, supplied by the maintainer on 2026-11-03 (`uiuxabhishek-frontend-expansion.zip`, SHA-256 `4a86b38a1efa79b8dfd0760eec70ff2ba2e53b80c9b417a869525c7521a83db1`) | MIT (© Abhishek Rampal) |
 | `references/workflows/git-workflow.md`, `references/workflows/git-recovery-and-release.md` | Universal Git & Repository Workflow, written for this project on 2026-11-04 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
+| `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
+| `agents/` (8 agent files), `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -83,22 +90,42 @@ The pack describes itself as framework-independent guides written for this proje
 - Converted cross-references to relative Markdown links.
 - 2026-11-04: moved the generic Git preflight, staging, commit and push steps of `azure-devops-delivery.md` into the shared `git-workflow.md`, which ADO now links to; the Azure-specific ticket, PR and comment steps are unchanged.
 - 2026-11-05 (2.0.1): `git-workflow.md` and `azure-devops-delivery.md` no longer fetch or write refs in `audit`, `plan` or ADO dry runs, and they honor "don't fetch" and "offline" in every mode.
+- 2026-11-24 (2.1.0): the provider-neutral lifecycle moved from `azure-devops-delivery.md` to `ticket-delivery.md`, which now also covers GitHub Issues, Jira and Linear; the ADO file keeps only Azure specifics. `templates/ado-delivery-report.md` became `templates/ticket-delivery-report.md`.
 - Not imported: the pack's `PACKAGE_MANIFEST.json`, `README.md` and `integration/` instructions (installer metadata, merged into `SKILL.md` routing instead).
 
 Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 
-- `references/frontend/admin-crud.md  0c38253c65ef8ce7f063fd33d4eddb8fb0c406d5e3c0cbebdea789a92c02dcba`
-- `references/frontend/api-integration.md  8bdb1e2638d441b13e674d889809d4111ac5d1369eb52f6b02777f7545c9f407`
-- `references/frontend/data-reports.md  4d80f0ae1f85392b51f6fd71282a764eb7254b18d1ad1227ef850c85914069c1`
-- `references/frontend/microfrontends.md  b73ecc23c71407686b272c57f1f4cea09db05ece77bcb4b7b093506b972e711b`
-- `references/frontend/packages-and-components.md  65f09a7c3481d9da47bda6f6b8c871043f79f59900067c435fa1a510ef538208`
-- `references/frontend/pages-and-routing.md  2e196021b5b4d7cc2d373fa2fc453e908f777aa6688eeca29b9712c79aee5f63`
-- `references/frontend/review-and-release.md  fe49d3f93b21a19d7558dcfce578f63300c5c166f1bcab7f7c3fa74e885d3eb8`
-- `references/frontend/state-management.md  110f8342d6a899a0c9a1e07c351200fcd6ef08b262bfd7ced98430418eaa2cb6`
-- `references/frontend/testing.md  cc71b889040f77e4a10c14240c02d42df610db893a62dc112bcac5a6b4ce5337`
-- `references/workflows/ado-configuration.md  f18ab5459e39f3d0a72ae66f92748f8ef3530c2c870db0beee23f19c01c67629`
-- `references/workflows/azure-devops-delivery.md  7ede12a81686e3c429cbbeeceaf16fafc5a3543e4994c9cfb40e1675f9ac1ab5`
+- `references/adapters/impeccable-without-cli.md  13232107300aeadcc051fecbcc8dae8c84d483c0c3b15ca2cf3385b599d01571`
+- `references/frontend/admin-crud.md  d5eb94fb9a001761a8daf6c2c73f289f3443666ed2382a6057655e9c1c6c080c`
+- `references/frontend/api-integration.md  34a6fc614750eba44ca81d02be6fc935ea8265407e3b297353b4ec19f69f0c62`
+- `references/frontend/cross-platform-native.md  44a75bd6184e557f6974af45939fc2bc3862fe8ca0977153136f768d5ce89281`
+- `references/frontend/data-reports.md  94b2384676ebedb857082cc98368c33b611dfbb23486a4dba10a0ab2b5d65288`
+- `references/frontend/figma-to-code.md  1d82e982d6693e1945b386cc3cdd57ec4c559e04d5192db42e41e838912f1453`
+- `references/frontend/forms.md  4e8b6cd9b2a9cfcc88a1eb6bd0962ce570e1201ca5434cca28528ac78cd18519`
+- `references/frontend/microfrontends.md  f79ec3983f518d5eb362920085fe80c4f5fe981ce5a9344f3e57d5410fcfb2e6`
+- `references/frontend/packages-and-components.md  61de77a4bb3a530cdb3bc6c2303b47586263f10f6f2c9630bd7820face798333`
+- `references/frontend/pages-and-routing.md  7ed8444d1806de55ca813cbee015abcaea873a421d4190dc9a835aecaaa2d2a5`
+- `references/frontend/review-and-release.md  9cb7ad4de9c7e80cb3c8680901a612e7c7600d8c19940be7200fc7ca53e166dc`
+- `references/frontend/security.md  ed28eb0526e80860a97238081af2022a06bf1635eb8b88b192d8f3d670f8b738`
+- `references/frontend/seo-and-metadata.md  d96ded2de837551a4c5d5da8d9785e850d116e3215aa6ac647d69c9014ff0ddf`
+- `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
+- `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
+- `references/workflows/ado-configuration.md  ff8cce8c406c5be539aa4af69301f4508c14dc6a306d0ef13713d626868464ac`
+- `references/workflows/agent-plans.md  d19c680d18dc1b387554057aaa260549b26488aff131af4a3819bb26d0aacfde`
+- `references/workflows/azure-devops-delivery.md  e3efeb5c23a132fc500b5705acc613522055a8ab77e51ee50d733cd061aeb180`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
-- `references/workflows/git-workflow.md  a143bf5584b9e478f9daff1388dcb81ee16104c4924a742303b9815175f22194`
-- `templates/ado-delivery-report.md  6673430bb2dfeed82758d1b459f82a699b4b4fad636c506a863e00a342e7783f`
+- `references/workflows/git-workflow.md  a581debca4a298fb45e65b73cdc47507d2b665d32bb4fe22ad09633e63e53d10`
+- `references/workflows/ticket-delivery.md  7a8425cacc821082db3f01ee57210b39c8cf2291b4aa808a0a2d7051172d8095`
 - `templates/pr-description.md  ed01966273e1e72cdc6c76c8d93a63060fdb3fb8b1e4a0ae0bfd1ab0fa9d3b94`
+- `templates/ticket-delivery-report.md  e13d9e63036843bba0696325f184812d7301a211ad5b34becfe3aac132528b87`
+
+Plugin agent files (paths relative to the repository root):
+
+- `agents/code-reviewer.md  689b694a38528bc51c26332c6db2fc35a070f40e807cb7c4b171ca5b289afc0b`
+- `agents/delivery-agent.md  b898d38d6cca1e6dcce59dd40c5b11e7419c7bbe0b698357f5f7e3ead97ea42c`
+- `agents/design-auditor.md  15192f9fe12307162f85119bd478af10a1bd35c90fc592bca667f5e9248fdb85`
+- `agents/figma-translator.md  ce4cb82a978e16818d86e4551b8d93a38f85ae526a261f97aa9419be521224d6`
+- `agents/frontend-engineer.md  5fba204243d9c1e847d9ffd69ffa2a498fe428cf94ba2d61065012dfd7bb06a0`
+- `agents/test-engineer.md  ff89d2b34c1331e28651a9903de552b534ee1e45e34def453582e1d24eed9d0b`
+- `agents/ui-designer.md  550e9c79b81c117b4676562a2bfa2d5a6327a7078a4a2252af58f64bca2c3c12`
+- `agents/ux-designer.md  e2e33e71165cd6faf25683d3186ebdc98e653c1b0aefdf2abd229cb5273fea3c`

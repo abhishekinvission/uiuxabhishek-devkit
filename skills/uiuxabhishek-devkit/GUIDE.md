@@ -1,53 +1,50 @@
 # UIUX Abhishek DevKit: what you can ask for
 
-**Design. Build. Automate. Deliver.**
-
-Describe the task in plain language. The skill picks the right guidance and loads only that. Naming a capability is optional.
+**Design. Build. Automate. Deliver.** Describe the task in plain language; the skill loads only the guidance it needs.
 
 ## Capabilities
 
-| Area | Ask for | Example |
+| Area | Covers | Example |
 | --- | --- | --- |
-| New visual work | landing pages, redesigns, new visual identity, UX planning | "Plan the UX for a new onboarding flow." |
-| Visual refinement | layout, typography, color, UX copy, polish, bolder, quieter, simpler, more delight | "The pricing headings feel cramped; fix the typography." |
-| Product UI | dashboards, settings, data-dense app screens | "Make this settings screen easier to scan." |
-| Accessibility and quality | accessibility audits, critiques, edge cases, error and empty states, responsive, UI performance | "Audit checkout for keyboard and contrast issues, read-only." |
-| Native platforms | iOS (SwiftUI/UIKit) and Android (Compose) conventions | "Review this SwiftUI screen against iOS conventions." |
-| Motion | purposeful animation, gestures, drag/swipe, springs, sheets, reduced motion | "Make the bottom sheet draggable with spring dismissal." |
-| Design systems | tokens, component extraction, design-system documentation | "Extract our button styles into tokens." |
-| Frontend engineering | pages and routing, API integration, admin CRUD, reports and exports, state, tests, code review, shared packages, microfrontends | "Add an admin users table with pagination and edit forms." |
-| Git and repositories | status, sync, branches, safe commits, PRs/MRs and reviews, conflicts, recovery, tags and releases on any Git host, for any project | "My branch is behind main; sync it without losing my work." |
-| Azure DevOps delivery | Azure Boards work item → plan → implementation → draft PR | "Dry-run Azure Boards item 4521." |
+| New visual work | landing pages, redesigns, visual identity, UX planning | "Plan the UX for a new onboarding flow." |
+| Visual refinement | layout, typography, color, UX copy, polish, bolder or quieter | "The pricing headings feel cramped; fix the typography." |
+| Product UI | dashboards, settings, data-dense screens | "Make this settings screen easier to scan." |
+| Quality | accessibility audits, critiques, edge and error states, responsive, UI performance | "Audit checkout for keyboard and contrast issues, read-only." |
+| Native and cross-platform | iOS, Android, React Native, Expo, Flutter | "Fix keyboard handling on the React Native login screen." |
+| Motion | animation, gestures, springs, sheets, reduced motion | "Make the bottom sheet draggable with spring dismissal." |
+| Design systems | tokens, component extraction, documentation | "Extract our button styles into tokens." |
+| Frontend engineering | pages, APIs, CRUD, reports, state, tests, code review, packages, microfrontends | "Add an admin users table with pagination and edit forms." |
+| Forms | validation, error summaries, multi-step, autosave, upload, autofill | "Add a multi-step claim form with autosave." |
+| Figma to code | frames and tokens mapped to your components, with a visual diff | "Implement this Figma frame with our components." |
+| Frontend security | XSS, CSP, tokens, CSRF, third-party scripts, secrets, dependency audits | "Check the comment widget for XSS and add a CSP." |
+| SEO and metadata | titles, canonical URLs, social cards, structured data, sitemaps, hreflang | "Add Open Graph metadata and a sitemap." |
+| Git | status, sync, branches, commits, PRs/MRs, conflicts, recovery, tags and releases on any host | "My branch is behind main; sync it without losing my work." |
+| Ticket delivery | GitHub Issues, Jira, Linear, Azure Boards: ticket → change → draft PR | "Dry-run GitHub issue acme/shop#88." |
 
 ## Control what it may do
 
 | Say | It will |
 | --- | --- |
-| "audit", "review", "read-only", "dry run" | report findings only, with no edits. Git checks don't fetch or change any branch, tag or ref |
-| "don't fetch", "offline" | in any mode, work from local Git state with no `git fetch` or pull; "offline" also means no network calls |
+| "audit", "review", "read-only", "dry run" | report findings only; Git checks don't fetch or change refs |
+| "don't fetch", "offline" | work from local Git state; "offline" also means no network calls |
 | "plan", "spec" | write a plan, with no edits |
-| "build", "fix", "add" | edit files in scope and run your project's own checks. It doesn't commit, push or open PRs |
-| "commit", "push the branch", "open a draft PR", with your authorization | do only what you named, following your repository's rules: a commit doesn't imply a push, and a PR is opened as a **draft** |
+| "build", "fix", "add" | edit files in scope and run your checks; no commit, push or PR |
+| "commit", "push the branch", "open a draft PR", with your authorization | only what you named; PRs open as **drafts** |
 
-It never merges, deploys, force-pushes, deletes or moves branches and tags, rewrites published history, discards uncommitted work or changes ticket state unless you ask for that exact operation. Owning the repository isn't the same as asking.
+It never merges, deploys, force-pushes, deletes or moves branches and tags, rewrites published history, discards work or changes ticket state unless you ask for that exact operation. Owning the repository isn't asking.
 
-## Git and repositories
+## Git and tickets
 
-- Works with any Git repository: local-only, GitHub, GitLab, Azure Repos, Bitbucket and others, in any language or framework.
-- It checks the real state first: uncommitted work, branch and upstream, remotes and provider, conventions, protection, and which tools (`gh`, `glab`, `az`) are signed in. Without a provider tool it does the Git part and gives you the remaining manual steps.
-- It preserves your work, prefers reversible steps (revert over reset, `--ff-only` pulls, `--force-with-lease`), records a backup before risky operations and tells you how to undo them. It stops and asks when a conflict can't be settled from the code and history.
-- Try: "Show the git status and diff, read-only", "Commit only the login fix and push the branch", "Open a draft merge request on GitLab", "Resolve the merge conflicts after my rebase", "I deleted a branch by accident; recover it", "Plan a v2.1.0 tag and release".
+- Works on any Git host and stack. It checks the real state first (uncommitted work, branches, remotes, protection, signed-in tools) and gives manual steps when a provider tool is missing. Risky steps get a backup and undo instructions.
+- Tickets are read live with `gh`, a signed-in Jira, Linear or Azure DevOps connector, or `az devops`; otherwise it asks you to paste the ticket. No tracker named: it asks which. A bare ticket ID or URL is a **dry run**; say "implement" for local changes, or "deliver" plus authorization for a draft PR.
 
-## Azure DevOps delivery
+## Agents (Claude Code)
 
-- Works only for Azure DevOps or Azure Boards work items, not Jira, GitHub or Linear tickets.
-- Needs an approved, signed-in Azure DevOps connector or the `az devops` CLI already available to your agent. No credentials are bundled.
-- It reads the live ticket, checks for existing PRs, asks about blocking gaps, works on a safe branch, runs your project's real checks and reports with a structured template.
-- A bare work-item ID or URL is a **dry run**. Say "implement" for local changes, or "deliver" plus explicit authorization for a draft PR.
+With the Claude Code plugin, the main session can hand parts of a larger task to `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer` and `delivery-agent`. Small tasks stay direct. Bigger ones get a plan first (who does what, in what order, which writes need your authorization), and nothing starts until you approve it. Read-only checks may run in parallel; delivery always runs last. Other tools run the same plan one step at a time.
 
 ## Good to know
 
-- It follows your existing framework, design system and conventions, and never imposes a style or library.
-- Upstream Impeccable tooling (live mode, detector hooks, `doctor`, image generation, `init`) isn't bundled. Install the original Impeccable project if you need it.
-- Keep it current: `npx skills update uiuxabhishek-devkit -g -y`. Optional update notifications and Claude Chat uploads are covered in the repository's INSTALL.md (github.com/abhishekinvission/uiuxabhishek-devkit).
+- It follows your framework, design system and conventions and never imposes a style or library.
+- Impeccable's own tooling isn't bundled; its script steps become manual ones, such as offering directions for you to choose.
+- Update: `npx skills update uiuxabhishek-devkit -g -y`. Plugin, Claude Chat and update notifications: INSTALL.md (github.com/abhishekinvission/uiuxabhishek-devkit).
 - Credits and licenses: [NOTICE.md](NOTICE.md).

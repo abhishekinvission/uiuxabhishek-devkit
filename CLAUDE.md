@@ -53,8 +53,8 @@ The user does not need to repeat integration requirements. Proceed from inspecti
    - no secrets, private data or unexpected executables/binaries; `git diff --check` is clean;
    - existing sources are intact and the diff has no unrelated changes.
    Retry or fix any failure before publishing.
-8. **Publish only if safe.** A source-only message is standing authorization to commit and push this *specific validated integration* to the already-configured `origin/main`. Stage only files belonging to this integration; use an informative commit. Push normally without force. **Do NOT commit or push** if permissions, licensing, ownership claims, security or secret scanning, validation, repository state, or remote ownership is uncertain; instead explain the blocker. Never change Git credentials, repository visibility, remotes, branch protection, or publish elsewhere.
-9. **Report concisely.** State source and version, what was integrated, any omitted capabilities, test results, commit/push status, and whether installed agent copies need manual refresh. Do not claim an office AIRA instance was updated: GitHub publication alone does not update its installation.
+8. **Publish only if safe.** A source-only message authorizes a local commit of this *specific validated integration*. Stage only files belonging to this integration; use an informative commit. Push to the already-configured `origin/main` only after the user confirms the push in the current session; a confirmation from an earlier session doesn't carry over. Push normally without force. **Do NOT commit or push** if permissions, licensing, ownership claims, security or secret scanning, validation, repository state, or remote ownership is uncertain; instead explain the blocker. Never change Git credentials, repository visibility, remotes, branch protection, or publish elsewhere.
+9. **Report concisely.** State source and version, what was integrated, any omitted capabilities, test results, commit/push status, and whether installed agent copies need manual refresh.
 
 ## Efficiency and behavior
 

@@ -4,6 +4,32 @@ All notable changes to UIUX Abhishek DevKit (formerly UIUX Abhishek Design) are 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [2.1.0] — Unreleased
+
+New capabilities, a Claude Code agent layer and fixes. The skill ID, install commands and existing routes are unchanged.
+
+### Fixes
+- **Impeccable script steps.** `new-work.md`, `critique.md` and `SOURCE_SKILL.md` call scripts that aren't bundled and call skipping them a contract violation. The new original adapter `references/adapters/impeccable-without-cli.md` gives a manual substitute for each step and overrides that wording. It loads with every routed file that calls a script: `design-new`, `critique`, `layout`, `typography` and `refine`'s polish step.
+- **Maintainer files kept out of installs.** The new Claude Code plugin ZIP holds only `.claude-plugin/`, `agents/` and `skills/`; the Chat upload ZIP stays skill-only. `CLAUDE.md` now pushes an integration only after the user confirms in the current session, and no longer mentions an office installation.
+- **Complete plugin manifest.** `plugin.json` carries version, description, author, homepage, repository, license and keywords, and its version must match `SKILL.md`.
+- **Unused files.** Both ZIPs leave out the nine "Never load" Impeccable files. They stay in the repository; `NOTICE.md` and `SOURCES.md` record the omission.
+- **Frontend guides.** The nine guides gained the decisions and failure modes they lacked, with compact examples where useful, and no longer restate the shared baseline.
+
+### New capabilities
+- `tickets`: ticket-to-draft-PR delivery for GitHub Issues, Jira and Linear, sharing a provider-neutral lifecycle (`ticket-delivery.md`) with Azure Boards. The ADO guide keeps only Azure specifics, and `ado-delivery-report.md` became `ticket-delivery-report.md`. ADO routing is unchanged.
+- `figma-to-code`, `frontend-security`, `forms`, `seo-metadata` and `cross-platform-native` (React Native, Expo, Flutter). Security also loads from `review` for diffs that touch HTML rendering, auth or third-party scripts; SEO loads from `design-new` and `pages` for public pages; React Native, Expo and Flutter load the native responsive and audit files.
+
+### Agents (Claude Code)
+- `SKILL.md` §5 makes the main session the head. Small tasks stay inline. Larger ones get a plan the user approves before any agent starts. Only read-only agents run in parallel, and delivery runs last. Without subagents, the same plan runs step by step.
+- Eight plugin agents: `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer` and `delivery-agent`. Each capability belongs to exactly one.
+- `.claude-plugin/marketplace.json` installs the plugin from its GitHub release archive, pinned by SHA-256.
+
+### Tests and tooling
+- Skills CLI 1.9.0 installs the Antigravity copy under `~/.gemini/config/skills` and can leave `~/.agents/skills/uiuxabhishek-devkit` after a removal. INSTALL.md's troubleshooting gives the pinned 1.7.6 commands and the manual cleanup, and `validate.py` pins `skills@1.7.6`.
+- `tools/package_skill.py` builds both ZIPs and, with `--update-marketplace`, pins the plugin ZIP in `marketplace.json`.
+- `validate.py` adds checks for agent frontmatter, one agent per capability, read-only tools, agent bodies, the plugin and marketplace manifests, both ZIP layouts, and script-calling files without the adapter.
+- Routing scenarios: 68 (24 new), each with its expected agent plan or `inline`. `SKILL.md` stays under 12,000 characters and `GUIDE.md` under 5,000. Average context per scenario must stay within 10% of the pre-router baseline (now +9.9%). The head's planning rules live in `references/workflows/agent-plans.md`, loaded only when a task uses agents.
+
 ## [2.0.1] — 2026-11-05 (stable release)
 
 Fixes only. The skill ID, capabilities, install commands and the Claude upload ZIP format are unchanged.
@@ -73,6 +99,7 @@ Tag `v1.0.0` (commit `dbb612c`), with the GitHub Release asset `uiuxabhishek-des
 - `f0b098f`: branding, ownership and licensing policy for integrating sources.
 - `8c7c9e5`, `93b5815`, `72d0bbf`: initial skill with Impeccable and Apple Design, the integration workflow and corrected install commands.
 
+[2.1.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.1.0
 [2.0.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.0.1
 [2.0.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.0.0
 [1.1.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/commit/82f5367

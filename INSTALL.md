@@ -8,6 +8,7 @@ How you install it depends on where your agent runs:
 | --- | --- | --- |
 | **Local coding agents:** Claude Code (terminal, IDE or the Claude Desktop **Code** tab, local sessions), Codex, Gemini CLI, GitHub Copilot, Antigravity | Skills CLI, installed on your computer | [Local agents](#local-coding-agents) |
 | **Cloud / account-based Chat:** Claude.ai, Claude Desktop **Chat** and Cowork, Claude Code cloud sessions | ZIP upload in your Claude account | [Claude Chat upload](#claudeai-and-claude-desktop-chat) |
+| **Claude Code with specialist agents** | Claude Code plugin from this repository's marketplace | [Claude Code plugin](#claude-code-plugin-skill-and-agents) |
 
 A local install doesn't reach cloud Chat, and an uploaded ZIP doesn't install anything for Codex, Gemini CLI, Copilot or Antigravity. Set up each environment you use.
 
@@ -39,7 +40,7 @@ npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit
 
 To install into the current project only, so it's shared through the repository, leave out `-g`. Run `npx skills add --help` to see every option your CLI version supports.
 
-**Stable releases only.** The commands above follow the repository's `main` branch. To pin a release, add the tag: `npx skills add abhishekinvission/uiuxabhishek-devkit#v2.0.1 --skill uiuxabhishek-devkit -g -a claude-code -y`. A pinned install stays on that tag when you run `update`, until you install a newer tag or use the [updater](#optional-update-notifications-and-automatic-updates).
+**Stable releases only.** The commands above follow the repository's `main` branch. To pin a release, add the tag: `npx skills add abhishekinvission/uiuxabhishek-devkit#v2.1.0 --skill uiuxabhishek-devkit -g -a claude-code -y`. A pinned install stays on that tag when you run `update`, until you install a newer tag or use the [updater](#optional-update-notifications-and-automatic-updates).
 
 **Where it lands.** With Skills CLI 1.7.6, a global install puts one copy in `~/.agents/skills/uiuxabhishek-devkit`, which Codex, Gemini CLI, GitHub Copilot and Antigravity read. Claude Code gets `~/.claude/skills/uiuxabhishek-devkit`, linked to that copy when you install for several agents. The CLI prints the exact paths when it finishes.
 
@@ -68,6 +69,25 @@ To remove it from one agent only, add `-a <identifier>`, for example `-a codex`.
 ### Reload after install, update or removal
 
 Agents usually read their skill list when a session starts. After any change, start a new session, or close and reopen the agent, IDE window or Claude Desktop.
+
+## Claude Code plugin (skill and agents)
+
+`npx skills` installs the **skill only**, for every agent above. The specialist agents (`ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer`, `delivery-agent`) work only in Claude Code and come with the plugin.
+
+In Claude Code:
+
+```text
+/plugin marketplace add abhishekinvission/uiuxabhishek-devkit
+/plugin install uiuxabhishek-devkit@uiuxabhishek
+```
+
+Or from a terminal: `claude plugin marketplace add abhishekinvission/uiuxabhishek-devkit`, then `claude plugin install uiuxabhishek-devkit@uiuxabhishek`.
+
+- **What it installs.** The marketplace entry points to the release asset `uiuxabhishek-devkit-plugin-v<version>.zip` and pins its SHA-256, so Claude Code refuses a download that doesn't match. The ZIP holds `.claude-plugin/plugin.json`, `agents/` and `skills/uiuxabhishek-devkit/` only. Maintainer files (`CLAUDE.md`, `.claude/`, `tests/`, `tools/`) are never installed.
+- **One copy only.** If you also installed the skill for Claude Code with `npx skills`, remove that copy so Claude Code doesn't load the skill twice: `npx skills remove uiuxabhishek-devkit -g -a claude-code -y`. Other agents keep their `npx` install.
+- **Update.** `/plugin marketplace update uiuxabhishek`, then update `uiuxabhishek-devkit` from `/plugin`. The updater below handles `npx` installs only.
+- **Check.** Run `/agents` and look for the `uiuxabhishek-devkit:` agents. Then ask for a task that spans two areas; the head should show a plan and wait for your approval before starting any agent.
+- **Without the plugin**, every agent, including Claude Code, runs the same plan itself, one step at a time.
 
 ## Migrate from `uiuxabhishek-design`
 
@@ -116,7 +136,7 @@ Claude.ai, Claude Desktop **Chat** and Cowork use skills stored in your Claude a
 
 **Replacing a version.** Uploaded skills don't update themselves, and the updater can't reach your Claude account. To move to a new release, delete the old skill (including `uiuxabhishek-design` if you have it) under **Customize → Skills**, then upload the new ZIP.
 
-**What's in the ZIP.** It contains one folder, `uiuxabhishek-devkit/`, with the full skill: `SKILL.md`, `GUIDE.md`, `references/`, `templates/`, `LICENSE`, `NOTICE.md` and `LICENSES/`. Claude's upload form allows descriptions of up to 200 characters, so the packaged `SKILL.md` carries a shorter description. Every other file matches the release tag byte for byte. The build is reproducible: `python3 tools/package_skill.py` at the same tag produces the same checksum.
+**What's in the ZIP.** It contains one folder, `uiuxabhishek-devkit/`, with the skill: `SKILL.md`, `GUIDE.md`, `references/`, `templates/`, `LICENSE`, `NOTICE.md` and `LICENSES/`. It has no agents, and it leaves out the nine reference files listed under "Never load" in `SKILL.md`, which only drive Impeccable tooling that isn't bundled (see `NOTICE.md`). Claude's upload form allows descriptions of up to 200 characters, so the packaged `SKILL.md` carries a shorter description. Every file it contains matches the release tag byte for byte. The build is reproducible: `python3 tools/package_skill.py` at the same tag produces the same checksum.
 
 **Plans and organizations.** Skills are available on Claude's individual and organization plans. On Team and Enterprise, an owner may need to allow skills or user-created skills, or to provision the skill for everyone.
 
@@ -189,9 +209,12 @@ After `setup`, run the installed copy, for example `node ~/.uiuxabhishek-devkit/
 | `Unknown agent`, or a flag is rejected | Check `npx skills add --help`. Use the identifiers exactly as listed above. |
 | Installed, but the agent doesn't use it | Restart the agent or open a new session. Run `npx skills list -g` to check it's installed. Name it in your prompt: *"Use uiuxabhishek-devkit to…"* |
 | Both `uiuxabhishek-design` and `uiuxabhishek-devkit` appear | Remove the old one: `npx skills remove uiuxabhishek-design -g -y`, then restart. |
+| Skills CLI 1.9.0 puts the Antigravity copy in `~/.gemini/config/skills/`, or leaves `~/.agents/skills/uiuxabhishek-devkit` behind after a removal | These docs are tested with 1.7.6; pin it: `npx skills@1.7.6 add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a antigravity -y` and `npx skills@1.7.6 remove uiuxabhishek-devkit -g -y`. To clean up by hand after removing the skill from **every** agent, check `npx skills list -g` no longer shows it, then run `rm -rf ~/.agents/skills/uiuxabhishek-devkit ~/.gemini/config/skills/uiuxabhishek-devkit`. Other agents still read the `~/.agents` copy, so don't delete it while any of them uses the skill. |
 | `npx skills update` warns that `uiuxabhishek-design` "appears to have been deleted upstream" | The skill was renamed in 2.0.0. The CLI keeps your old copy, so nothing breaks, but it stays on the old version. [Migrate](#migrate-from-uiuxabhishek-design) instead of updating. |
 | Installed into the wrong project | Project installs (without `-g`) only apply to the folder you ran them in. Reinstall with `-g` or from the right project. |
-| The skill appears twice | It's installed both globally and in the project, or both by the CLI and through your Claude account. Remove one copy. |
+| The skill appears twice | It's installed both globally and in the project, by the CLI and through your Claude account, or by the CLI for Claude Code and as the Claude Code plugin. Remove one copy. |
+| `/plugin install` fails to download or reports a checksum mismatch | The release for that version, or its `uiuxabhishek-devkit-plugin-v<version>.zip`, isn't published yet, or the ZIP was replaced after release. Run `/plugin marketplace update uiuxabhishek` and try again; if it persists, use the `npx` install until the release is fixed. |
+| The agents don't appear in Claude Code | They come only with the plugin, not with `npx skills`. Install the [plugin](#claude-code-plugin-skill-and-agents), restart Claude Code and check `/agents`. |
 | Claude upload rejected | Upload the release ZIP unchanged. Re-zipping the folder contents loose, or using the repository's own `SKILL.md`, whose description is longer than 200 characters, fails. Check that code execution is on and that your organization allows skills. |
 | The skill shows in Chat but can't edit your code | That's expected. Chat has no access to your local repository. Use a local coding agent for implementation, Git and Azure DevOps delivery. |
 | The updater says "another updater run is in progress" | Wait for it to finish. If nothing is running, the lock clears after two hours, or delete `~/.uiuxabhishek-devkit/update.lock`. |

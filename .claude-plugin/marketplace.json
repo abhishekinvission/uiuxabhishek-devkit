@@ -1,0 +1,19 @@
+{
+  "name": "uiuxabhishek",
+  "owner": {
+    "name": "Abhishek Rampal",
+    "url": "https://github.com/abhishekinvission"
+  },
+  "description": "UIUX Abhishek DevKit for Claude Code, installed from its verified GitHub release.",
+  "plugins": [
+    {
+      "name": "uiuxabhishek-devkit",
+      "description": "Router skill for UI/UX design, frontend engineering, Git and ticket-to-draft-PR delivery, with specialist agents.",
+      "source": {
+        "source": "archive",
+        "url": "https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/download/v2.1.0/uiuxabhishek-devkit-plugin-v2.1.0.zip",
+        "sha256": "fc46fdff432aa5bd2dd0bd165c7ab8d45fb8faa0cf585099d12bf55e98f5ccf5"
+      }
+    }
+  ]
+}
