@@ -129,3 +129,7 @@ Plugin agent files (paths relative to `plugin/`):
 - `agents/test-engineer.md  b06b0a3989e2c0e4f9362bdabee47170fb3aa7de79707b71a6437ee702fcb973`
 - `agents/ui-designer.md  b747fdb31a98abae3cdfe776cc44c5122947891f076d9b88941901224d3f6a92`
 - `agents/ux-designer.md  ba9deaad18820d81d01cfec75ca50edf40ba4d1b29e11446702fb5f7b4a6427d`
+
+Plugin icon (path relative to `plugin/`; the Craftline logo, a 1254×1254 PNG supplied by the maintainer on 2026-11-24; no third-party source):
+
+- `.claude-plugin/icon.png  c30e3abde88d746f043a79948a758223f6b1501dfad742368e2b5d8c0811f764`

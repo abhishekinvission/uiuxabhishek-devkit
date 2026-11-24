@@ -4,18 +4,19 @@ All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
-## [3.0.1] — Unreleased
+## [3.0.1] — 2026-11-24 (stable release)
 
 Prepares the plugin for submission to Anthropic's plugin directory. No skill guidance or routing changes.
 
 ### Added
 - `plugin/README.md`: the directory listing. It covers example prompts, the 8 agents and where they load (Claude Code and Cowork; Claude Chat runs the same skill without agents), the approval rules for writes, what the plugin runs and sends (guidance only: no hooks, MCP servers, scripts or network calls of its own), and credits for Impeccable and Apple Design as in NOTICE.md.
+- `plugin/.claude-plugin/icon.png`: the Craftline logo (1254×1254 PNG) for the directory listing, at the default path the validator reads, so `plugin.json` needs no `icon` field.
 - `plugin.json`: `displayName: "Craftline"`, `documentationUrl` (GUIDE.md) and `supportUrl` (GitHub Issues). `name` stays `craftline`.
 
 ### Changed
-- The plugin ZIP now carries `README.md` at its top level.
+- The plugin ZIP now carries `README.md` and `.claude-plugin/icon.png`.
 - NOTICE.md and SOURCES.md list `plugin/README.md` as original work.
-- Tests: the plugin layout check allows `README.md` and requires at least 40 words outside code blocks; the manifest check requires `displayName`, `documentationUrl` and `supportUrl`.
+- Tests: the plugin layout check allows `README.md` and requires at least 40 words outside code blocks; the manifest check requires `displayName`, `documentationUrl` and `supportUrl`; the icon must be a complete square PNG, 512–2048 px, under 2 MB, with its checksum in SOURCES.md.
 
 ## [3.0.0] — 2026-11-24 (stable release)
 
@@ -148,6 +149,7 @@ Tag `v1.0.0` (commit `dbb612c`), with the GitHub Release asset `uiuxabhishek-des
 - `f0b098f`: branding, ownership and licensing policy for integrating sources.
 - `8c7c9e5`, `93b5815`, `72d0bbf`: initial skill with Impeccable and Apple Design, the integration workflow and corrected install commands.
 
+[3.0.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.1
 [3.0.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.0
 [2.1.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.1.1
 [2.1.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.1.0

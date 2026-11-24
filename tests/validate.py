@@ -210,7 +210,7 @@ def check_integrity():
     third, _, original = sources.partition("## Original project content")
     entries = [(os.path.join(SKILL, "references", p), h)
                for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", third, re.M)]
-    entries += [(os.path.join(PLUGIN if p.startswith("agents/") else SKILL, p), h)
+    entries += [(os.path.join(PLUGIN if p.startswith(("agents/", ".claude-plugin/")) else SKILL, p), h)
                 for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", original, re.M)]
     for path, digest in entries:
         if check(os.path.exists(path), f"SOURCES.md lists missing file {rel(path)}"):
@@ -218,6 +218,7 @@ def check_integrity():
     on_disk = {os.path.join(r, f) for d in ("references", "templates")
                for r, _, fs in os.walk(os.path.join(SKILL, d)) for f in fs}
     on_disk |= {os.path.join(AGENT_DIR, f) for f in os.listdir(AGENT_DIR)}
+    on_disk.add(os.path.join(PLUGIN, ".claude-plugin", "icon.png"))
     listed = {p for p, _ in entries}
     check(on_disk == listed, f"inventory drift: unlisted {sorted(rel(p) for p in on_disk - listed)}")
     for name in ("LICENSE", "NOTICE.md"):
@@ -692,8 +693,9 @@ def check_package():
             pnames = z.namelist()
             tops = {n.split("/", 1)[0] for n in pnames}
             check(tops == {".claude-plugin", "README.md", "agents", "skills"}, f"plugin ZIP has unexpected top-level entries {tops}")
-            check(".claude-plugin/plugin.json" in pnames and ".claude-plugin/marketplace.json" not in pnames,
-                  "plugin ZIP must carry plugin.json and not marketplace.json")
+            check({".claude-plugin/plugin.json", ".claude-plugin/icon.png"} <= set(pnames)
+                  and ".claude-plugin/marketplace.json" not in pnames,
+                  "plugin ZIP must carry plugin.json and icon.png and not marketplace.json")
             agents_in = sorted(n for n in pnames if n.startswith("agents/"))
             check(agents_in == sorted(f"agents/{f}" for f in os.listdir(AGENT_DIR)
                                      if f.endswith(".md")), "plugin ZIP agents differ from agents/")
@@ -714,7 +716,17 @@ def check_plugin_layout():
     ls = lambda *p: sorted(n for n in os.listdir(os.path.join(PLUGIN, *p)) if n not in (".DS_Store", "Thumbs.db"))
     check(ls() == [".claude-plugin", "README.md", "agents", "skills"],
           f"plugin/ must hold only .claude-plugin, README.md, agents and skills, found {ls()}")
-    check(ls(".claude-plugin") == ["plugin.json"], "plugin/.claude-plugin must hold only plugin.json")
+    check(ls(".claude-plugin") == ["icon.png", "plugin.json"], "plugin/.claude-plugin must hold only icon.png and plugin.json")
+    # The plugin directory reads .claude-plugin/icon.png: a complete square PNG, 512-2048 px, under 2 MB.
+    icon = os.path.join(PLUGIN, ".claude-plugin", "icon.png")
+    if check(os.path.isfile(icon), "plugin/.claude-plugin/icon.png is missing"):
+        with open(icon, "rb") as f:
+            png = f.read()
+        w, h = (int.from_bytes(png[16:20], "big"), int.from_bytes(png[20:24], "big")) if len(png) > 24 else (0, 0)
+        check(png[:8] == b"\x89PNG\r\n\x1a\n" and png[12:16] == b"IHDR" and png.endswith(b"IEND\xaeB`\x82"),
+              "icon.png is not a complete PNG")
+        check(w == h and 512 <= w <= 2048 and len(png) < 2 * 1024 * 1024,
+              f"icon.png must be square, 512-2048 px and under 2 MB, got {w}x{h}, {len(png)} bytes")
     check(ls("skills") == [SKILL_ID], "plugin/skills must hold only the one skill")
     for stale in ("skills", "agents", ".claude-plugin/plugin.json"):
         check(not os.path.exists(os.path.join(ROOT, stale)), f"{stale} must live under plugin/, not the repository root")
