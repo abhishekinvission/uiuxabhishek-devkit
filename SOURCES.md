@@ -81,7 +81,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
 | `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
-| `plugin/agents/` (8 agent files), `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `plugin/agents/` (8 agent files), `plugin/README.md`, `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents, directory README and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 

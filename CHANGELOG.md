@@ -4,6 +4,19 @@ All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [3.0.1] — Unreleased
+
+Prepares the plugin for submission to Anthropic's plugin directory. No skill guidance or routing changes.
+
+### Added
+- `plugin/README.md`: the directory listing. It covers example prompts, the 8 agents and where they load (Claude Code and Cowork; Claude Chat runs the same skill without agents), the approval rules for writes, what the plugin runs and sends (guidance only: no hooks, MCP servers, scripts or network calls of its own), and credits for Impeccable and Apple Design as in NOTICE.md.
+- `plugin.json`: `displayName: "Craftline"`, `documentationUrl` (GUIDE.md) and `supportUrl` (GitHub Issues). `name` stays `craftline`.
+
+### Changed
+- The plugin ZIP now carries `README.md` at its top level.
+- NOTICE.md and SOURCES.md list `plugin/README.md` as original work.
+- Tests: the plugin layout check allows `README.md` and requires at least 40 words outside code blocks; the manifest check requires `displayName`, `documentationUrl` and `supportUrl`.
+
 ## [3.0.0] — 2026-11-24 (stable release)
 
 **Breaking: renamed to Craftline.** UIUX Abhishek DevKit is now **Craftline** by uiuxAbhishek (Abhishek Rampal). The plugin ID and skill ID change from `uiuxabhishek-devkit` to `craftline`, so existing installs must migrate; an update can't carry them across. There are no capability, routing or guidance changes.

@@ -691,7 +691,7 @@ def check_package():
         with zipfile.ZipFile(ppath) as z:
             pnames = z.namelist()
             tops = {n.split("/", 1)[0] for n in pnames}
-            check(tops <= {".claude-plugin", "agents", "skills"}, f"plugin ZIP has unexpected top-level entries {tops}")
+            check(tops == {".claude-plugin", "README.md", "agents", "skills"}, f"plugin ZIP has unexpected top-level entries {tops}")
             check(".claude-plugin/plugin.json" in pnames and ".claude-plugin/marketplace.json" not in pnames,
                   "plugin ZIP must carry plugin.json and not marketplace.json")
             agents_in = sorted(n for n in pnames if n.startswith("agents/"))
@@ -712,7 +712,8 @@ def check_package():
 def check_plugin_layout():
     """plugin/ is the single, self-contained copy that marketplaces and the Skills CLI read."""
     ls = lambda *p: sorted(n for n in os.listdir(os.path.join(PLUGIN, *p)) if n not in (".DS_Store", "Thumbs.db"))
-    check(ls() == [".claude-plugin", "agents", "skills"], f"plugin/ must hold only .claude-plugin, agents and skills, found {ls()}")
+    check(ls() == [".claude-plugin", "README.md", "agents", "skills"],
+          f"plugin/ must hold only .claude-plugin, README.md, agents and skills, found {ls()}")
     check(ls(".claude-plugin") == ["plugin.json"], "plugin/.claude-plugin must hold only plugin.json")
     check(ls("skills") == [SKILL_ID], "plugin/skills must hold only the one skill")
     for stale in ("skills", "agents", ".claude-plugin/plugin.json"):
@@ -720,7 +721,12 @@ def check_plugin_layout():
     links = [os.path.join(r, n) for r, ds, fs in os.walk(ROOT) if ".git" not in r.split(os.sep)
              for n in ds + fs if os.path.islink(os.path.join(r, n))]
     check(not links, f"symlinks aren't allowed: {[rel(p, ROOT) for p in links]}")
-    print(f"plugin layout: plugin/ holds .claude-plugin/plugin.json, agents/ and skills/{SKILL_ID}/ only")
+    # The plugin directory shows plugin/README.md as the listing and blocks one under 40 words outside code blocks.
+    readme = re.sub(r"```.*?```", " ", read(os.path.join(PLUGIN, "README.md")), flags=re.S)
+    count = len(re.findall(r"[A-Za-z0-9][\w'-]*", readme))
+    check(count >= 40, f"plugin/README.md has {count} words outside code blocks; the directory needs 40")
+    print(f"plugin layout: plugin/ holds .claude-plugin/plugin.json, README.md ({count} words), agents/ "
+          f"and skills/{SKILL_ID}/ only")
 
 
 def check_plugin_manifests(pkg):
@@ -733,6 +739,11 @@ def check_plugin_manifests(pkg):
     for key in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords"):
         check(manifest.get(key), f"plugin.json lacks {key}")
     check(manifest.get("name") == SKILL_ID, f"plugin.json name must be {SKILL_ID}")
+    check(manifest.get("displayName") == "Craftline", "plugin.json displayName must be Craftline")
+    for key in ("documentationUrl", "supportUrl"):
+        check(str(manifest.get(key, "")).startswith(f"https://github.com/{REPO}/"), f"plugin.json {key} must be a repository URL")
+    check(not manifest.get("documentationUrl", "").endswith("GUIDE.md")
+          or os.path.isfile(os.path.join(SKILL, "GUIDE.md")), "plugin.json documentationUrl points at a missing GUIDE.md")
     check(manifest.get("version") == pkg.version(), f"plugin.json version {manifest.get('version')} != SKILL.md {pkg.version()}")
     check(isinstance(manifest.get("author"), dict) and manifest["author"].get("name"), "plugin.json author needs a name")
     check(isinstance(manifest.get("keywords"), list), "plugin.json keywords must be a list")

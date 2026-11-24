@@ -10,8 +10,8 @@ Two ZIPs, both deterministic (sorted entries, fixed timestamps and permissions):
   no agents. Claude's upload form limits the description to 200 characters, so the
   packaged SKILL.md swaps its description for UPLOAD_DESCRIPTION.
 - craftline-plugin-v<version>.zip: the plugin/ folder for manual uploads,
-  with exactly .claude-plugin/plugin.json, agents/ and skills/craftline/
-  at its top level. Marketplaces don't use it: .claude-plugin/marketplace.json
+  with exactly .claude-plugin/plugin.json, README.md, agents/ and
+  skills/craftline/ at its top level. Marketplaces don't use it: .claude-plugin/marketplace.json
   points at ./plugin in the repository itself.
 
 Both leave out the "Never load" files listed in SKILL.md (they need upstream
@@ -91,7 +91,7 @@ def files():
 
 def plugin_files():
     """Plugin files that ship: (source path, plugin-relative path)."""
-    out = [(PLUGIN_MANIFEST, ".claude-plugin/plugin.json")]
+    out = [(PLUGIN_MANIFEST, ".claude-plugin/plugin.json"), (os.path.join(PLUGIN, "README.md"), "README.md")]
     out += [(p, "agents/" + r) for p, r in walk(AGENTS) if r.endswith(".md")]
     out += [(p, f"skills/{NAME}/{r}") for p, r in files()]
     return out

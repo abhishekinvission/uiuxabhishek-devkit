@@ -126,6 +126,7 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 ```text
 plugin/                     # The Claude Code plugin; the only thing marketplaces install
 ├── .claude-plugin/plugin.json
+├── README.md               # Plugin directory listing
 ├── agents/                 # Claude Code plugin agents (plugin only)
 └── skills/craftline/
     ├── SKILL.md            # Single entry point: intent, mode and capability router
