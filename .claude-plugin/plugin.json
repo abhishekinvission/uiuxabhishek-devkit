@@ -1,0 +1,28 @@
+{
+  "name": "uiuxabhishek-devkit",
+  "version": "2.1.0",
+  "description": "UIUX Abhishek DevKit: one router skill for UI/UX design, accessibility, motion, frontend engineering, Figma to code, frontend security, Git and ticket-to-draft-PR delivery, plus specialist agents the main session can plan and dispatch in Claude Code.",
+  "author": {
+    "name": "Abhishek Rampal",
+    "url": "https://github.com/abhishekinvission"
+  },
+  "homepage": "https://github.com/abhishekinvission/uiuxabhishek-devkit",
+  "repository": "https://github.com/abhishekinvission/uiuxabhishek-devkit",
+  "license": "MIT AND Apache-2.0",
+  "keywords": [
+    "ui",
+    "ux",
+    "design",
+    "accessibility",
+    "frontend",
+    "figma",
+    "security",
+    "testing",
+    "git",
+    "pull-request",
+    "azure-devops",
+    "jira",
+    "linear",
+    "agents"
+  ]
+}

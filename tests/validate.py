@@ -481,6 +481,7 @@ def check_package():
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     sys.dont_write_bytecode = True
     import package_skill as pkg
+    never = pkg.never_load()
     with tempfile.TemporaryDirectory() as out:
         path, digest = pkg.build(out)
         check(pkg.build(os.path.join(out, "again"))[1] == digest, "upload ZIP build is not deterministic")
@@ -492,6 +493,9 @@ def check_package():
             check(all((i.external_attr >> 16) & 0o777 == 0o644 for i in infos), "ZIP entries must be 0644 files")
             expected = {f"uiuxabhishek-devkit/{r}" for _, r in pkg.files()}
             check(set(names) == expected, f"ZIP contents drift: {sorted(set(names) ^ expected)[:5]}")
+            inner = [n.split("/", 1)[1] for n in names]
+            check(not [n for n in inner if pkg.omitted(n, never)], "upload ZIP contains a Never load file")
+            check(not [n for n in inner if n.startswith("agents/")], "upload ZIP must stay skill-only (no agents/)")
             for req in ("SKILL.md", "GUIDE.md", "LICENSE", "NOTICE.md", "LICENSES/IMPECCABLE_NOTICE.md",
                         "references/impeccable/SOURCE_SKILL.md", "templates/pr-description.md"):
                 check(f"uiuxabhishek-devkit/{req}" in names, f"ZIP lacks {req}")
@@ -510,7 +514,59 @@ def check_package():
                     with open(src, "rb") as f:
                         check(f.read() == data, f"ZIP copy of {n} differs")
         print(f"package: {os.path.basename(path)}, {len(names)} files, {os.path.getsize(path) // 1024} KB, "
-              f"upload description {len(pkg.UPLOAD_DESCRIPTION)} chars")
+              f"upload description {len(pkg.UPLOAD_DESCRIPTION)} chars, {len(never)} Never load entries left out")
+
+        ppath, pdigest = pkg.build_plugin(out)
+        check(pkg.build_plugin(os.path.join(out, "again"))[1] == pdigest, "plugin ZIP build is not deterministic")
+        with zipfile.ZipFile(ppath) as z:
+            pnames = z.namelist()
+            tops = {n.split("/", 1)[0] for n in pnames}
+            check(tops <= {".claude-plugin", "agents", "skills"}, f"plugin ZIP has unexpected top-level entries {tops}")
+            check(".claude-plugin/plugin.json" in pnames and ".claude-plugin/marketplace.json" not in pnames,
+                  "plugin ZIP must carry plugin.json and not marketplace.json")
+            agents_in = sorted(n for n in pnames if n.startswith("agents/"))
+            check(agents_in == sorted(f"agents/{f}" for f in os.listdir(os.path.join(ROOT, "agents"))
+                                     if f.endswith(".md")), "plugin ZIP agents differ from agents/")
+            skill_in = {n[len("skills/uiuxabhishek-devkit/"):] for n in pnames if n.startswith("skills/")}
+            check(skill_in == {r for _, r in pkg.files()}, "plugin ZIP skill files differ from the shipped set")
+            check(z.read("skills/uiuxabhishek-devkit/SKILL.md") == open(os.path.join(SKILL, "SKILL.md"), "rb").read(),
+                  "plugin ZIP SKILL.md must be the repository copy (full description)")
+            for n in pnames:
+                src = os.path.join(ROOT, n) if not n.startswith("skills/") else os.path.join(SKILL, n.split("/", 2)[2])
+                with open(src, "rb") as f:
+                    check(f.read() == z.read(n), f"plugin ZIP copy of {n} differs")
+        print(f"package: {os.path.basename(ppath)}, {len(pnames)} files, {len(agents_in)} agents, top level {sorted(tops)}")
+    check_plugin_manifests(pkg, pdigest)
+
+
+def check_plugin_manifests(pkg, plugin_digest):
+    try:
+        manifest = json.loads(read(pkg.PLUGIN_MANIFEST))
+        market = json.loads(read(pkg.MARKETPLACE))
+    except (OSError, ValueError) as e:
+        check(False, f"plugin manifests unreadable: {e}")
+        return
+    for key in ("name", "version", "description", "author", "homepage", "repository", "license", "keywords"):
+        check(manifest.get(key), f"plugin.json lacks {key}")
+    check(manifest.get("name") == "uiuxabhishek-devkit", "plugin.json name must be uiuxabhishek-devkit")
+    check(manifest.get("version") == pkg.version(), f"plugin.json version {manifest.get('version')} != SKILL.md {pkg.version()}")
+    check(isinstance(manifest.get("author"), dict) and manifest["author"].get("name"), "plugin.json author needs a name")
+    check(isinstance(manifest.get("keywords"), list), "plugin.json keywords must be a list")
+    for key in ("homepage", "repository"):
+        check(str(manifest.get(key, "")).startswith(f"https://github.com/{REPO}"), f"plugin.json {key} must be the repository URL")
+    check(not set(manifest) & {"agents", "skills", "commands"}, "plugin.json should rely on the default agents/ and skills/ layout")
+    check(market.get("name") and market.get("owner", {}).get("name"), "marketplace.json needs name and owner.name")
+    entries = [p for p in market.get("plugins", []) if p.get("name") == "uiuxabhishek-devkit"]
+    if not check(len(entries) == 1 and len(market["plugins"]) == 1, "marketplace.json must list exactly this plugin"):
+        return
+    src = entries[0].get("source", {})
+    check("version" not in entries[0], "marketplace entry must not set version (plugin.json owns it)")
+    check(isinstance(src, dict) and src.get("source") == "archive", "marketplace source must be the release archive")
+    check(src.get("url") == pkg.plugin_release_url(), f"marketplace URL {src.get('url')} != {pkg.plugin_release_url()}")
+    check(src.get("sha256") == plugin_digest,
+          "marketplace sha256 doesn't match the plugin ZIP; run python3 tools/package_skill.py --update-marketplace")
+    print(f"plugin: manifest {manifest.get('version')}, marketplace pins {os.path.basename(src.get('url', ''))} "
+          f"sha256 {str(src.get('sha256'))[:12]}")
 
 
 # -------------------------------------------------------------- git sandbox

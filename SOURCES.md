@@ -27,6 +27,8 @@ The same files are mirrored in `skills/uiuxabhishek-devkit/LICENSES/` so they tr
 
 Paths are relative to `skills/uiuxabhishek-devkit/references/`.
 
+All files below stay in the repository and in Skills CLI installs. The release ZIPs (Claude Chat upload and Claude Code plugin), built by `tools/package_skill.py`, leave out the nine "Never load" files from `SKILL.md`: `impeccable/reference/live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md` and `degraded/` (four files). They only drive Impeccable tooling that isn't bundled. Shipping a subset of an Apache-2.0 work is permitted (Section 4), and every ZIP keeps `LICENSE`, `NOTICE.md` and `LICENSES/`, including Impeccable's NOTICE.
+
 - `apple-design/SOURCE_SKILL.md  77bb63b7043bb93aca2ff4ab040c249484eef35682bb6ff7163433c31d30adc7`
 - `impeccable/SOURCE_SKILL.md  246464ef6b115235791f5683922092f5d5e0ce95d6f6a94ed140d2eb0f8c4f82`
 - `impeccable/reference/adapt.md  ec58806f16fc7ba29bccef08f2e158cd00be077ce05d45e943a59bd26dc6dc55`

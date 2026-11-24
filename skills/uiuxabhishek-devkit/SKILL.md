@@ -5,7 +5,7 @@ license: MIT for UIUX Abhishek DevKit original work; bundled references keep the
 metadata:
   author: Abhishek Rampal (uiuxAbhishek)
   repository: https://github.com/abhishekinvission/uiuxabhishek-devkit
-  version: "2.0.1"
+  version: "2.1.0"
 ---
 # UIUX Abhishek DevKit
 
