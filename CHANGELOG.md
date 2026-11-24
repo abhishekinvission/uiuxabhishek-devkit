@@ -4,7 +4,7 @@ All notable changes to UIUX Abhishek DevKit (formerly UIUX Abhishek Design) are 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
-## [2.1.0] — Unreleased
+## [2.1.0] — stable release
 
 New capabilities, a Claude Code agent layer and fixes. The skill ID, install commands and existing routes are unchanged.
 
