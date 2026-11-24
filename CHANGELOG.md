@@ -4,6 +4,18 @@ All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [3.0.2] — 2026-11-24 (stable release)
+
+Fixes the Claude plugin directory's validation of the plugin folder. No routing or guidance changes.
+
+### Fixed
+- **Refusal UNREAD_ASSET_REFERENCED.** Removed the YAML front matter from the bundled `references/impeccable/SOURCE_SKILL.md`. It isn't a discoverable skill, and its `allowed-tools` wildcards (`Bash(npx impeccable *)`, `Bash(node .Codex/skills/impeccable/scripts/*)`) only served Impeccable's own tooling. A one-line attribution note replaces it. This is a modification of an Apache-2.0 file, recorded in NOTICE.md, SOURCES.md and both READMEs. The `design-new` entry still loads the same file.
+- **Warning RUNTIME_FETCH_EXEC.** Reworded two lines in `references/frontend/security.md`: third-party scripts and package install hooks. The lessons are unchanged.
+
+### Tests
+- New directory-rules check, covering the rules `claude plugin validate` doesn't run. Front matter is allowed only in SKILL.md, the agents and Apple Design's entry, and must name no image or font and use no wildcard. No file may name a bundled image or font. No file may pipe or substitute a download into a shell or interpreter (`curl`/`wget`/`iwr`/`irm` into `sh`, `bash`, `iex` and the like).
+- The context-budget baseline now measures Impeccable's entry file as the pre-router commit had it, so removing its front matter doesn't shrink the baseline. The result is +9.6% against the +10% budget.
+
 ## [3.0.1] — 2026-11-24 (stable release)
 
 Prepares the plugin for submission to Anthropic's plugin directory. No skill guidance or routing changes.
@@ -149,6 +161,7 @@ Tag `v1.0.0` (commit `dbb612c`), with the GitHub Release asset `uiuxabhishek-des
 - `f0b098f`: branding, ownership and licensing policy for integrating sources.
 - `8c7c9e5`, `93b5815`, `72d0bbf`: initial skill with Impeccable and Apple Design, the integration workflow and corrected install commands.
 
+[3.0.2]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.2
 [3.0.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.1
 [3.0.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.0
 [2.1.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.1.1

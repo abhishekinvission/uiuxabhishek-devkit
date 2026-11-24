@@ -416,14 +416,22 @@ def tokens(paths):
     return sum(len(read(os.path.join(SKILL, p))) for p in paths) // 4
 
 
-def baseline_tokens(old_skill_chars, files, selected):
+def baseline_entry_chars():
+    """Impeccable's entry file as the previous router read it (3.0.2 removed its front matter from the bundle)."""
+    try:
+        return len(subprocess.run(["git", "show", f"{BASELINE_COMMIT}:skills/{OLD_ID}/references/impeccable/SOURCE_SKILL.md"],
+                                  cwd=ROOT, capture_output=True, text=True, check=True).stdout)
+    except (OSError, subprocess.CalledProcessError):
+        return len(read(os.path.join(SKILL, "references", "impeccable", "SOURCE_SKILL.md")))
+
+
+def baseline_tokens(old_skill_chars, files, selected, entry_chars):
     """Approximate load under the previous router (entry points read first)."""
-    base = set(files) - {"GUIDE.md"}
-    if any(f.startswith("references/impeccable/") for f in base):
-        base.add("references/impeccable/SOURCE_SKILL.md")
+    base = set(files) - {"GUIDE.md", "references/impeccable/SOURCE_SKILL.md"}
+    entry = entry_chars if any(f.startswith("references/impeccable/") for f in files) else 0
     if "ado" in selected:
         base |= {"references/frontend/testing.md", "references/frontend/review-and-release.md"}
-    return old_skill_chars // 4 + tokens(sorted(base))
+    return (old_skill_chars + entry) // 4 + tokens(sorted(base))
 
 
 def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
@@ -436,6 +444,7 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
     shared = {f for c, segs in caps.items() if c != "ado" for s in segs for f in s["files"]}
     ado_files = {f for s in caps["ado"] for f in s["files"]} - shared
     skill_tokens = len(text) // 4
+    entry_chars = baseline_entry_chars()
     print(f"\n{'scenario':30} {'mode':10} {'capabilities':34} {'tokens':>7} {'before':>7}  result")
     total_new = total_old = 0
     for sc in data["scenarios"]:
@@ -458,7 +467,7 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
         if "ado" not in sc["caps"]:
             errs += [f"loaded ADO file {f}" for f in files if f in ado_files]
         new = skill_tokens + tokens(files + ([AGENT_PLANS] if planned != "inline" else []))
-        before = baseline_tokens(len(old), files, selected) if old else 0
+        before = baseline_tokens(len(old), files, selected, entry_chars) if old else 0
         total_new += new
         total_old += before
         check(not errs, f"scenario {sc['id']}: {'; '.join(errs)}")
@@ -793,6 +802,40 @@ def check_git_sandbox():
 
 
 # ----------------------------------------------------------------- security
+ASSET_EXT = r"\.(?:png|jpe?g|svg|webp|gif|ico|woff2?|ttf|otf)\b"
+# A download piped or substituted straight into an interpreter (the directory's RUNTIME_FETCH_EXEC warning).
+FETCH = r"(?:curl|wget|iwr|irm|Invoke-WebRequest|Invoke-RestMethod|DownloadString|DownloadFile)\b"
+SHELL = r"(?:sudo\s+)?(?:sh|bash|zsh|dash|ksh|fish|python3?|node|perl|ruby|iex|Invoke-Expression|pwsh|powershell)\b"
+FETCH_EXEC = re.compile(rf"{FETCH}[^\n|]*\|\s*{SHELL}|{SHELL}\s+(?:-c\s+)?[\"']?[<$]\(\s*{FETCH}|"
+                        rf"(?:iex|Invoke-Expression)\b[^\n]*{FETCH}", re.I)
+
+
+def check_directory_rules():
+    """Plugin directory rules the CLI doesn't run: assets named from front matter or code, and fetch-and-execute."""
+    bundled = {n for r, _, fs in os.walk(PLUGIN) for n in fs if re.search(ASSET_EXT + "$", n, re.I)}
+    front_ok = {os.path.join(SKILL, "SKILL.md"), os.path.join(SKILL, "references", "apple-design", "SOURCE_SKILL.md")}
+    texts = 0
+    for r, _, fs in os.walk(PLUGIN):
+        for n in fs:
+            p = os.path.join(r, n)
+            if re.search(ASSET_EXT + "$", n, re.I):
+                continue
+            text, texts = read(p), texts + 1
+            name = rel(p, ROOT)
+            fm = re.match(r"---\n(.*?)\n---\n", text, re.S) if n.endswith(".md") else None
+            if fm:
+                check(p in front_ok or os.path.dirname(p) == AGENT_DIR,
+                      f"{name} has front matter; only SKILL.md, the agents and Apple Design's entry may")
+                check(not re.search(ASSET_EXT, fm.group(1), re.I), f"{name} front matter names an image or font")
+                check("*" not in fm.group(1), f"{name} front matter has a wildcard the directory may expand to assets")
+            for asset in bundled:
+                check(asset not in text, f"{name} names the bundled asset {asset}")
+            for m in FETCH_EXEC.finditer(text):
+                check(False, f"{name}:{text.count(chr(10), 0, m.start()) + 1} pipes a download into an interpreter")
+    print(f"directory rules: {texts} text files checked for front matter, {len(bundled)} bundled asset name(s) "
+          "and fetch-and-execute")
+
+
 def check_security():
     secret = re.compile(r"(ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|BEGIN [A-Z ]*PRIVATE KEY|"
                         r"(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][^'\"]{8,})", re.I)
@@ -830,6 +873,7 @@ def main():
     check_security()
     check_install_docs()
     check_plugin_layout()
+    check_directory_rules()
     check_package()
     check_git_sandbox()
     check_updater()

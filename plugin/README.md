@@ -57,10 +57,10 @@ Craftline is Markdown guidance only. It has no hooks, MCP servers, scripts or ex
 
 ## Credits and licenses
 
-Craftline's original work is © 2026 Abhishek Rampal under the MIT License. It bundles, unmodified:
+Craftline's original work is © 2026 Abhishek Rampal under the MIT License. It bundles:
 
-- **Impeccable** by Paul Bakaus, under the Apache License 2.0, with its upstream NOTICE. Its iOS and Android references are distilled from **platform-design-skills** by ehmo (MIT).
-- **Apple Design** by Emil Kowalski, under the MIT License.
+- **Impeccable** by Paul Bakaus, under the Apache License 2.0, with its upstream NOTICE. Its entry file's front matter was removed for Craftline; the guidance is unchanged. Its iOS and Android references are distilled from **platform-design-skills** by ehmo (MIT).
+- **Apple Design** by Emil Kowalski, under the MIT License, unmodified.
 
 They remain the work of their authors. Craftline is an independent project, not affiliated with or endorsed by them, Apple, Google or Microsoft.
 

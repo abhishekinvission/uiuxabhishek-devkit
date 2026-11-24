@@ -34,7 +34,7 @@ const safe = /^https?:\/\//i.test(profile.website) ? profile.website : undefined
 - State changes never use `GET`. Use `SameSite=Lax` or `Strict` cookies, plus a CSRF token or a required custom header that the server checks.
 
 ## Third-party scripts
-- Each script runs with your page's full privileges; a tag manager can run anything. Load only what's needed.
+- A third-party script has the same privileges as your own code, and a tag manager can add more of them at any time. Include only the ones you need.
 - Pin versions and add Subresource Integrity (`integrity` plus `crossorigin`) for CDN files, or self-host them. Sandbox third-party iframes.
 
 ## Secrets in bundles
@@ -47,7 +47,7 @@ const safe = /^https?:\/\//i.test(profile.website) ? profile.website : undefined
 
 ## Dependencies
 - Run the project's audit (`npm audit`, `pnpm audit`, `yarn npm audit`, or the scanner in CI) and triage by whether the vulnerable code is reachable.
-- Commit the lockfile. Before adding a package, check its maintenance, install scripts and size.
+- Commit the lockfile. Before adding a package, check how well it's maintained, whether it runs lifecycle hooks during installation, and its size.
 
 ## Verify
 - Inject `<img src=x onerror=alert(1)>` and `javascript:` URLs into every new rendering path; nothing runs.

@@ -6,7 +6,7 @@ Provenance record for content bundled in **Craftline** (`craftline`), formerly U
 
 | Source | Author | License | Bundled version | Bundled path |
 | --- | --- | --- | --- | --- |
-| [Impeccable](https://github.com/pbakaus/impeccable) | Paul Bakaus | Apache-2.0 + [NOTICE](LICENSES/IMPECCABLE_NOTICE.md) | 4.1.1 (frontmatter); exact commit not recorded | `references/impeccable/` (40 Markdown files) |
+| [Impeccable](https://github.com/pbakaus/impeccable) | Paul Bakaus | Apache-2.0 + [NOTICE](LICENSES/IMPECCABLE_NOTICE.md) | 4.1.1 (upstream front matter); exact commit not recorded | `references/impeccable/` (40 Markdown files) |
 | [platform-design-skills](https://github.com/ehmo/platform-design-skills) | ehmo | MIT | Derived content within Impeccable 4.1.1 | `references/impeccable/reference/ios.md`, `android.md` |
 | [Apple Design](https://github.com/emilkowalski/skills) | Emil Kowalski | MIT | Exact commit not recorded | `references/apple-design/` (1 Markdown file) |
 
@@ -29,8 +29,10 @@ Paths are relative to `plugin/skills/craftline/references/`.
 
 All files below stay in the repository and in Skills CLI installs. The release ZIPs (Claude Chat upload and Claude Code plugin), built by `tools/package_skill.py`, leave out the nine "Never load" files from `SKILL.md`: `impeccable/reference/live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md` and `degraded/` (four files). They only drive Impeccable tooling that isn't bundled. Shipping a subset of an Apache-2.0 work is permitted (Section 4), and every ZIP keeps `LICENSE`, `NOTICE.md` and `LICENSES/`, including Impeccable's NOTICE.
 
+**Modified file (Apache-2.0 §4(b)):** `impeccable/SOURCE_SKILL.md`. On 2026-11-24 Abhishek Rampal modified `SOURCE_SKILL.md` for Craftline: he removed its YAML front matter (`name`, `description`, `version`, `user-invocable`, `argument-hint`, `license` and `allowed-tools`, which only serve Impeccable's own tooling and whose tool wildcards the Claude plugin directory refused) and replaced it with a one-line attribution note. The body text is unchanged. Its checksum below is of the modified file.
+
 - `apple-design/SOURCE_SKILL.md  77bb63b7043bb93aca2ff4ab040c249484eef35682bb6ff7163433c31d30adc7`
-- `impeccable/SOURCE_SKILL.md  246464ef6b115235791f5683922092f5d5e0ce95d6f6a94ed140d2eb0f8c4f82`
+- `impeccable/SOURCE_SKILL.md  dc4f3e74fff0d0dfd0ed6987cc206a16e43e5567b7aecff201ef2262710906e0`
 - `impeccable/reference/adapt.md  ec58806f16fc7ba29bccef08f2e158cd00be077ce05d45e943a59bd26dc6dc55`
 - `impeccable/reference/adapt.native.md  17c583cf8ad41266ea1e787b666b9d91fe13469d3d0f6af57c08e0146f9b17ac`
 - `impeccable/reference/android.md  058f81f256134841875fd3183e06b37a023de0c877fd2b9eecd97011640791fe`
@@ -106,7 +108,7 @@ Checksums (paths relative to `plugin/skills/craftline/`):
 - `references/frontend/packages-and-components.md  61de77a4bb3a530cdb3bc6c2303b47586263f10f6f2c9630bd7820face798333`
 - `references/frontend/pages-and-routing.md  7ed8444d1806de55ca813cbee015abcaea873a421d4190dc9a835aecaaa2d2a5`
 - `references/frontend/review-and-release.md  9cb7ad4de9c7e80cb3c8680901a612e7c7600d8c19940be7200fc7ca53e166dc`
-- `references/frontend/security.md  ed28eb0526e80860a97238081af2022a06bf1635eb8b88b192d8f3d670f8b738`
+- `references/frontend/security.md  209672d3e022a0b2ce7dcafd8f94d36c325ad35bd58815a475e0156cd3efdcc6`
 - `references/frontend/seo-and-metadata.md  d96ded2de837551a4c5d5da8d9785e850d116e3215aa6ac647d69c9014ff0ddf`
 - `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
