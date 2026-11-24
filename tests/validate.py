@@ -262,10 +262,15 @@ def is_never(path, never):
     return any(path == n or (n.endswith("/") and path.startswith(n)) for n in never)
 
 
+CLI_ADAPTER = "references/adapters/impeccable-without-cli.md"
+SHARED_COMPANIONS = ("references/adapters/",)  # loaded beside several capabilities' primary files
+
+
 def check_coverage(caps, never):
     routed = {f for segs in caps.values() for s in segs for f in s["files"]}
     expected = set()
-    for d in ("references/frontend", "references/workflows", "templates", "references/impeccable/reference"):
+    for d in ("references/frontend", "references/workflows", "references/adapters", "templates",
+              "references/impeccable/reference"):
         for r, _, fs in os.walk(os.path.join(SKILL, d)):
             expected |= {rel(os.path.join(r, f)) for f in fs if f.endswith(".md")}
     expected.add("references/apple-design/SOURCE_SKILL.md")
@@ -279,9 +284,16 @@ def check_coverage(caps, never):
             if not s["cond"]:
                 for f in s["files"]:
                     primary.setdefault(f, set()).add(cap)
-    dup = {f: c for f, c in primary.items() if len(c) > 1}
+    dup = {f: c for f, c in primary.items() if len(c) > 1 and not f.startswith(SHARED_COMPANIONS)}
     check(not dup, f"files routed as primary by several capabilities: {dup}")
-    print(f"coverage: {len(routed)} routed files, {len(never)} never-load entries, no duplicate primaries")
+    # A routable file that tells the agent to run an unbundled Impeccable script must
+    # always load together with the adapter that replaces those steps.
+    script_call = re.compile(r"scripts/[\w.-]+\.mjs")
+    unadapted = sorted({f"{cap}: {f}" for cap, segs in caps.items() for s in segs for f in s["files"]
+                        if script_call.search(read(os.path.join(SKILL, f))) and CLI_ADAPTER not in s["files"]})
+    check(not unadapted, f"script-calling files routed without {CLI_ADAPTER}: {unadapted}")
+    print(f"coverage: {len(routed)} routed files, {len(never)} never-load entries, no duplicate primaries, "
+          f"script steps always adapted")
 
 
 LIMIT_AUDIT = "read-only, dry run, report only, don't change"

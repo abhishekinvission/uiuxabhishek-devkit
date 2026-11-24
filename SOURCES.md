@@ -75,6 +75,7 @@ Paths are relative to `skills/uiuxabhishek-devkit/references/`.
 | --- | --- | --- |
 | `references/frontend/` (9 guides), `references/workflows/` (2 guides), `templates/` (2 templates) | *UIUX Abhishek Design Frontend Engineering Expansion* pack, supplied by the maintainer on 2026-11-03 (`uiuxabhishek-frontend-expansion.zip`, SHA-256 `4a86b38a1efa79b8dfd0760eec70ff2ba2e53b80c9b417a869525c7521a83db1`) | MIT (© Abhishek Rampal) |
 | `references/workflows/git-workflow.md`, `references/workflows/git-recovery-and-release.md` | Universal Git & Repository Workflow, written for this project on 2026-11-04 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -87,6 +88,7 @@ The pack describes itself as framework-independent guides written for this proje
 
 Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 
+- `references/adapters/impeccable-without-cli.md  b239c6aa056fa19c085f523479b0057cc68b3e5363be19fd6fd7c340bd8fa0c1`
 - `references/frontend/admin-crud.md  0c38253c65ef8ce7f063fd33d4eddb8fb0c406d5e3c0cbebdea789a92c02dcba`
 - `references/frontend/api-integration.md  8bdb1e2638d441b13e674d889809d4111ac5d1369eb52f6b02777f7545c9f407`
 - `references/frontend/data-reports.md  4d80f0ae1f85392b51f6fd71282a764eb7254b18d1ad1227ef850c85914069c1`
