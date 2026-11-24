@@ -4,6 +4,20 @@ All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [3.0.3] — 2026-11-24 (stable release)
+
+Second fix for the Claude plugin directory's RUNTIME_FETCH_EXEC warning ("Contains a download-and-run command") on `references/frontend/security.md`. No routing changes, and every security recommendation is kept.
+
+### Fixed
+- The directory docs don't define this check, and `claude plugin validate` doesn't run it. These four lines each put a load word and an execution word on one line, and are reworded:
+  - The URL sinks line: `src` with "URLs run code".
+  - The CSP line: `script-src` with `'unsafe-eval'`. The keywords to avoid are now a separate bullet.
+  - The package line: "runs lifecycle hooks during installation".
+  - The verify line: a literal `<img src=x onerror=alert(1)>` payload, now described in words.
+
+### Tests
+- The directory-rules check now also fails on any line in `plugin/` that pairs a load word (`src`, `script-src`, fetch, download, dynamic import, install) with an execution word (eval, `new Function`, `exec(`, `onerror=`/`onload=`, "runs code", "runs … install"). It flags all four former lines, and nothing else in the plugin.
+
 ## [3.0.2] — 2026-11-24 (stable release)
 
 Fixes the Claude plugin directory's validation of the plugin folder. No routing or guidance changes.
@@ -161,6 +175,7 @@ Tag `v1.0.0` (commit `dbb612c`), with the GitHub Release asset `uiuxabhishek-des
 - `f0b098f`: branding, ownership and licensing policy for integrating sources.
 - `8c7c9e5`, `93b5815`, `72d0bbf`: initial skill with Impeccable and Apple Design, the integration workflow and corrected install commands.
 
+[3.0.3]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.3
 [3.0.2]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.2
 [3.0.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.1
 [3.0.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.0

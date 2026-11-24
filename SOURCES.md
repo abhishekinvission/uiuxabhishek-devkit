@@ -108,7 +108,7 @@ Checksums (paths relative to `plugin/skills/craftline/`):
 - `references/frontend/packages-and-components.md  61de77a4bb3a530cdb3bc6c2303b47586263f10f6f2c9630bd7820face798333`
 - `references/frontend/pages-and-routing.md  7ed8444d1806de55ca813cbee015abcaea873a421d4190dc9a835aecaaa2d2a5`
 - `references/frontend/review-and-release.md  9cb7ad4de9c7e80cb3c8680901a612e7c7600d8c19940be7200fc7ca53e166dc`
-- `references/frontend/security.md  209672d3e022a0b2ce7dcafd8f94d36c325ad35bd58815a475e0156cd3efdcc6`
+- `references/frontend/security.md  3f7e6b09457d1a3b04796277da8a9718f624e01d9c24fbcb5b6ee68d7c175d45`
 - `references/frontend/seo-and-metadata.md  d96ded2de837551a4c5d5da8d9785e850d116e3215aa6ac647d69c9014ff0ddf`
 - `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`

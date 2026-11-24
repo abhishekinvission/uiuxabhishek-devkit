@@ -808,6 +808,11 @@ FETCH = r"(?:curl|wget|iwr|irm|Invoke-WebRequest|Invoke-RestMethod|DownloadStrin
 SHELL = r"(?:sudo\s+)?(?:sh|bash|zsh|dash|ksh|fish|python3?|node|perl|ruby|iex|Invoke-Expression|pwsh|powershell)\b"
 FETCH_EXEC = re.compile(rf"{FETCH}[^\n|]*\|\s*{SHELL}|{SHELL}\s+(?:-c\s+)?[\"']?[<$]\(\s*{FETCH}|"
                         rf"(?:iex|Invoke-Expression)\b[^\n]*{FETCH}", re.I)
+# The directory's scan also flagged prose that puts loading and executing on one line (3.0.2 and 3.0.3). Its exact
+# pattern isn't documented, so this is the conservative same-line form: a load word plus an execution word.
+LOAD_WORD = re.compile(r"\bsrc\b|script-src|\bfetch\b|download|\bimport\s*\(|XMLHttpRequest|\binstall\w*", re.I)
+EXEC_WORD = re.compile(r"\beval\b|unsafe-eval|new Function|\bexec(?:Sync)?\s*\(|child_process|\bon(?:error|load)\s*=|"
+                       r"\bruns?\s+(?:code|scripts?)\b|\bruns?\b[^.\n]{0,40}\binstall", re.I)
 
 
 def check_directory_rules():
@@ -832,6 +837,9 @@ def check_directory_rules():
                 check(asset not in text, f"{name} names the bundled asset {asset}")
             for m in FETCH_EXEC.finditer(text):
                 check(False, f"{name}:{text.count(chr(10), 0, m.start()) + 1} pipes a download into an interpreter")
+            for n_, line in enumerate(text.splitlines(), 1):
+                if LOAD_WORD.search(line) and EXEC_WORD.search(line):
+                    check(False, f"{name}:{n_} puts loading and executing on one line (directory RUNTIME_FETCH_EXEC)")
     print(f"directory rules: {texts} text files checked for front matter, {len(bundled)} bundled asset name(s) "
           "and fetch-and-execute")
 

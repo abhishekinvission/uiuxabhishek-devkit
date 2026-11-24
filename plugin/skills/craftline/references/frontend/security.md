@@ -6,7 +6,7 @@
 Treat any value from users, URLs, APIs or storage as untrusted when it reaches:
 - **HTML:** `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`, `dangerouslySetInnerHTML`, Vue `v-html`, Angular `[innerHTML]`, and any `bypassSecurityTrust*` call.
 - **Code:** `eval`, `new Function`, and string arguments to `setTimeout` or `setInterval`.
-- **URLs:** `href`, `src`, `action`, `formaction` and `location`, where `javascript:` and `data:` URLs run code.
+- **URLs:** `href`, `src`, `action`, `formaction` and `location`. Treat `javascript:` and `data:` values there as code, not links.
 
 Prefer the framework's text binding, which escapes. Allow only safe URL schemes:
 
@@ -23,7 +23,8 @@ const safe = /^https?:\/\//i.test(profile.website) ? profile.website : undefined
 - Don't write your own regex sanitizer. Where browsers support it, Trusted Types make unsafe sinks fail loudly.
 
 ## Content Security Policy
-- Aim for `script-src` with nonces or hashes plus `'strict-dynamic'`, `object-src 'none'`, `base-uri 'none'` and `frame-ancestors` set to who may embed you. Avoid `'unsafe-inline'` and `'unsafe-eval'`.
+- Aim for `script-src` with nonces or hashes plus `'strict-dynamic'`, `object-src 'none'`, `base-uri 'none'` and `frame-ancestors` set to who may embed you.
+- Leave out `'unsafe-inline'` and `'unsafe-eval'`: each reopens the hole the policy exists to close.
 - Roll out with `Content-Security-Policy-Report-Only` first, fix the reports, then enforce.
 
 ## Tokens and sessions
@@ -47,9 +48,9 @@ const safe = /^https?:\/\//i.test(profile.website) ? profile.website : undefined
 
 ## Dependencies
 - Run the project's audit (`npm audit`, `pnpm audit`, `yarn npm audit`, or the scanner in CI) and triage by whether the vulnerable code is reachable.
-- Commit the lockfile. Before adding a package, check how well it's maintained, whether it runs lifecycle hooks during installation, and its size.
+- Commit the lockfile. Before adding a package, check how well it's maintained, whether its manifest declares lifecycle hooks, and its size.
 
 ## Verify
-- Inject `<img src=x onerror=alert(1)>` and `javascript:` URLs into every new rendering path; nothing runs.
+- Feed every new rendering path two test inputs: markup with an inline event-handler attribute, and a link with the `javascript:` scheme. Both must render as inert text or be dropped.
 - The CSP has no violations in report-only mode; no token is in web storage; state changes are refused without a CSRF token.
 - External `returnUrl` values and foreign `postMessage` origins are ignored; the audit is triaged; the built bundle has no secrets.
