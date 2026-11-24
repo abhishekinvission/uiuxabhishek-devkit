@@ -39,7 +39,7 @@ OLD_ID_ALLOWED = ("CHANGELOG.md", "README.md", "INSTALL.md", "NOTICE.md", "SOURC
                   "skills/uiuxabhishek-devkit/NOTICE.md", "tests/", "tools/updater/")
 AGENTS = ("claude-code", "codex", "gemini-cli", "github-copilot", "antigravity")
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
-SKILL_MD_MAX_CHARS = 12000
+SKILL_MD_MAX_CHARS = 16000  # raised in 2.1.0 for the tickets row and the §5 agent roster
 GUIDE_MAX_CHARS = 5000
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 
@@ -215,6 +215,8 @@ def words(text):
             tok = tok[:-1]
         if tok:
             out.add(tok)
+            if tok.count(".") >= 2:  # acme.atlassian.net also matches the signal atlassian.net
+                out.add(".".join(tok.split(".")[-2:]))
     return out
 
 
@@ -263,7 +265,8 @@ def is_never(path, never):
 
 
 CLI_ADAPTER = "references/adapters/impeccable-without-cli.md"
-SHARED_COMPANIONS = ("references/adapters/",)  # loaded beside several capabilities' primary files
+SHARED_COMPANIONS = ("references/adapters/",  # loaded beside several capabilities' primary files
+                     "references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md")  # tickets + ado
 
 
 def check_coverage(caps, never):
@@ -300,10 +303,11 @@ LIMIT_AUDIT = "read-only, dry run, report only, don't change"
 LIMIT_IMPLEMENT = "don't push, no pr, locally"
 LIMIT_NO_FETCH = "don't fetch, do not fetch"
 LIMIT_OFFLINE = "offline, no network"
-ADO_OWNS_GIT = "when `ado` is selected, don't select `git` separately"
+ADO_OWNS_GIT = "when either is selected, don't select `git` separately"
 BACKEND_RULE = "the backend part of a full-stack or `ado` task"
 STRICT_AUDIT = "`audit` and `plan` never fetch or write refs"
 # Prompts that name backend work and no UI select no Design or Engineering row (SKILL.md §1 Scope)
+TRACKER_WORDS = {"github", "jira", "linear", "linear.app", "atlassian.net"}
 BACKEND_WORDS = {"backend", "database", "sql", "migration", "microservice", "postgre", "net"}
 
 
@@ -330,11 +334,14 @@ def route(prompt, modes, caps, craft_floor, groups):
         if hit and not (backend_only and cap in frontend):
             selected.append(cap)
             files += [f for s in hit for f in s["files"]]
-    if "ado" in selected and "git" in selected:
-        selected.remove("git")  # ADO_OWNS_GIT
+    if "ado" in selected and "tickets" in selected:
+        selected.remove("tickets")  # ado wins when both match
+        files = [f for f in files if f not in {f for s in caps["tickets"] for f in s["files"]}]
+    if {"ado", "tickets"} & set(selected) and "git" in selected:
+        selected.remove("git")  # ADO_OWNS_GIT: both load git themselves
         files = [f for f in files if f not in {f for s in caps["git"] for f in s["files"]}]
-    if "ado" in selected and mode is None:
-        mode = "audit"  # a bare work-item ID or URL is a dry run
+    if {"ado", "tickets"} & set(selected) and mode is None:
+        mode = "audit"  # a bare ticket or work-item ID or URL is a dry run
     mode = mode or "implement"
     for cap in selected:
         for s in caps[cap]:
@@ -349,6 +356,8 @@ def route(prompt, modes, caps, craft_floor, groups):
     if not selected:
         outcome = "guide" if mode == "answer" else ("clarify" if w & UI_WORDS else "skip")
         files = ["GUIDE.md"] if outcome == "guide" else []
+    elif "tickets" in selected and not (w & TRACKER_WORDS):
+        outcome = "ask-tracker"  # "a ticket" with no tracker named
     else:
         outcome = "route"
     if matches(LIMIT_OFFLINE, w) and not set(selected) & groups["Design"]:

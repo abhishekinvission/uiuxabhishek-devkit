@@ -76,22 +76,23 @@ Each route is `signals → files`. A `+` item loads only when its capability is 
 | `frontend-security` | xss, csp, content security policy, sanitize, csrf, open redirect, postmessage, subresource integrity, token storage, dependency audit, npm audit → `security.md` |
 | `seo-metadata` | seo, meta tags, open graph, canonical, sitemap, robots.txt, structured data, json-ld, hreflang → `seo-and-metadata.md` |
 | `cross-platform-native` | react native, expo, flutter → `cross-platform-native.md` |
-| `ado` | azure devops, azure boards, ado, work item, dev.azure.com → [delivery](references/workflows/azure-devops-delivery.md) + [configuration](references/workflows/ado-configuration.md) + [report template](templates/ado-delivery-report.md) · +implement or deliver → `testing.md` + `review-and-release.md` + [Git workflow](references/workflows/git-workflow.md) · +deliver → [PR template](templates/pr-description.md) |
+| `ado` | azure devops, azure boards, ado, work item, dev.azure.com → [delivery](references/workflows/azure-devops-delivery.md) + [configuration](references/workflows/ado-configuration.md) + [lifecycle](references/workflows/ticket-delivery.md) + [report template](templates/ticket-delivery-report.md) · +implement or deliver → `testing.md` + `review-and-release.md` + [Git workflow](references/workflows/git-workflow.md) · +deliver → [PR template](templates/pr-description.md) |
 
 **Workflows**: apply to any repository; bare names are in `references/workflows/`
 
 | ID | Route |
 | --- | --- |
 | `git` | git, repo, repository, commit, push the branch, pull request, merge request, merge conflict, rebase, cherry-pick, stash, revert commit, reflog, force push, deleted branch, create branch, sync branch, sync fork, branch protection, behind main, github, gitlab, bitbucket, azure repos, git tag, publish release → `git-workflow.md` · +conflict, revert, recover, reflog, reset, rebase, cherry-pick, force push, rewrite history, deleted branch, tag, release → `git-recovery-and-release.md` · +open a pr, open a pull request, open a merge request, create a pull request, pr description → [PR template](templates/pr-description.md) |
+| `tickets` | github issue, jira, jira issue, linear issue, linear.app, atlassian.net, ticket → `ticket-delivery.md` + [report template](templates/ticket-delivery-report.md) · +implement or deliver → [testing](references/frontend/testing.md) + [review](references/frontend/review-and-release.md) + `git-workflow.md` · +deliver → [PR template](templates/pr-description.md) |
 
-`git` covers repository operations, not code that merely mentions Git, and runs beside other capabilities. `ado` loads it itself: when `ado` is selected, don't select `git` separately. `ado` is **only** for Azure DevOps/Azure Boards work. A Jira, GitHub or Linear ticket, or "a ticket" alone, is not ADO. A bare work-item ID or URL means `audit` (dry run). `ado` orchestrates the task: it adds the capabilities the ticket needs as each phase starts, and never infers the organization, project, repository or base branch.
+`git` covers repository operations, not code that merely mentions Git, and runs beside other capabilities. `ado` and `tickets` load it themselves: when either is selected, don't select `git` separately. `ado` is **only** for Azure DevOps/Azure Boards work; GitHub Issues, Jira and Linear go to `tickets`, and when both match, `ado` wins. "A ticket" with no tracker named: ask which one. A bare ticket or work-item ID or URL means `audit` (dry run). `ado` and `tickets` orchestrate the task: they add the capabilities the ticket needs as each phase starts, never change ticket state unless asked, and never infer the organization, project, repository or base branch.
 
 **Never load** (they need upstream Impeccable tooling that isn't bundled): `live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md`, `degraded/*`.
 
 ## 3. Combining capabilities
 
 - **Phases.** Load supporting references when their phase starts. More than three references means phasing, not loading more at once.
-- **Ownership.** Impeccable: look, hierarchy, copy and how states read. `animate`: whether and where motion appears. `fluid-motion`: gesture and spring physics. Frontend guides: contracts, state and routing. `testing`: gate order. `review`: diff and release-readiness checks. `git`: repository state, branches, history and publishing gates. `ado`: the Azure ticket-to-PR lifecycle on top of `git`.
+- **Ownership.** Impeccable: look, hierarchy, copy and how states read. `animate`: whether and where motion appears. `fluid-motion`: gesture and spring physics. Frontend guides: contracts, state and routing. `testing`: gate order. `review`: diff and release-readiness checks. `git`: repository state, branches, history and publishing gates. `tickets`: the ticket-to-PR lifecycle on top of `git`; `ado` adds the Azure specifics.
 - **Shared baseline** (apply once, however many references restate it): user scope and repository rules; existing conventions and dependencies; server-side authorization; no secrets or personal data in code, logs or bundles; report exact commands and results, never unrun checks.
 - **Precedence.** User scope and repository rules > design system and product requirements > security, accessibility and performance > reference guidance > embellishment.
 

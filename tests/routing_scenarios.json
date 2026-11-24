@@ -82,7 +82,7 @@
       "id": "ado-dry-run",
       "prompt": "Here is Azure Boards work item 4521, tell me what it needs. Dry run only.",
       "caps": ["ado"], "mode": "audit", "net": "no-fetch",
-      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ado-delivery-report.md"],
+      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ticket-delivery-report.md"],
       "forbid": ["references/frontend/testing.md", "references/frontend/review-and-release.md", "templates/pr-description.md"]
     },
     {
@@ -103,15 +103,15 @@
       "id": "ado-deliver-authorized",
       "prompt": "Deliver Azure DevOps work item 4521 end to end and open a draft PR. You are authorized to push the task branch.",
       "caps": ["ado"], "mode": "deliver",
-      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "templates/pr-description.md", "templates/ado-delivery-report.md"],
+      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "templates/pr-description.md", "templates/ticket-delivery-report.md"],
       "forbid": ["references/impeccable/SOURCE_SKILL.md", "references/apple-design/SOURCE_SKILL.md"]
     },
     {
       "id": "non-ado-ticket",
       "prompt": "Deliver the Jira ticket PROJ-12.",
-      "caps": [], "mode": "deliver", "outcome": ["clarify", "skip"],
-      "must": [],
-      "forbid": []
+      "caps": ["tickets"], "mode": "deliver",
+      "must": ["references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md", "references/workflows/git-workflow.md", "templates/pr-description.md"],
+      "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"]
     },
     {
       "id": "review-pr",
@@ -250,7 +250,7 @@
       "id": "ado-backend-only",
       "prompt": "Implement Azure Boards work item 7310 in our .NET backend: add a refund endpoint to the payments API with unit tests. Don't push or open a PR.",
       "caps": ["ado"], "mode": "implement", "net": "fetch",
-      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ado-delivery-report.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "references/workflows/git-workflow.md"],
+      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ticket-delivery-report.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "references/workflows/git-workflow.md"],
       "forbid": ["references/frontend/api-integration.md", "references/impeccable/reference/craft-floor.md", "references/impeccable/SOURCE_SKILL.md", "templates/pr-description.md"]
     },
     {
@@ -270,9 +270,9 @@
     {
       "id": "github-issue-not-ado",
       "prompt": "Fix GitHub issue #88 in this repo and open a draft pull request.",
-      "caps": ["git"], "mode": "deliver", "net": "fetch",
-      "must": ["references/workflows/git-workflow.md", "templates/pr-description.md"],
-      "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ado-delivery-report.md"]
+      "caps": ["tickets"], "mode": "deliver", "net": "fetch",
+      "must": ["references/workflows/ticket-delivery.md", "references/workflows/git-workflow.md", "templates/pr-description.md", "templates/ticket-delivery-report.md"],
+      "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"]
     },
     {
       "id": "git-offline-status",

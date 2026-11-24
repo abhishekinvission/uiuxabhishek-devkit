@@ -79,6 +79,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/workflows/git-workflow.md`, `references/workflows/git-recovery-and-release.md` | Universal Git & Repository Workflow, written for this project on 2026-11-04 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -87,6 +88,7 @@ The pack describes itself as framework-independent guides written for this proje
 - Converted cross-references to relative Markdown links.
 - 2026-11-04: moved the generic Git preflight, staging, commit and push steps of `azure-devops-delivery.md` into the shared `git-workflow.md`, which ADO now links to; the Azure-specific ticket, PR and comment steps are unchanged.
 - 2026-11-05 (2.0.1): `git-workflow.md` and `azure-devops-delivery.md` no longer fetch or write refs in `audit`, `plan` or ADO dry runs, and they honor "don't fetch" and "offline" in every mode.
+- 2026-11-24 (2.1.0): the provider-neutral lifecycle moved from `azure-devops-delivery.md` to `ticket-delivery.md`, which now also covers GitHub Issues, Jira and Linear; the ADO file keeps only Azure specifics. `templates/ado-delivery-report.md` became `templates/ticket-delivery-report.md`.
 - Not imported: the pack's `PACKAGE_MANIFEST.json`, `README.md` and `integration/` instructions (installer metadata, merged into `SKILL.md` routing instead).
 
 Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
@@ -107,11 +109,12 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 - `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
 - `references/workflows/ado-configuration.md  f18ab5459e39f3d0a72ae66f92748f8ef3530c2c870db0beee23f19c01c67629`
-- `references/workflows/azure-devops-delivery.md  7ede12a81686e3c429cbbeeceaf16fafc5a3543e4994c9cfb40e1675f9ac1ab5`
+- `references/workflows/azure-devops-delivery.md  e3efeb5c23a132fc500b5705acc613522055a8ab77e51ee50d733cd061aeb180`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
 - `references/workflows/git-workflow.md  a143bf5584b9e478f9daff1388dcb81ee16104c4924a742303b9815175f22194`
-- `templates/ado-delivery-report.md  6673430bb2dfeed82758d1b459f82a699b4b4fad636c506a863e00a342e7783f`
+- `references/workflows/ticket-delivery.md  5c17f86440985179f9936a27fc87bba537ec4893a2d770008d1bad19330fd214`
 - `templates/pr-description.md  ed01966273e1e72cdc6c76c8d93a63060fdb3fb8b1e4a0ae0bfd1ab0fa9d3b94`
+- `templates/ticket-delivery-report.md  32426630eced5c8de25dd49a520373336df0b8492f285e00a4c515f9fc874b99`
 
 Plugin agent files (paths relative to the repository root):
 
