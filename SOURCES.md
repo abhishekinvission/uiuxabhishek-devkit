@@ -92,20 +92,20 @@ The pack describes itself as framework-independent guides written for this proje
 Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 
 - `references/adapters/impeccable-without-cli.md  b239c6aa056fa19c085f523479b0057cc68b3e5363be19fd6fd7c340bd8fa0c1`
-- `references/frontend/admin-crud.md  0c38253c65ef8ce7f063fd33d4eddb8fb0c406d5e3c0cbebdea789a92c02dcba`
-- `references/frontend/api-integration.md  8bdb1e2638d441b13e674d889809d4111ac5d1369eb52f6b02777f7545c9f407`
+- `references/frontend/admin-crud.md  d5eb94fb9a001761a8daf6c2c73f289f3443666ed2382a6057655e9c1c6c080c`
+- `references/frontend/api-integration.md  34a6fc614750eba44ca81d02be6fc935ea8265407e3b297353b4ec19f69f0c62`
 - `references/frontend/cross-platform-native.md  44a75bd6184e557f6974af45939fc2bc3862fe8ca0977153136f768d5ce89281`
-- `references/frontend/data-reports.md  4d80f0ae1f85392b51f6fd71282a764eb7254b18d1ad1227ef850c85914069c1`
+- `references/frontend/data-reports.md  94b2384676ebedb857082cc98368c33b611dfbb23486a4dba10a0ab2b5d65288`
 - `references/frontend/figma-to-code.md  1d82e982d6693e1945b386cc3cdd57ec4c559e04d5192db42e41e838912f1453`
 - `references/frontend/forms.md  4e8b6cd9b2a9cfcc88a1eb6bd0962ce570e1201ca5434cca28528ac78cd18519`
-- `references/frontend/microfrontends.md  b73ecc23c71407686b272c57f1f4cea09db05ece77bcb4b7b093506b972e711b`
-- `references/frontend/packages-and-components.md  65f09a7c3481d9da47bda6f6b8c871043f79f59900067c435fa1a510ef538208`
-- `references/frontend/pages-and-routing.md  2e196021b5b4d7cc2d373fa2fc453e908f777aa6688eeca29b9712c79aee5f63`
-- `references/frontend/review-and-release.md  fe49d3f93b21a19d7558dcfce578f63300c5c166f1bcab7f7c3fa74e885d3eb8`
+- `references/frontend/microfrontends.md  f79ec3983f518d5eb362920085fe80c4f5fe981ce5a9344f3e57d5410fcfb2e6`
+- `references/frontend/packages-and-components.md  61de77a4bb3a530cdb3bc6c2303b47586263f10f6f2c9630bd7820face798333`
+- `references/frontend/pages-and-routing.md  7ed8444d1806de55ca813cbee015abcaea873a421d4190dc9a835aecaaa2d2a5`
+- `references/frontend/review-and-release.md  9cb7ad4de9c7e80cb3c8680901a612e7c7600d8c19940be7200fc7ca53e166dc`
 - `references/frontend/security.md  ed28eb0526e80860a97238081af2022a06bf1635eb8b88b192d8f3d670f8b738`
 - `references/frontend/seo-and-metadata.md  d96ded2de837551a4c5d5da8d9785e850d116e3215aa6ac647d69c9014ff0ddf`
-- `references/frontend/state-management.md  110f8342d6a899a0c9a1e07c351200fcd6ef08b262bfd7ced98430418eaa2cb6`
-- `references/frontend/testing.md  cc71b889040f77e4a10c14240c02d42df610db893a62dc112bcac5a6b4ce5337`
+- `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
+- `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
 - `references/workflows/ado-configuration.md  f18ab5459e39f3d0a72ae66f92748f8ef3530c2c870db0beee23f19c01c67629`
 - `references/workflows/azure-devops-delivery.md  7ede12a81686e3c429cbbeeceaf16fafc5a3543e4994c9cfb40e1675f9ac1ab5`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
