@@ -104,7 +104,7 @@ Routes are `signals → files`; a `+` item loads only when its condition also ho
 
 ## 5. Agents (Claude Code)
 
-The main session is the **head**; agents never start agents. Small or single-capability tasks run inline. Capabilities owned by two or more agents below, or a large task: follow [agent-plans.md](references/workflows/agent-plans.md) (plan, approval, dispatch; without subagents, run the plan yourself).
+The main session is the **head**; agents never start agents. Small or single-capability tasks run inline. Capabilities owned by two or more agents below, or a large task: follow [agent-plans.md](references/workflows/agent-plans.md): show the plan, then stop until the user approves it.
 
 - `ui-designer` (edits): design-new, product-ui, layout, typography, color, refine, design-system, responsive, animate, fluid-motion, ios, android
 - `ux-designer` (edits): ux-shape, ux-copy, onboarding, harden

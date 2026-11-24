@@ -111,7 +111,7 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 - `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
 - `references/workflows/ado-configuration.md  ff8cce8c406c5be539aa4af69301f4508c14dc6a306d0ef13713d626868464ac`
-- `references/workflows/agent-plans.md  1e4fe56b218a8e29601ded0982ffe8fdd8ee0362f0cba5acc5e13d745792e234`
+- `references/workflows/agent-plans.md  d19c680d18dc1b387554057aaa260549b26488aff131af4a3819bb26d0aacfde`
 - `references/workflows/azure-devops-delivery.md  e3efeb5c23a132fc500b5705acc613522055a8ab77e51ee50d733cd061aeb180`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
 - `references/workflows/git-workflow.md  a581debca4a298fb45e65b73cdc47507d2b665d32bb4fe22ad09633e63e53d10`

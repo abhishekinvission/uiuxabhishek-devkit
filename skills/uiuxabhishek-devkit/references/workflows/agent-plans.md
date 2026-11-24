@@ -3,7 +3,7 @@
 **Use for:** a task that [SKILL.md](../../SKILL.md) §5 sends to agents: capabilities owned by two or more agents, or a large task. The main session (the head) plans and dispatches; agents never start agents.
 
 ## Plan, then confirm
-Before starting any agent, show a short plan: each agent's job, the order, what runs in parallel, and which writes need authorization. Resolve every question for the user and every authorization, then wait for approval.
+Before starting any agent, show a short plan: each agent's job, the order, what runs in parallel, and which writes need authorization. Ask any open question in the same message, then **end your turn**. Dispatch only after the user approves the plan in a later message. Authorizations in the original request (to commit, push or open a PR) cover those writes; they don't approve the plan.
 
 ## Order
 - Read-only agents (`design-auditor`, `code-reviewer`, `figma-translator`, and `delivery-agent` doing reads) may run in parallel.

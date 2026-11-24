@@ -297,6 +297,11 @@ def check_coverage(caps, never):
     skill_text = read(os.path.join(SKILL, "SKILL.md"))
     check(f"]({AGENT_PLANS})" in skill_text.split("## 5.")[-1], f"SKILL.md §5 must link {AGENT_PLANS}")
     routed = routed | {AGENT_PLANS}  # loaded from §5 when the head plans agents
+    plans = read(os.path.join(SKILL, AGENT_PLANS)).lower()
+    for phrase in ("end your turn", "approves the plan in a later message", "don't approve the plan", "parallel",
+                   "one at a time", "writes last", "absolute paths", "combine duplicates", "agents never start agents"):
+        check(phrase in plans, f"{AGENT_PLANS} lacks the dispatch rule {phrase!r}")
+    check("stop until the user approves it" in skill_text.lower(), "SKILL.md §5 must stop for plan approval")
     check(not (expected - routed), f"unrouted references: {sorted(expected - routed)}")
     check(not {p for p in routed if is_never(p, never)}, "a never-load file is routed")
     primary = {}
