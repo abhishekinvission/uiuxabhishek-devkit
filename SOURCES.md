@@ -78,6 +78,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/frontend/` (9 guides), `references/workflows/` (2 guides), `templates/` (2 templates) | *UIUX Abhishek Design Frontend Engineering Expansion* pack, supplied by the maintainer on 2026-11-03 (`uiuxabhishek-frontend-expansion.zip`, SHA-256 `4a86b38a1efa79b8dfd0760eec70ff2ba2e53b80c9b417a869525c7521a83db1`) | MIT (© Abhishek Rampal) |
 | `references/workflows/git-workflow.md`, `references/workflows/git-recovery-and-release.md` | Universal Git & Repository Workflow, written for this project on 2026-11-04 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -93,11 +94,16 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 - `references/adapters/impeccable-without-cli.md  b239c6aa056fa19c085f523479b0057cc68b3e5363be19fd6fd7c340bd8fa0c1`
 - `references/frontend/admin-crud.md  0c38253c65ef8ce7f063fd33d4eddb8fb0c406d5e3c0cbebdea789a92c02dcba`
 - `references/frontend/api-integration.md  8bdb1e2638d441b13e674d889809d4111ac5d1369eb52f6b02777f7545c9f407`
+- `references/frontend/cross-platform-native.md  44a75bd6184e557f6974af45939fc2bc3862fe8ca0977153136f768d5ce89281`
 - `references/frontend/data-reports.md  4d80f0ae1f85392b51f6fd71282a764eb7254b18d1ad1227ef850c85914069c1`
+- `references/frontend/figma-to-code.md  1d82e982d6693e1945b386cc3cdd57ec4c559e04d5192db42e41e838912f1453`
+- `references/frontend/forms.md  4e8b6cd9b2a9cfcc88a1eb6bd0962ce570e1201ca5434cca28528ac78cd18519`
 - `references/frontend/microfrontends.md  b73ecc23c71407686b272c57f1f4cea09db05ece77bcb4b7b093506b972e711b`
 - `references/frontend/packages-and-components.md  65f09a7c3481d9da47bda6f6b8c871043f79f59900067c435fa1a510ef538208`
 - `references/frontend/pages-and-routing.md  2e196021b5b4d7cc2d373fa2fc453e908f777aa6688eeca29b9712c79aee5f63`
 - `references/frontend/review-and-release.md  fe49d3f93b21a19d7558dcfce578f63300c5c166f1bcab7f7c3fa74e885d3eb8`
+- `references/frontend/security.md  ed28eb0526e80860a97238081af2022a06bf1635eb8b88b192d8f3d670f8b738`
+- `references/frontend/seo-and-metadata.md  d96ded2de837551a4c5d5da8d9785e850d116e3215aa6ac647d69c9014ff0ddf`
 - `references/frontend/state-management.md  110f8342d6a899a0c9a1e07c351200fcd6ef08b262bfd7ced98430418eaa2cb6`
 - `references/frontend/testing.md  cc71b889040f77e4a10c14240c02d42df610db893a62dc112bcac5a6b4ce5337`
 - `references/workflows/ado-configuration.md  f18ab5459e39f3d0a72ae66f92748f8ef3530c2c870db0beee23f19c01c67629`
@@ -106,3 +112,7 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 - `references/workflows/git-workflow.md  a143bf5584b9e478f9daff1388dcb81ee16104c4924a742303b9815175f22194`
 - `templates/ado-delivery-report.md  6673430bb2dfeed82758d1b459f82a699b4b4fad636c506a863e00a342e7783f`
 - `templates/pr-description.md  ed01966273e1e72cdc6c76c8d93a63060fdb3fb8b1e4a0ae0bfd1ab0fa9d3b94`
+
+Plugin agent files (paths relative to the repository root):
+
+

@@ -38,7 +38,7 @@ Each route is `signals → files`. A `+` item loads only when its capability is 
 
 | ID | Route |
 | --- | --- |
-| `design-new` | new landing page, redesign, new visual identity, from scratch → [entry](references/impeccable/SOURCE_SKILL.md) + `new-work.md` + [CLI adapter](references/adapters/impeccable-without-cli.md) |
+| `design-new` | new landing page, redesign, new visual identity, from scratch → [entry](references/impeccable/SOURCE_SKILL.md) + `new-work.md` + [CLI adapter](references/adapters/impeccable-without-cli.md) · +public page, landing page, marketing site, website → [SEO](references/frontend/seo-and-metadata.md) |
 | `product-ui` | dashboard design, app ui, settings ui, data-dense ui → `operate.md` |
 | `ux-shape` | plan ux, design brief, user flow, wireframe → `shape.md` |
 | `layout` | spacing, alignment, visual hierarchy, layout, grid → `layout.md` + [CLI adapter](references/adapters/impeccable-without-cli.md) |
@@ -47,11 +47,11 @@ Each route is `signals → files`. A `+` item loads only when its capability is 
 | `ux-copy` | ux copy, microcopy, labels, error message, button text → `clarify.md` |
 | `harden` | edge cases, error states, loading states, i18n, long text, offline state, offline support, network failure → `harden.md` |
 | `onboarding` | onboarding, first-run, empty state → `onboard.md` |
-| `responsive` | responsive, mobile breakpoints, screen sizes → `adapt.md` · +native app, ios, android, swiftui → `adapt.native.md` |
+| `responsive` | responsive, mobile breakpoints, screen sizes → `adapt.md` · +native app, ios, android, swiftui, react native, expo, flutter → `adapt.native.md` |
 | `ui-performance` | slow ui, jank, layout shift, lcp → `optimize.md` |
 | `refine` | bland, bolder → `bolder.md` · too loud, tone down → `quieter.md` · simplify, declutter → `distill.md` · delight, personality → `delight.md` · wow effect → `overdrive.md` · polish, final pass → `polish.md` + [CLI adapter](references/adapters/impeccable-without-cli.md) |
 | `design-system` | design tokens, extract components → `extract.md` · +document design system → `document.md` |
-| `design-audit` | accessibility, a11y, wcag, contrast, keyboard navigation, ui audit → `audit.md` · +native app, ios, android, swiftui → `audit.native.md` |
+| `design-audit` | accessibility, a11y, wcag, contrast, keyboard navigation, ui audit → `audit.md` · +native app, ios, android, swiftui, react native, expo, flutter → `audit.native.md` |
 | `critique` | ux critique, heuristic review, design feedback → `critique.md` + [CLI adapter](references/adapters/impeccable-without-cli.md) |
 | `ios` | ios, swiftui, uikit → `ios.md` |
 | `android` | android, jetpack compose → `android.md` |
@@ -62,15 +62,20 @@ Each route is `signals → files`. A `+` item loads only when its capability is 
 
 | ID | Route |
 | --- | --- |
-| `pages` | route, routing, navigation menu, breadcrumb, feature area → `pages-and-routing.md` |
+| `pages` | route, routing, navigation menu, breadcrumb, feature area → `pages-and-routing.md` · +public page, landing page, marketing site, indexable → `seo-and-metadata.md` |
 | `api` | api, rest, http, endpoint, typed errors, retry → `api-integration.md` |
 | `crud` | admin, crud, edit form, create edit delete → `admin-crud.md` |
 | `reports` | data table, pagination, filters, chart, export, csv, report page → `data-reports.md` |
 | `state` | state management, url state, shared state, store, persisted state → `state-management.md` |
 | `testing` | tests, unit test, e2e, playwright, cypress, vitest, jest, flaky test, coverage → `testing.md` |
-| `review` | code review, release readiness, pr readiness → `review-and-release.md` · +pr description → [PR template](templates/pr-description.md) |
+| `review` | code review, release readiness, pr readiness → `review-and-release.md` · +html rendering, innerhtml, auth, login, token, session, third-party script, redirect → `security.md` · +pr description → [PR template](templates/pr-description.md) |
 | `packages` | npm package, publishable, component library, shared component → `packages-and-components.md` |
 | `microfrontends` | microfrontend, module federation, remote module → `microfrontends.md` |
+| `forms` | form validation, form errors, multi-step form, wizard, autosave, file upload, autocomplete, double submit → `forms.md` |
+| `figma-to-code` | figma, figma frame, figma.com, implement the design, design handoff → `figma-to-code.md` |
+| `frontend-security` | xss, csp, content security policy, sanitize, csrf, open redirect, postmessage, subresource integrity, token storage, dependency audit, npm audit → `security.md` |
+| `seo-metadata` | seo, meta tags, open graph, canonical, sitemap, robots.txt, structured data, json-ld, hreflang → `seo-and-metadata.md` |
+| `cross-platform-native` | react native, expo, flutter → `cross-platform-native.md` |
 | `ado` | azure devops, azure boards, ado, work item, dev.azure.com → [delivery](references/workflows/azure-devops-delivery.md) + [configuration](references/workflows/ado-configuration.md) + [report template](templates/ado-delivery-report.md) · +implement or deliver → `testing.md` + `review-and-release.md` + [Git workflow](references/workflows/git-workflow.md) · +deliver → [PR template](templates/pr-description.md) |
 
 **Workflows**: apply to any repository; bare names are in `references/workflows/`
