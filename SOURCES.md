@@ -80,6 +80,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
+| `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
 | `agents/` (8 agent files), `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
@@ -94,7 +95,7 @@ The pack describes itself as framework-independent guides written for this proje
 
 Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 
-- `references/adapters/impeccable-without-cli.md  b239c6aa056fa19c085f523479b0057cc68b3e5363be19fd6fd7c340bd8fa0c1`
+- `references/adapters/impeccable-without-cli.md  13232107300aeadcc051fecbcc8dae8c84d483c0c3b15ca2cf3385b599d01571`
 - `references/frontend/admin-crud.md  d5eb94fb9a001761a8daf6c2c73f289f3443666ed2382a6057655e9c1c6c080c`
 - `references/frontend/api-integration.md  34a6fc614750eba44ca81d02be6fc935ea8265407e3b297353b4ec19f69f0c62`
 - `references/frontend/cross-platform-native.md  44a75bd6184e557f6974af45939fc2bc3862fe8ca0977153136f768d5ce89281`
@@ -109,13 +110,14 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 - `references/frontend/seo-and-metadata.md  d96ded2de837551a4c5d5da8d9785e850d116e3215aa6ac647d69c9014ff0ddf`
 - `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
-- `references/workflows/ado-configuration.md  f18ab5459e39f3d0a72ae66f92748f8ef3530c2c870db0beee23f19c01c67629`
+- `references/workflows/ado-configuration.md  ff8cce8c406c5be539aa4af69301f4508c14dc6a306d0ef13713d626868464ac`
+- `references/workflows/agent-plans.md  1e4fe56b218a8e29601ded0982ffe8fdd8ee0362f0cba5acc5e13d745792e234`
 - `references/workflows/azure-devops-delivery.md  e3efeb5c23a132fc500b5705acc613522055a8ab77e51ee50d733cd061aeb180`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
-- `references/workflows/git-workflow.md  a143bf5584b9e478f9daff1388dcb81ee16104c4924a742303b9815175f22194`
-- `references/workflows/ticket-delivery.md  5c17f86440985179f9936a27fc87bba537ec4893a2d770008d1bad19330fd214`
+- `references/workflows/git-workflow.md  a581debca4a298fb45e65b73cdc47507d2b665d32bb4fe22ad09633e63e53d10`
+- `references/workflows/ticket-delivery.md  7a8425cacc821082db3f01ee57210b39c8cf2291b4aa808a0a2d7051172d8095`
 - `templates/pr-description.md  ed01966273e1e72cdc6c76c8d93a63060fdb3fb8b1e4a0ae0bfd1ab0fa9d3b94`
-- `templates/ticket-delivery-report.md  32426630eced5c8de25dd49a520373336df0b8492f285e00a4c515f9fc874b99`
+- `templates/ticket-delivery-report.md  e13d9e63036843bba0696325f184812d7301a211ad5b34becfe3aac132528b87`
 
 Plugin agent files (paths relative to the repository root):
 

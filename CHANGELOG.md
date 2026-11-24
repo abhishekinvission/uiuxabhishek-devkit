@@ -27,7 +27,7 @@ New capabilities, a Claude Code agent layer and fixes. The skill ID, install com
 ### Tests and tooling
 - `tools/package_skill.py` builds both ZIPs and, with `--update-marketplace`, pins the plugin ZIP in `marketplace.json`.
 - `validate.py` adds checks for agent frontmatter, one agent per capability, read-only tools, agent bodies, the plugin and marketplace manifests, both ZIP layouts, and script-calling files without the adapter.
-- Routing scenarios: 68 (24 new), each with its expected agent plan or `inline`. The `SKILL.md` and `GUIDE.md` size budgets rose to 16,000 and 8,000 characters.
+- Routing scenarios: 68 (24 new), each with its expected agent plan or `inline`. `SKILL.md` stays under 12,000 characters and `GUIDE.md` under 5,000. Average context per scenario must stay within 10% of the pre-router baseline (now +9.9%). The head's planning rules live in `references/workflows/agent-plans.md`, loaded only when a task uses agents.
 
 ## [2.0.1] — 2026-11-05 (stable release)
 

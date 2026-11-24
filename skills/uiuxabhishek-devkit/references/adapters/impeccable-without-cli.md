@@ -1,32 +1,29 @@
 # Impeccable steps without its CLI
 
-**Use for:** any loaded Impeccable file (`SOURCE_SKILL.md`, `new-work.md`, `critique.md`, `layout.md`, `typeset.md`, `polish.md`) that tells you to run a `scripts/*.mjs` command. Those scripts, Impeccable's live mode and its shipped subagents aren't bundled with this skill.
+**Use for:** a loaded Impeccable file (`SOURCE_SKILL.md`, `new-work.md`, `critique.md`, `layout.md`, `typeset.md`, `polish.md`) that says to run `scripts/*.mjs`. Those scripts, live mode and Impeccable's own subagents aren't bundled.
 
 ## Precedence
-
-This adapter **overrides** any upstream wording that calls a skipped script a contract violation, a failed run or a degraded run. Here, the manual substitute below is the complete, intended path, not a fallback. Never invent script output, roll results or detector counts. In your report, name each step you replaced and how.
+This adapter **overrides** upstream wording that calls a skipped script a contract violation, a failed run or a degraded run: the substitute below is the intended path. Never invent script output, rolls or detector counts, and name each replaced step in your report.
 
 ## Substitutes
 
-| Upstream step | Do this instead |
+| Upstream step | Instead |
 | --- | --- |
-| `context.mjs` (session setup) | Read `PRODUCT.md` and `DESIGN.md` if the project has them. Otherwise take the facts from the code: tokens, theme, global CSS, a representative component, and the target platform (web, iOS, Android). Say which source you used |
-| `concept-seed.mjs --scope surface` | Draft the five to seven structures as instructed, then offer the **three most distinct**, not the three you like best, as equal options. The user picks one |
-| `concept-seed.mjs --scope direction` | Offer two or three clearly different directions, plus the conventional category-standard option played straight. Don't recommend or rank the conventional one. Ask the user to choose before writing artifact code |
-| `serve-question.mjs` (decision page) | Ask with the agent's structured question tool when it has one, otherwise as a plain chat question with numbered options. One decision per question, with each option's trade-off in a single line |
-| `surface-brief.mjs read` | Look for an existing brief in `PRODUCT.md`, `DESIGN.md` or the artifact's opening comment. If there's none, say so and continue |
-| `surface-brief.mjs write`, `critique-storage.mjs`, `embed-prompt.mjs` | Skip them. Keep the direction contract in the artifact's opening comment as `new-work.md` describes, and state in the report that brief storage, critique history or trends, and prompt embedding were skipped |
-| `detect.mjs` (critique, layout, type, new work) | Check the target by hand against [craft-floor.md](../impeccable/reference/craft-floor.md) and the relevant checks in [audit.md](../impeccable/reference/audit.md). Report the findings as **manual review** with file and line, never as detector output |
-| `live-server.mjs`, live mode, browser injection | Use a preview the user already has running, or screenshots they provide. Start the project's own dev script only in `implement` mode, in the background, and stop it before you report |
-| Image generation and comps (`visualize.md`) | Not bundled. Build code-led from the locked direction and say that no comp was made |
-| Shipped finish reviewer or documenter subagents | Do the finish pass yourself with `polish.md`. Update `DESIGN.md` only when the user asks (`design-system` with the document step) |
+| `context.mjs` | Read `PRODUCT.md`/`DESIGN.md` if present; otherwise take tokens, theme, global CSS, a representative component and the platform from the code. Say which |
+| `concept-seed.mjs --scope surface` | Draft the five to seven structures, then offer the **three most distinct** as equal options; the user picks |
+| `concept-seed.mjs --scope direction` | Offer two or three clearly different directions plus the conventional option played straight, unranked. The user chooses before any artifact code |
+| `serve-question.mjs` | The agent's structured question tool, or a plain question with numbered options: one decision, one-line trade-off per option |
+| `surface-brief.mjs read` | Look for a brief in `PRODUCT.md`, `DESIGN.md` or the artifact's opening comment; if none, say so |
+| `surface-brief.mjs write`, `critique-storage.mjs`, `embed-prompt.mjs` | Skip, keep the direction contract in the artifact's opening comment, and report the skipped storage, history and embedding |
+| `detect.mjs` | Check by hand against [craft-floor.md](../impeccable/reference/craft-floor.md) and the relevant [audit.md](../impeccable/reference/audit.md) checks; report as **manual review** with file and line |
+| `live-server.mjs`, live mode | Use the user's running preview or screenshots. Start the project's dev script only in `implement`, in the background, and stop it before reporting |
+| Image generation, comps | Not bundled: build code-led and say no comp was made |
+| Finish reviewer, documenter subagents | Do the finish pass with `polish.md`; update `DESIGN.md` only when asked |
 
 ## Two-assessment critiques
-
-`critique.md` wants its design review (A) and evidence pass (B) to run in isolation. In Claude Code with this plugin's agents, the head may run both as two parallel read-only `design-auditor` tasks (SKILL.md §5). Anywhere else, finish A completely, then do B by hand from the substitutes above, and keep the two lists separate in the report.
+`critique.md` wants its design review (A) and evidence pass (B) isolated. With the plugin's agents, the head may run both as parallel read-only `design-auditor` tasks; otherwise finish A, then do B by hand, and keep the lists separate.
 
 ## Verify
-
-- Every script step the loaded file names is either replaced from the table above or reported as skipped.
-- Each choice the user had to make (direction, structure, scope) was asked, not decided for them.
-- Findings say "manual review", and the report lists the steps that used a substitute.
+- Every script step the loaded file names is replaced or reported as skipped.
+- Every user choice (direction, structure, scope) was asked, not made for them.
+- Findings say "manual review".

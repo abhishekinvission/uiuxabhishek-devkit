@@ -43,8 +43,9 @@ OLD_ID_ALLOWED = ("CHANGELOG.md", "README.md", "INSTALL.md", "NOTICE.md", "SOURC
 AGENTS = ("claude-code", "codex", "gemini-cli", "github-copilot", "antigravity")
 SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater pins; newer CLIs change install paths
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
-SKILL_MD_MAX_CHARS = 16000  # raised in 2.1.0 for the tickets row and the §5 agent roster
-GUIDE_MAX_CHARS = 8000  # raised in 2.1.0 for the new capabilities and the agents section
+SKILL_MD_MAX_CHARS = 12000
+MAX_CONTEXT_GROWTH = 10  # percent over the pre-router baseline, averaged over all scenarios
+GUIDE_MAX_CHARS = 5000
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 
 failures = []
@@ -249,11 +250,19 @@ def parse_router():
             sig, _, targets = seg.lstrip("+").partition(" → ")
             files = [p for p in re.findall(r"\]\(([^)]+)\)", targets)]
             files += [base + p for p in re.findall(r"(?<!\()`([\w./-]+\.md)`", targets)]
+            if "†" in targets:
+                files.append(CLI_ADAPTER)  # † = also load the Impeccable script adapter
             check(files, f"router row {row.group(1)} segment has no files: {seg}")
             for f in files:
                 check(os.path.exists(os.path.join(SKILL, f)), f"router target missing: {f}")
-            segments.append({"cond": cond, "signals": sig, "files": files})
+            segments.append({"cond": cond, "signals": sig, "files": files, "raw": targets})
         caps[row.group(1)] = segments
+    for cap, segs in caps.items():  # "all of `tickets`": the row also loads that capability's whole route
+        for seg in list(segs):
+            m = re.search(r"all of `([\w-]+)`", seg.get("raw", ""))
+            if m and m.group(1) in caps:
+                seg["files"] += caps[m.group(1)][0]["files"]
+                segs += [dict(x) for x in caps[m.group(1)][1:]]
     never = re.search(r"\*\*Never load\*\*[^:]*:(.*)", text).group(1)
     never = {"references/impeccable/reference/" + n.rstrip("*")
              for n in re.findall(r"`([\w/.*-]+)`", never)}
@@ -270,6 +279,7 @@ def is_never(path, never):
 
 
 CLI_ADAPTER = "references/adapters/impeccable-without-cli.md"
+AGENT_PLANS = "references/workflows/agent-plans.md"
 SHARED_COMPANIONS = ("references/adapters/",  # loaded beside several capabilities' primary files
                      "references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md")  # tickets + ado
 
@@ -284,6 +294,9 @@ def check_coverage(caps, never):
     expected.add("references/apple-design/SOURCE_SKILL.md")
     expected -= {p for p in expected if is_never(p, never)}
     expected.discard("references/impeccable/reference/craft-floor.md")  # loaded by the shared UI-edit rule
+    skill_text = read(os.path.join(SKILL, "SKILL.md"))
+    check(f"]({AGENT_PLANS})" in skill_text.split("## 5.")[-1], f"SKILL.md §5 must link {AGENT_PLANS}")
+    routed = routed | {AGENT_PLANS}  # loaded from §5 when the head plans agents
     check(not (expected - routed), f"unrouted references: {sorted(expected - routed)}")
     check(not {p for p in routed if is_never(p, never)}, "a never-load file is routed")
     primary = {}
@@ -420,7 +433,7 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
         errs += [f"loaded never-load {f}" for f in files if is_never(f, never)]
         if "ado" not in sc["caps"]:
             errs += [f"loaded ADO file {f}" for f in files if f in ado_files]
-        new = skill_tokens + tokens(files)
+        new = skill_tokens + tokens(files + ([AGENT_PLANS] if planned != "inline" else []))
         before = baseline_tokens(len(old), files, selected) if old else 0
         total_new += new
         total_old += before
@@ -430,9 +443,10 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
     n = len(data["scenarios"])
     check(n >= 12, "need at least 12 routing scenarios")
     if total_old:
+        growth = 100 * total_new / total_old - 100
         print(f"{n} scenarios: ~{total_new // n} tokens/scenario vs ~{total_old // n} before "
-              f"({abs(100 - 100 * total_new // total_old)}% "
-              f"{'less' if total_new <= total_old else 'more'} context than the pre-router baseline)")
+              f"({growth:+.1f}% context vs the pre-router baseline; budget +{MAX_CONTEXT_GROWTH}%)")
+        check(growth <= MAX_CONTEXT_GROWTH, f"context growth {growth:.1f}% exceeds {MAX_CONTEXT_GROWTH}%")
 
 
 # ------------------------------------------------------------------- agents
@@ -443,14 +457,10 @@ AGENT_BODY_MAX_LINES = 45
 
 
 def parse_roster(text, caps):
-    """SKILL.md §5 table: agent -> (access, [capability IDs])."""
+    """SKILL.md §5 list: "- `agent` (access): cap, cap" -> {agent: (access, [capability IDs])}."""
     section = text.split("## 5.")[1] if "## 5." in text else ""
-    roster = {}
-    for name, access, cell in re.findall(r"^\| `([\w-]+)` \| ([^|]+) \| (.+) \|$", section, re.M):
-        roster[name] = (access.strip(), [c for c in re.findall(r"`([\w-]+)`", cell) if c in caps or c not in roster])
-    for name in roster:
-        roster[name] = (roster[name][0], [c for c in roster[name][1] if c not in roster])
-    return roster
+    return {name: (access.strip(), [c.strip() for c in cells.split(",") if c.strip()])
+            for name, access, cells in re.findall(r"^- `([\w-]+)` \(([^)]+)\): (.+)$", section, re.M)}
 
 
 def frontmatter_fields(text):
