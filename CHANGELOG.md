@@ -1,8 +1,30 @@
 # Changelog
 
-All notable changes to UIUX Abhishek DevKit (formerly UIUX Abhishek Design) are recorded here. The project follows [Semantic Versioning](https://semver.org): a skill ID change or removed capability is a major version, a new capability a minor one, and fixes a patch.
+All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit and UIUX Abhishek Design) are recorded here. The project follows [Semantic Versioning](https://semver.org): a skill ID change or removed capability is a major version, a new capability a minor one, and fixes a patch.
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
+
+## [3.0.0] — 2026-11-24 (stable release)
+
+**Breaking: renamed to Craftline.** UIUX Abhishek DevKit is now **Craftline** by uiuxAbhishek (Abhishek Rampal). The plugin ID and skill ID change from `uiuxabhishek-devkit` to `craftline`, so existing installs must migrate; an update can't carry them across. There are no capability, routing or guidance changes.
+
+### Renamed
+- Skill ID and folder: `plugin/skills/uiuxabhishek-devkit/` → `plugin/skills/craftline/` (`name: craftline`), moved with history. Title "Craftline"; tagline unchanged.
+- Plugin: `plugin.json` `name: "craftline"`, author `uiuxAbhishek`. The marketplace keeps its name, `uiuxabhishek`, and its source, `./plugin`, so the Claude Code install ID is `craftline@uiuxabhishek` and the agents' namespace is `craftline:`. The 8 agents keep their names.
+- Release ZIPs: `craftline-v<version>.zip` (Claude Chat upload) and `craftline-plugin-v<version>.zip`.
+- The repository keeps its name, `abhishekinvission/uiuxabhishek-devkit`, and its pinned repository ID.
+- Branding: Craftline is the primary identity in every doc, manifest, agent and tool. Former names appear only in migration notes and history. Licenses and copyright lines are unchanged.
+
+### Migration
+- **Claude Code:** `claude plugin marketplace update uiuxabhishek`, `claude plugin uninstall uiuxabhishek-devkit@uiuxabhishek`, `claude plugin install craftline@uiuxabhishek`.
+- **Claude app:** after the marketplace syncs, install **craftline** and uninstall **uiuxabhishek-devkit**.
+- **Codex, Gemini CLI, GitHub Copilot, Antigravity:** `npx skills remove uiuxabhishek-devkit -g -a <agents> -y`, then `npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a <agents> -y`. Claude Code is never in these commands; it uses the plugin. The README and INSTALL.md Skills CLI commands now cover these four tools only.
+- **Claude Chat:** delete the old skill and upload `craftline-v3.0.0.zip`.
+- **Updater:** when it finds `uiuxabhishek-devkit` installed, `update --yes` installs `craftline` for the same configured agents, verifies it, then removes the former ID. `setup` no longer adds `claude-code` on its own when the Craftline plugin is installed. Its folder (`~/.uiuxabhishek-devkit`), file name and schedule names are unchanged, so existing schedules update in place. Download the 3.0.0 updater and run `setup` again.
+
+### Tests
+- `validate.py` requires exactly one discoverable skill, `craftline`, with Skills CLI 1.7.6 and 1.9.0; former IDs and brands only in migration notes, history, tests and the updater's migration code; no Skills CLI install command for `claude-code`; and the documented migration from both former IDs in a throwaway HOME.
+- The updater sandbox adds migration cases: install then remove for the configured agents, failures at either step, and `setup` with the plugin installed.
 
 ## [2.1.1] — 2026-11-24 (stable release)
 
@@ -113,6 +135,7 @@ Tag `v1.0.0` (commit `dbb612c`), with the GitHub Release asset `uiuxabhishek-des
 - `f0b098f`: branding, ownership and licensing policy for integrating sources.
 - `8c7c9e5`, `93b5815`, `72d0bbf`: initial skill with Impeccable and Apple Design, the integration workflow and corrected install commands.
 
+[3.0.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.0
 [2.1.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.1.1
 [2.1.0]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.1.0
 [2.0.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v2.0.1

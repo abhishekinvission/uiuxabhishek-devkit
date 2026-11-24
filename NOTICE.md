@@ -1,6 +1,6 @@
-# UIUX Abhishek DevKit — Notice
+# Craftline — Notice
 
-**UIUX Abhishek DevKit** (`uiuxabhishek-devkit`), formerly UIUX Abhishek Design (`uiuxabhishek-design`)
+**Craftline** (`craftline`) by uiuxAbhishek (Abhishek Rampal), formerly UIUX Abhishek DevKit (`uiuxabhishek-devkit`) and UIUX Abhishek Design (`uiuxabhishek-design`)
 Created and maintained by Abhishek Rampal (uiuxAbhishek) — <https://github.com/abhishekinvission/uiuxabhishek-devkit>
 
 ## Ownership
@@ -16,7 +16,7 @@ Created and maintained by Abhishek Rampal (uiuxAbhishek) — <https://github.com
 
 ## Disclaimers
 
-UIUX Abhishek DevKit is an independent project. It is not affiliated with, sponsored by or endorsed by the upstream authors, Apple Inc., Google or Microsoft. Apple and other trademarks belong to their respective owners; the Apple Design reference describes publicly presented design principles and does not imply any association.
+Craftline is an independent project. It is not affiliated with, sponsored by or endorsed by the upstream authors, Apple Inc., Google or Microsoft. Apple and other trademarks belong to their respective owners; the Apple Design reference describes publicly presented design principles and does not imply any association.
 
 Only Markdown guidance and templates are bundled. Upstream CLIs, scripts, hooks, binaries and install tooling are not included, and this package is not a replacement for the original projects. Azure DevOps and Azure Boards are trademarks of Microsoft. No Azure credentials or connectors are included.
 

@@ -1,9 +1,9 @@
 {
-  "name": "uiuxabhishek-devkit",
-  "version": "2.1.1",
-  "description": "UIUX Abhishek DevKit: one router skill for UI/UX design, accessibility, motion, frontend engineering, Figma to code, frontend security, Git and ticket-to-draft-PR delivery, plus specialist agents the main session can plan and dispatch in Claude Code.",
+  "name": "craftline",
+  "version": "3.0.0",
+  "description": "Craftline by uiuxAbhishek: one router skill for UI/UX design, accessibility, motion, frontend engineering, Figma to code, frontend security, Git and ticket-to-draft-PR delivery, plus specialist agents the main session plans and dispatches.",
   "author": {
-    "name": "Abhishek Rampal",
+    "name": "uiuxAbhishek",
     "url": "https://github.com/abhishekinvission"
   },
   "homepage": "https://github.com/abhishekinvission/uiuxabhishek-devkit",

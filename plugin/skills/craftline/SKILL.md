@@ -1,13 +1,13 @@
 ---
-name: uiuxabhishek-devkit
-description: Router for UIUX Abhishek DevKit. Use for UI/UX design, accessibility, motion, native and cross-platform UI, Figma to code, frontend engineering (pages, APIs, forms, state, SEO, security, tests, review), Git on any provider, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. Loads only what a task needs. Not for other backend-only or infrastructure tasks.
-license: MIT for UIUX Abhishek DevKit original work; bundled references keep their upstream licenses (see NOTICE.md)
+name: craftline
+description: Craftline router by uiuxAbhishek. Use for UI/UX design, accessibility, motion, native and cross-platform UI, Figma to code, frontend engineering (pages, APIs, forms, state, SEO, security, tests, review), Git on any provider, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. Loads only what a task needs. Not for other backend-only or infrastructure tasks.
+license: MIT for Craftline original work; bundled references keep their upstream licenses (see NOTICE.md)
 metadata:
-  author: Abhishek Rampal (uiuxAbhishek)
+  author: "Abhishek Rampal (uiuxAbhishek)"
   repository: https://github.com/abhishekinvission/uiuxabhishek-devkit
-  version: "2.1.1"
+  version: "3.0.0"
 ---
-# UIUX Abhishek DevKit
+# Craftline
 
 **Design. Build. Automate. Deliver.** By Abhishek Rampal (uiuxAbhishek). Classify the task, then load **only** the files listed for it; paths are relative to this file.
 

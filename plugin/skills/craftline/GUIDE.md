@@ -1,4 +1,4 @@
-# UIUX Abhishek DevKit: what you can ask for
+# Craftline: what you can ask for
 
 **Design. Build. Automate. Deliver.** Describe the task in plain language; the skill loads only the guidance it needs.
 
@@ -46,5 +46,5 @@ With the Claude Code plugin, the main session can hand parts of a larger task to
 
 - It follows your framework, design system and conventions and never imposes a style or library.
 - Impeccable's own tooling isn't bundled; its script steps become manual ones, such as offering directions for you to choose.
-- Update: `npx skills update uiuxabhishek-devkit -g -y`. Plugin, Claude Chat and update notifications: INSTALL.md (github.com/abhishekinvission/uiuxabhishek-devkit).
+- Update: `npx skills update craftline -g -y`. Plugin, Claude Chat and update notifications: INSTALL.md (github.com/abhishekinvission/uiuxabhishek-devkit).
 - Credits and licenses: [NOTICE.md](NOTICE.md).

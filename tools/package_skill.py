@@ -1,16 +1,16 @@
-"""Build the release ZIPs for UIUX Abhishek DevKit.
+"""Build the release ZIPs for Craftline.
 
 Standard library only. Run from anywhere:
     python3 tools/package_skill.py [out_dir]
 
 Two ZIPs, both deterministic (sorted entries, fixed timestamps and permissions):
 
-- uiuxabhishek-devkit-v<version>.zip: the Claude.ai / Claude Desktop Chat upload
-  (Customize > Skills). One root folder, uiuxabhishek-devkit/, with the skill only:
+- craftline-v<version>.zip: the Claude.ai / Claude Desktop Chat upload
+  (Customize > Skills). One root folder, craftline/, with the skill only:
   no agents. Claude's upload form limits the description to 200 characters, so the
   packaged SKILL.md swaps its description for UPLOAD_DESCRIPTION.
-- uiuxabhishek-devkit-plugin-v<version>.zip: the plugin/ folder for manual uploads,
-  with exactly .claude-plugin/plugin.json, agents/ and skills/uiuxabhishek-devkit/
+- craftline-plugin-v<version>.zip: the plugin/ folder for manual uploads,
+  with exactly .claude-plugin/plugin.json, agents/ and skills/craftline/
   at its top level. Marketplaces don't use it: .claude-plugin/marketplace.json
   points at ./plugin in the repository itself.
 
@@ -28,12 +28,12 @@ import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLUGIN = os.path.join(ROOT, "plugin")
-SKILL = os.path.join(PLUGIN, "skills", "uiuxabhishek-devkit")
+SKILL = os.path.join(PLUGIN, "skills", "craftline")
 AGENTS = os.path.join(PLUGIN, "agents")
 PLUGIN_MANIFEST = os.path.join(PLUGIN, ".claude-plugin", "plugin.json")
 MARKETPLACE = os.path.join(ROOT, ".claude-plugin", "marketplace.json")
-NAME = "uiuxabhishek-devkit"
-UPLOAD_DESCRIPTION = ("UIUX Abhishek DevKit router for UI/UX design, accessibility, motion, frontend, "
+NAME = "craftline"
+UPLOAD_DESCRIPTION = ("Craftline router by uiuxAbhishek for UI/UX design, accessibility, motion, frontend, "
                       "Figma to code, security, tests, Git, PRs and ticket-to-PR delivery. Loads only "
                       "what a task needs.")
 UPLOAD_DESCRIPTION_MAX = 200

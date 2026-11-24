@@ -1,60 +1,65 @@
-# UIUX Abhishek DevKit
+# Craftline
 
 > **Design. Build. Automate. Deliver.**
 
-UIUX Abhishek DevKit is one installable Agent Skill, `uiuxabhishek-devkit`, that gives AI coding agents senior-level judgment for UI/UX design, motion, frontend engineering, Figma to code, frontend security, Git and repository workflows, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. It works with Claude Code, Codex, Gemini CLI, GitHub Copilot and Antigravity. For each task it loads only the guidance that task needs. In Claude Code, an optional plugin adds specialist agents that the main session can plan and dispatch.
+Craftline by uiuxAbhishek (Abhishek Rampal) is one installable Agent Skill, `craftline`, that gives AI coding agents senior-level judgment for UI/UX design, motion, frontend engineering, Figma to code, frontend security, Git and repository workflows, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. It works with Claude Code, Codex, Gemini CLI, GitHub Copilot and Antigravity, and loads only the guidance each task needs. In Claude Code it comes as a plugin that also adds specialist agents the main session can plan and dispatch.
 
 Created and maintained by **Abhishek Rampal ([uiuxAbhishek](https://github.com/abhishekinvission))**.
 
 - **Repository:** [abhishekinvission/uiuxabhishek-devkit](https://github.com/abhishekinvission/uiuxabhishek-devkit)
-- **Skill ID:** `uiuxabhishek-devkit` (formerly `uiuxabhishek-design`; see [upgrading](#upgrading-from-uiuxabhishek-design))
-- **Current version:** 2.1.0 ([changelog](CHANGELOG.md))
+- **Plugin and skill ID:** `craftline`; Claude Code install ID `craftline@uiuxabhishek`
+- **Current version:** 3.0.0 ([changelog](CHANGELOG.md))
+- Formerly UIUX Abhishek DevKit (`uiuxabhishek-devkit`) and UIUX Abhishek Design (`uiuxabhishek-design`); see [migrating](#migrating-from-earlier-names).
 
-## Install UIUX Abhishek DevKit
+## Install Craftline
 
-**One command installs it globally for all five supported agents:**
-
-```bash
-npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a claude-code -a codex -a gemini-cli -a github-copilot -a antigravity -y
-```
-
-It needs Node.js 22.20+ and Git, and uses the official [Skills CLI](https://github.com/vercel-labs/skills). Restart your agent afterwards, then ask *"What can uiuxabhishek-devkit do?"* to check it's loaded.
-
-Or install for a single agent:
-
-| Agent | Global install |
-| --- | --- |
-| Claude Code (terminal, IDE, Claude Desktop Code tab) | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a claude-code -y` |
-| OpenAI Codex | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a codex -y` |
-| Gemini CLI | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a gemini-cli -y` |
-| GitHub Copilot | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a github-copilot -y` |
-| Google Antigravity | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a antigravity -y` |
-
-**Local agents vs. Claude Chat.** The commands above install files on your computer for local coding agents. **Claude.ai and Claude Desktop Chat** use skills stored in your Claude account instead, so a terminal install doesn't enable the skill there. For Chat, download `uiuxabhishek-devkit-v<version>.zip` from the [latest release](https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/latest) and upload it under **Customize → Skills → + → Create skill → Upload a skill**.
-
-### Claude Code plugin (skill plus agents)
-
-`npx skills` installs the skill only. To also get the specialist agents in Claude Code, install the plugin from this repository's marketplace instead (the Claude app can add the same marketplace; see [INSTALL.md](INSTALL.md#claude-app-add-marketplace)):
+### Claude Code: the plugin
 
 ```text
 /plugin marketplace add abhishekinvission/uiuxabhishek-devkit
-/plugin install uiuxabhishek-devkit@uiuxabhishek
+/plugin install craftline@uiuxabhishek
 ```
 
-The plugin is the repository's `plugin/` folder: `.claude-plugin/plugin.json`, `agents/` and `skills/` only, without the repository's maintainer files. Use the plugin or the Claude Code `npx` install, not both, so Claude Code doesn't load two copies of the skill.
+The plugin is the repository's `plugin/` folder: `.claude-plugin/plugin.json`, `agents/` and `skills/` only, without the repository's maintainer files. It gives Claude Code the skill and the specialist agents, so don't also install the skill for Claude Code with `npx`. The Claude app can add the same marketplace; see [INSTALL.md](INSTALL.md#claude-app-add-marketplace).
 
-The bundled capabilities belong to this one skill. Install only `uiuxabhishek-devkit`. **[INSTALL.md](INSTALL.md)** covers requirements, project installs, verification, updates, removal, reloading, migration, Chat uploads and troubleshooting.
+### Codex, Gemini CLI, GitHub Copilot and Antigravity: the Skills CLI
 
-### Upgrading from `uiuxabhishek-design`
-
-Version 2.0.0 renamed the skill, so remove the old one and install the new one:
+**One command installs it globally for all four:**
 
 ```bash
-npx skills remove uiuxabhishek-design -g -y
-npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit -g -a claude-code -a codex -a gemini-cli -a github-copilot -a antigravity -y
+npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a codex -a gemini-cli -a github-copilot -a antigravity -y
 ```
 
-Then restart your agents. In Claude Chat, delete the old skill and upload the latest release ZIP. See [INSTALL.md](INSTALL.md#migrate-from-uiuxabhishek-design) for details.
+It needs Node.js 22.20+ and Git, and uses the official [Skills CLI](https://github.com/vercel-labs/skills). Restart your agent afterwards, then ask *"What can Craftline do?"* to check it's loaded.
+
+Or install for a single tool:
+
+| Agent | Global install |
+| --- | --- |
+| OpenAI Codex | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a codex -y` |
+| Gemini CLI | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a gemini-cli -y` |
+| GitHub Copilot | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a github-copilot -y` |
+| Google Antigravity | `npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a antigravity -y` |
+
+**Local agents vs. Claude Chat.** These commands install files on your computer for local coding agents. **Claude.ai and Claude Desktop Chat** use skills stored in your Claude account instead. For Chat, download `craftline-v<version>.zip` from the [latest release](https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/latest) and upload it under **Customize → Skills → + → Create skill → Upload a skill**.
+
+The bundled capabilities belong to this one skill. Install only `craftline`. **[INSTALL.md](INSTALL.md)** covers requirements, project installs, verification, updates, removal, reloading, migration, Chat uploads and troubleshooting.
+
+### Migrating from earlier names
+
+Version 3.0.0 renamed UIUX Abhishek DevKit (`uiuxabhishek-devkit`) to Craftline (`craftline`); version 2.0.0 had renamed UIUX Abhishek Design (`uiuxabhishek-design`). Capabilities are unchanged. In short:
+
+```bash
+# Claude Code
+claude plugin marketplace update uiuxabhishek
+claude plugin uninstall uiuxabhishek-devkit@uiuxabhishek
+claude plugin install craftline@uiuxabhishek
+# Codex, Gemini CLI, GitHub Copilot, Antigravity
+npx skills remove uiuxabhishek-devkit -g -a codex -a gemini-cli -a github-copilot -a antigravity -y
+npx skills add abhishekinvission/uiuxabhishek-devkit --skill craftline -g -a codex -a gemini-cli -a github-copilot -a antigravity -y
+```
+
+Still on `uiuxabhishek-design`? Run `npx skills remove uiuxabhishek-design -g -y` first. Then restart your agents. In Claude Chat, delete the old skill and upload `craftline-v<version>.zip`. [INSTALL.md](INSTALL.md#migrate-to-craftline) has every step, including the Claude app and the updater, which migrates for you.
 
 ## What's included
 
@@ -84,7 +89,7 @@ Merges, destructive resets, force-pushes, branch or tag deletion, published-hist
 
 ## Using it
 
-Describe the task in plain language. Naming the skill is optional, but you can start with *"Use uiuxabhishek-devkit to…"*. To see everything it can do, ask *"What can uiuxabhishek-devkit do?"*, which shows the built-in [capability guide](plugin/skills/uiuxabhishek-devkit/GUIDE.md).
+Describe the task in plain language. Naming the skill is optional, but you can start with *"Use Craftline to…"*. To see everything it can do, ask *"What can Craftline do?"*, which shows the built-in [capability guide](plugin/skills/craftline/GUIDE.md).
 
 | Area | Example prompt |
 | --- | --- |
@@ -96,7 +101,7 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 | CRUD and reports | "Add an admin users table with server pagination, filters, CSV export and edit forms." |
 | Testing | "Write Playwright end-to-end tests for the login flow." |
 | Git | "My branch is behind main; sync it without losing my work." · "Commit only the login fix and push the branch." · "Open a draft merge request on GitLab." · "Resolve the merge conflicts after my rebase." |
-| Releases | "Plan a v2.1.0 tag and GitHub release." Plans only; publishing needs your go-ahead |
+| Releases | "Plan a v3.1.0 tag and GitHub release." Plans only; publishing needs your go-ahead |
 | Forms | "Add a multi-step claim form with autosave, file upload and accessible errors." |
 | Figma | "Implement this Figma frame using our existing tokens and components." |
 | Security | "Check the comment widget for XSS and add a CSP." |
@@ -110,11 +115,11 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 ## Updates and versions
 
 - **Stable releases** are tagged `vX.Y.Z` on GitHub with a Claude upload ZIP and its SHA-256 checksum. See [CHANGELOG.md](CHANGELOG.md).
-- **Update a local install:** `npx skills update uiuxabhishek-devkit -g -y`. An install made with the commands above follows `main`, which only receives validated changes. To stay on stable releases only, install a tag (`abhishekinvission/uiuxabhishek-devkit#v2.1.0`) or use the optional updater.
+- **Update a local install:** `npx skills update craftline -g -y`. An install made with the commands above follows `main`, which only receives validated changes. To stay on stable releases only, install a tag (`abhishekinvission/uiuxabhishek-devkit#v3.0.0`) or use the optional updater.
 - **Update the Claude Code plugin:** `/plugin marketplace update uiuxabhishek`, then update the plugin from `/plugin`. Claude Code offers an update only when `plugin.json`'s `version` changes; a Claude app marketplace with **Sync automatically** on picks up every push to `main`.
-- **Update notifications (optional):** the [updater](INSTALL.md#optional-update-notifications-and-automatic-updates) checks GitHub once a day for a newer stable release and notifies you. It never changes anything unless you opt in with `enable-auto-update --yes`. It runs on macOS, Linux and Windows and touches only `uiuxabhishek-devkit`.
+- **Update notifications (optional):** the [updater](INSTALL.md#optional-update-notifications-and-automatic-updates) checks GitHub once a day for a newer stable release and notifies you. It never changes anything unless you opt in with `enable-auto-update --yes`. It runs on macOS, Linux and Windows and touches only `craftline` (and, once, its former ID when it migrates an install).
 - **Claude Chat uploads** are always updated by hand: delete the old skill and upload the new ZIP.
-- **Remove:** `npx skills remove uiuxabhishek-devkit -g -y`.
+- **Remove:** `npx skills remove craftline -g -a codex -a gemini-cli -a github-copilot -a antigravity -y`; in Claude Code, `claude plugin uninstall craftline@uiuxabhishek`.
 
 ## Repository layout
 
@@ -122,7 +127,7 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 plugin/                     # The Claude Code plugin; the only thing marketplaces install
 ├── .claude-plugin/plugin.json
 ├── agents/                 # Claude Code plugin agents (plugin only)
-└── skills/uiuxabhishek-devkit/
+└── skills/craftline/
     ├── SKILL.md            # Single entry point: intent, mode and capability router
     ├── GUIDE.md            # User-facing capability and usage guide
     ├── NOTICE.md, LICENSE  # In-skill attribution and license (travel with installs)
@@ -152,7 +157,7 @@ This is a **guidance-only** skill. The installed skill doesn't include CLIs, bin
   - links, checksums, license mirrors and the security scan;
   - the `plugin/` layout, both ZIPs, `plugin.json` and the `./plugin` marketplace source;
   - the agents and their capability mapping;
-  - leftover references to the old skill ID.
+  - former names only in migration notes and history.
 - **Release:**
   1. Bump `metadata.version` in `SKILL.md` and add a `CHANGELOG.md` entry.
   2. Set the same version in `plugin/.claude-plugin/plugin.json`. Claude Code users get the update only when this string changes.
@@ -162,10 +167,10 @@ This is a **guidance-only** skill. The installed skill doesn't include CLIs, bin
 
 ## Third-Party Licenses & Credits
 
-UIUX Abhishek DevKit's original work is © Abhishek Rampal and licensed under the [MIT License](LICENSE). That covers the routing, architecture, documentation, frontend, Git and ticket-delivery guides, the Impeccable adapter, the plugin agents, templates and tooling. Bundled third-party material is **not** owned by Abhishek Rampal. It stays the work of its authors and is redistributed under its original licenses:
+Craftline's original work is © Abhishek Rampal and licensed under the [MIT License](LICENSE). That covers the routing, architecture, documentation, frontend, Git and ticket-delivery guides, the Impeccable adapter, the plugin agents, templates and tooling. Bundled third-party material is **not** owned by Abhishek Rampal. It stays the work of its authors and is redistributed under its original licenses:
 
 - **[Impeccable](https://github.com/pbakaus/impeccable)** by Paul Bakaus: [Apache License 2.0](LICENSES/IMPECCABLE_APACHE-2.0.txt), with its [upstream NOTICE](LICENSES/IMPECCABLE_NOTICE.md).
 - **[platform-design-skills](https://github.com/ehmo/platform-design-skills)** by ehmo: [MIT](LICENSES/PLATFORM_DESIGN_SKILLS_MIT.txt). Impeccable's iOS and Android references are derived from it.
 - **[Apple Design](https://github.com/emilkowalski/skills)** by Emil Kowalski: [MIT](LICENSES/APPLE_DESIGN_MIT.txt).
 
-UIUX Abhishek DevKit is independent and isn't affiliated with or endorsed by these authors, or by Apple Inc., Google or Microsoft. Apple, Azure DevOps and other trademarks belong to their owners. See [NOTICE.md](NOTICE.md) for full attribution and [SOURCES.md](SOURCES.md) for provenance. Keep `LICENSE`, `NOTICE.md` and `LICENSES/` when you redistribute.
+Craftline is independent and isn't affiliated with or endorsed by these authors, or by Apple Inc., Google or Microsoft. Apple, Azure DevOps and other trademarks belong to their owners. See [NOTICE.md](NOTICE.md) for full attribution and [SOURCES.md](SOURCES.md) for provenance. Keep `LICENSE`, `NOTICE.md` and `LICENSES/` when you redistribute.

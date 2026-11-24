@@ -21,7 +21,8 @@ import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPDATER = os.path.join(ROOT, "tools", "updater", "devkit-update.mjs")
-OWNER, REPO, SKILL = "abhishekinvission", "uiuxabhishek-devkit", "uiuxabhishek-devkit"
+OWNER, REPO, SKILL = "abhishekinvission", "uiuxabhishek-devkit", "craftline"
+RENAMED = "uiuxabhishek-devkit"  # the skill ID from 2.0.0 to 2.1.1, which update migrates
 REPO_ID = 1442633889
 TREE = "a" * 40
 AGENTS = ["claude-code", "codex", "gemini-cli", "github-copilot", "antigravity"]
@@ -30,14 +31,25 @@ MOCK_CLI = r"""
 import fs from "node:fs"; import path from "node:path";
 const home = process.env.HOME, args = process.argv.slice(2);
 fs.appendFileSync(path.join(home, "cli-calls.jsonl"), JSON.stringify(args) + "\n");
-if (process.env.MOCK_EXIT) process.exit(Number(process.env.MOCK_EXIT));
-const tag = args[1].split("#")[1], version = process.env.MOCK_VERSION || tag.slice(1);
-const dir = path.join(home, ".agents", "skills", "uiuxabhishek-devkit");
-fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(path.join(dir, "SKILL.md"), `---\nname: uiuxabhishek-devkit\nmetadata:\n  version: "${version}"\n---\n`);
+if (process.env.MOCK_EXIT && args[0] === (process.env.MOCK_EXIT_ON || args[0])) process.exit(Number(process.env.MOCK_EXIT));
 const lockPath = path.join(home, ".agents", ".skill-lock.json");
 const lock = JSON.parse(fs.readFileSync(lockPath, "utf8"));
-lock.skills["uiuxabhishek-devkit"] = { ...lock.skills["uiuxabhishek-devkit"], ref: tag, skillFolderHash: process.env.MOCK_HASH };
+const agents = args.filter((_, i) => args[i - 1] === "-a");
+if (args[0] === "remove") {
+  const id = args[1];
+  if (agents.some((a) => a !== "claude-code")) {
+    fs.rmSync(path.join(home, ".agents", "skills", id), { recursive: true, force: true });
+    delete lock.skills[id];
+  }
+  if (agents.includes("claude-code")) fs.rmSync(path.join(home, ".claude", "skills", id), { recursive: true, force: true });
+} else {
+  const id = args[args.indexOf("--skill") + 1];
+  const tag = args[1].split("#")[1], version = process.env.MOCK_VERSION || tag.slice(1);
+  const dir = path.join(home, ".agents", "skills", id);
+  fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "SKILL.md"), `---\nname: ${id}\nmetadata:\n  version: "${version}"\n---\n`);
+  lock.skills[id] = { ...lock.skills[id], ref: tag, skillFolderHash: process.env.MOCK_HASH };
+}
 fs.writeFileSync(lockPath, JSON.stringify(lock));
 """
 
@@ -98,7 +110,7 @@ def serve(mock):
 
 
 class Home:
-    def __init__(self, base, port, cli, version="2.0.0", platform="darwin"):
+    def __init__(self, base, port, cli, version="2.0.0", platform="darwin", skill=SKILL, plugin=False):
         self.path = tempfile.mkdtemp(dir=base)
         self.env = {"PATH": os.environ.get("PATH", ""), "HOME": self.path, "DEVKIT_USER_HOME": self.path,
                     "DEVKIT_API_BASE": f"http://127.0.0.1:{port}/api", "DEVKIT_RAW_BASE": f"http://127.0.0.1:{port}/raw",
@@ -107,12 +119,15 @@ class Home:
                     "MOCK_HASH": TREE}
         self.dir = os.path.join(self.path, ".uiuxabhishek-devkit")
         if version:
-            self.install(SKILL, version)
+            self.install(skill, version)
             os.makedirs(os.path.join(self.path, ".claude", "skills"))
-            os.symlink(os.path.join(self.path, ".agents", "skills", SKILL),
-                       os.path.join(self.path, ".claude", "skills", SKILL))
+            os.symlink(os.path.join(self.path, ".agents", "skills", skill),
+                       os.path.join(self.path, ".claude", "skills", skill))
             self.write(".agents/.skill-lock.json", json.dumps({"version": 3, "skills": {
-                SKILL: {"source": f"{OWNER}/{REPO}", "ref": f"v{version}", "skillFolderHash": "0" * 40}}}))
+                skill: {"source": f"{OWNER}/{REPO}", "ref": f"v{version}", "skillFolderHash": "0" * 40}}}))
+        if plugin:
+            self.write(".claude/plugins/installed_plugins.json", json.dumps({"version": 2, "plugins": {
+                f"{SKILL}@uiuxabhishek": [{"scope": "user", "version": "3.0.0"}]}}))
         self.install("other-skill", "9.9.9")
 
     def write(self, rel, text):
@@ -128,8 +143,11 @@ class Home:
     def install(self, name, version):
         self.write(f".agents/skills/{name}/SKILL.md", f'---\nname: {name}\nmetadata:\n  version: "{version}"\n---\n')
 
-    def version(self):
-        return self.read(f".agents/skills/{SKILL}/SKILL.md").split('version: "')[1].split('"')[0]
+    def version(self, skill=SKILL):
+        return self.read(f".agents/skills/{skill}/SKILL.md").split('version: "')[1].split('"')[0]
+
+    def has(self, rel):
+        return os.path.lexists(os.path.join(self.path, rel))
 
     def calls(self):
         p = os.path.join(self.path, "cli-calls.jsonl")
@@ -266,6 +284,50 @@ def overdue_checks(check, new, mock, plist_rel):
           and cfg["mode"] == "notify" and cfg["agents"] == legacy["agents"] and cfg["npx"] == legacy["npx"])
 
 
+def migration_checks(check, new, mock):
+    """3.0.0 renamed uiuxabhishek-devkit to craftline: update installs craftline, then removes the old ID."""
+    four = ["codex", "gemini-cli", "github-copilot", "antigravity"]
+    flags = [x for a in four for x in ("-a", a)]
+    mock.reset("v3.0.0")
+    h = new(version="2.1.1", skill=RENAMED)
+    st = json.loads(h.run("check", "--json").stdout)
+    check("migration: check finds the renamed install and offers the update",
+          st["installed"] == "2.1.1" and st["migrateFrom"] == RENAMED and st["updateAvailable"] and not h.calls())
+    check("migration: check output explains the rename", "is now craftline" in h.run("check").stdout)
+    h.run("setup", "--agents", ",".join(four), "--no-schedule")
+    r = h.run("update", "--yes")
+    calls = h.calls()
+    check("migration: installs craftline for the configured agents, then removes the old ID for the same agents",
+          calls == [["add", f"{OWNER}/{REPO}#v3.0.0", "--skill", SKILL, "-g"] + flags + ["-y"],
+                    ["remove", RENAMED, "-g"] + flags + ["-y"]])
+    check("migration: craftline 3.0.0 is installed and the old ID is gone from ~/.agents/skills",
+          r.returncode == 0 and h.version() == "3.0.0" and not h.has(f".agents/skills/{RENAMED}")
+          and "migrated uiuxabhishek-devkit 2.1.1 -> craftline 3.0.0" in r.stdout)
+    check("migration: claude-code isn't configured, so no Claude Code copy is added",
+          not h.has(f".claude/skills/{SKILL}") and all("claude-code" not in c for c in calls))
+    check("migration: the previous version is backed up", len(os.listdir(os.path.join(h.dir, "backups"))) == 1)
+    check("migration: a second update is a no-op", "already at 3.0.0" in h.run("update", "--yes").stdout and len(h.calls()) == 2)
+
+    h = new(version="2.1.1", skill=RENAMED)
+    h.run("setup", "--agents", ",".join(four), "--no-schedule")
+    r = h.run("update", "--yes", MOCK_EXIT="7", MOCK_EXIT_ON="add")
+    check("migration: a failed install keeps the old ID and explains recovery",
+          r.returncode == 1 and h.version(RENAMED) == "2.1.1" and "--skill uiuxabhishek-devkit" in r.stderr
+          and all(c[0] != "remove" for c in h.calls()))
+    h = new(version="2.1.1", skill=RENAMED)
+    h.run("setup", "--agents", ",".join(four), "--no-schedule")
+    r = h.run("update", "--yes", MOCK_EXIT="5", MOCK_EXIT_ON="remove")
+    check("migration: a failed removal reports craftline installed and the removal command",
+          r.returncode == 1 and h.version() == "3.0.0" and f"npx skills remove {RENAMED} -g -a codex" in r.stderr)
+
+    r = new(version="2.1.1", skill=RENAMED, plugin=True).run("setup", "--no-schedule")
+    check("setup doesn't auto-add claude-code when the Craftline plugin is installed",
+          r.returncode == 0 and "claude-code" not in r.stdout and "codex" in r.stdout)
+    r = new(version="2.1.1", skill=RENAMED).run("setup", "--no-schedule")
+    check("setup still detects claude-code from a Skills CLI copy when the plugin isn't installed", "claude-code" in r.stdout)
+    mock.reset("v2.1.0")
+
+
 def run_checks():
     results = []
 
@@ -365,6 +427,8 @@ def run_checks():
         r = h.run("check")
         check("old skill is reported, not removed", "npx skills remove uiuxabhishek-design" in r.stdout
               and os.path.exists(os.path.join(h.path, ".agents/skills/uiuxabhishek-design/SKILL.md")))
+
+        migration_checks(check, new, mock)
 
         # setup, scheduling per platform, modes, disable, uninstall
         sched = {"darwin": "Library/LaunchAgents/com.uiuxabhishek.devkit-update.plist",

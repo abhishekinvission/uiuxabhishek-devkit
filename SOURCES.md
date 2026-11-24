@@ -1,6 +1,6 @@
 # Sources manifest
 
-Provenance record for content bundled in **UIUX Abhishek Design** (`uiuxabhishek-design`). Third-party files remain the work of their authors under the licenses shown; original project content is listed separately at the end. See [NOTICE.md](NOTICE.md).
+Provenance record for content bundled in **Craftline** (`craftline`), formerly UIUX Abhishek DevKit and UIUX Abhishek Design. Third-party files remain the work of their authors under the licenses shown; original project content is listed separately at the end. See [NOTICE.md](NOTICE.md).
 
 ## Upstream sources
 
@@ -21,11 +21,11 @@ The initial import came from locally installed copies of Impeccable and Apple De
 | `LICENSES/PLATFORM_DESIGN_SKILLS_MIT.txt` | platform-design-skills `LICENSE` (`main`) | 2026-11-03 |
 | `LICENSES/APPLE_DESIGN_MIT.txt` | emilkowalski/skills license | Initial import |
 
-The same files are mirrored in `plugin/skills/uiuxabhishek-devkit/LICENSES/` so they travel with installed copies.
+The same files are mirrored in `plugin/skills/craftline/LICENSES/` so they travel with installed copies.
 
 ## Included third-party files (SHA-256)
 
-Paths are relative to `plugin/skills/uiuxabhishek-devkit/references/`.
+Paths are relative to `plugin/skills/craftline/references/`.
 
 All files below stay in the repository and in Skills CLI installs. The release ZIPs (Claude Chat upload and Claude Code plugin), built by `tools/package_skill.py`, leave out the nine "Never load" files from `SKILL.md`: `impeccable/reference/live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md` and `degraded/` (four files). They only drive Impeccable tooling that isn't bundled. Shipping a subset of an Apache-2.0 work is permitted (Section 4), and every ZIP keeps `LICENSE`, `NOTICE.md` and `LICENSES/`, including Impeccable's NOTICE.
 
@@ -75,7 +75,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 
 | Content | Origin | License |
 | --- | --- | --- |
-| `references/frontend/` (9 guides), `references/workflows/` (2 guides), `templates/` (2 templates) | *UIUX Abhishek Design Frontend Engineering Expansion* pack, supplied by the maintainer on 2026-11-03 (`uiuxabhishek-frontend-expansion.zip`, SHA-256 `4a86b38a1efa79b8dfd0760eec70ff2ba2e53b80c9b417a869525c7521a83db1`) | MIT (© Abhishek Rampal) |
+| `references/frontend/` (9 guides), `references/workflows/` (2 guides), `templates/` (2 templates) | *UIUX Abhishek Design Frontend Engineering Expansion* pack (named after the project's former name), supplied by the maintainer on 2026-11-03 (`uiuxabhishek-frontend-expansion.zip`, SHA-256 `4a86b38a1efa79b8dfd0760eec70ff2ba2e53b80c9b417a869525c7521a83db1`) | MIT (© Abhishek Rampal) |
 | `references/workflows/git-workflow.md`, `references/workflows/git-recovery-and-release.md` | Universal Git & Repository Workflow, written for this project on 2026-11-04 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
@@ -93,7 +93,7 @@ The pack describes itself as framework-independent guides written for this proje
 - 2026-11-24 (2.1.0): the provider-neutral lifecycle moved from `azure-devops-delivery.md` to `ticket-delivery.md`, which now also covers GitHub Issues, Jira and Linear; the ADO file keeps only Azure specifics. `templates/ado-delivery-report.md` became `templates/ticket-delivery-report.md`.
 - Not imported: the pack's `PACKAGE_MANIFEST.json`, `README.md` and `integration/` instructions (installer metadata, merged into `SKILL.md` routing instead).
 
-Checksums (paths relative to `plugin/skills/uiuxabhishek-devkit/`):
+Checksums (paths relative to `plugin/skills/craftline/`):
 
 - `references/adapters/impeccable-without-cli.md  13232107300aeadcc051fecbcc8dae8c84d483c0c3b15ca2cf3385b599d01571`
 - `references/frontend/admin-crud.md  d5eb94fb9a001761a8daf6c2c73f289f3443666ed2382a6057655e9c1c6c080c`
@@ -112,7 +112,7 @@ Checksums (paths relative to `plugin/skills/uiuxabhishek-devkit/`):
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
 - `references/workflows/ado-configuration.md  ff8cce8c406c5be539aa4af69301f4508c14dc6a306d0ef13713d626868464ac`
 - `references/workflows/agent-plans.md  d19c680d18dc1b387554057aaa260549b26488aff131af4a3819bb26d0aacfde`
-- `references/workflows/azure-devops-delivery.md  e3efeb5c23a132fc500b5705acc613522055a8ab77e51ee50d733cd061aeb180`
+- `references/workflows/azure-devops-delivery.md  5c43d9edb1416222bb3a0c17644273cb8d3da72ef6265c240c6baf1807a0d7bb`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
 - `references/workflows/git-workflow.md  a581debca4a298fb45e65b73cdc47507d2b665d32bb4fe22ad09633e63e53d10`
 - `references/workflows/ticket-delivery.md  7a8425cacc821082db3f01ee57210b39c8cf2291b4aa808a0a2d7051172d8095`
@@ -121,11 +121,11 @@ Checksums (paths relative to `plugin/skills/uiuxabhishek-devkit/`):
 
 Plugin agent files (paths relative to `plugin/`):
 
-- `agents/code-reviewer.md  689b694a38528bc51c26332c6db2fc35a070f40e807cb7c4b171ca5b289afc0b`
-- `agents/delivery-agent.md  b898d38d6cca1e6dcce59dd40c5b11e7419c7bbe0b698357f5f7e3ead97ea42c`
-- `agents/design-auditor.md  15192f9fe12307162f85119bd478af10a1bd35c90fc592bca667f5e9248fdb85`
-- `agents/figma-translator.md  ce4cb82a978e16818d86e4551b8d93a38f85ae526a261f97aa9419be521224d6`
-- `agents/frontend-engineer.md  5fba204243d9c1e847d9ffd69ffa2a498fe428cf94ba2d61065012dfd7bb06a0`
-- `agents/test-engineer.md  ff89d2b34c1331e28651a9903de552b534ee1e45e34def453582e1d24eed9d0b`
-- `agents/ui-designer.md  550e9c79b81c117b4676562a2bfa2d5a6327a7078a4a2252af58f64bca2c3c12`
-- `agents/ux-designer.md  e2e33e71165cd6faf25683d3186ebdc98e653c1b0aefdf2abd229cb5273fea3c`
+- `agents/code-reviewer.md  bce58a3583c0d2314c7a57c93885703bec03f06f22009d03cdc0c8f4272df5cc`
+- `agents/delivery-agent.md  0fb07b1078ab3de237c2d07ad6a8fe711de329cadbd16fe7c05eb4d77d1bf468`
+- `agents/design-auditor.md  099481bd6f4a4306710ad71a646d46463168e0d40e61837880bb6a7d029dea0d`
+- `agents/figma-translator.md  a1e43172d3f6b39296d7fe27ac139dbdd02b9a5ecac78621c93fc9a2254d9b71`
+- `agents/frontend-engineer.md  0bcef591c9076979c19d7f079404ce8a4ccb102c06737dbfe9a0234c10c7d62a`
+- `agents/test-engineer.md  b06b0a3989e2c0e4f9362bdabee47170fb3aa7de79707b71a6437ee702fcb973`
+- `agents/ui-designer.md  b747fdb31a98abae3cdfe776cc44c5122947891f076d9b88941901224d3f6a92`
+- `agents/ux-designer.md  ba9deaad18820d81d01cfec75ca50edf40ba4d1b29e11446702fb5f7b4a6427d`

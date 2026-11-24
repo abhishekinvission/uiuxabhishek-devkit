@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// UIUX Abhishek DevKit updater: optional, opt-in, stable releases only.
+// Craftline updater by uiuxAbhishek: optional, opt-in, stable releases only.
 //
 //   node devkit-update.mjs <command> [options]
 //
@@ -7,7 +7,8 @@
 //                                         schedule a daily check that only notifies
 //   check [--json]                        compare the installed version with the latest
 //                                         stable GitHub release; never changes anything
-//   update --yes                          update uiuxabhishek-devkit now (manual)
+//   update --yes                          update craftline now (manual); migrates a
+//                                         pre-3.0 uiuxabhishek-devkit install to craftline
 //   enable-auto-update --yes              let the scheduled check install stable updates
 //   status                                show settings, schedule, versions and last result
 //   disable                               remove the schedule and stop automatic updates
@@ -15,8 +16,8 @@
 //
 // Requirements: Node.js 22.20+ (the Skills CLI needs it anyway). No credentials, no
 // background service, no downloaded scripts: it calls the public GitHub API, then the
-// official Skills CLI pinned to a verified release tag. Only uiuxabhishek-devkit is
-// touched; agent settings, other skills and projects are never modified.
+// official Skills CLI pinned to a verified release tag. Only craftline (and, when
+// migrating, its former ID) is touched; agent settings, other skills and projects are never modified.
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -27,11 +28,14 @@ import { fileURLToPath } from "node:url";
 const OWNER = "abhishekinvission";
 const REPO = "uiuxabhishek-devkit";
 const REPO_ID = 1442633889; // GitHub's numeric ID survives renames; a look-alike repo can't match it
-const SKILL_ID = "uiuxabhishek-devkit";
-const OLD_SKILL_ID = "uiuxabhishek-design";
+const SKILL_ID = "craftline";
+const RENAMED_ID = "uiuxabhishek-devkit"; // the skill ID from 2.0.0 to 2.1.1; update migrates it to SKILL_ID
+const OLD_SKILL_ID = "uiuxabhishek-design"; // the skill ID before 2.0.0; reported, never removed
 const SKILLS_CLI = "skills@1.7.6"; // the CLI version these docs were verified with
 const SKILL_ROOTS = ["plugin/skills", "skills"]; // where a release tag keeps the skill: 2.1.1 and later, then earlier tags
 const ALL_AGENTS = ["claude-code", "codex", "gemini-cli", "github-copilot", "antigravity"];
+// Scheduler names, the updater folder (~/.uiuxabhishek-devkit) and the file name are kept from
+// earlier releases so existing schedules are found and replaced in place.
 const LABEL = "com.uiuxabhishek.devkit-update";
 const TASK = "UIUXAbhishekDevKitUpdate";
 const MARKER = "# uiuxabhishek-devkit-update";
@@ -103,21 +107,28 @@ const getJson = async (url) => (await fetchOk(url)).json();
 const getText = async (url) => (await fetchOk(url)).text();
 
 // ------------------------------------------------------------- local state
-function installed() {
-  for (const dir of skillDirs(SKILL_ID)) {
+function installedAs(id) {
+  for (const dir of skillDirs(id)) {
     try {
       const fm = frontmatter(fs.readFileSync(path.join(dir, "SKILL.md"), "utf8"));
-      if (fm.name === SKILL_ID) return { dir: fs.realpathSync(dir), version: fm.version };
+      if (fm.name === id) return { id, dir: fs.realpathSync(dir), version: fm.version };
     } catch {}
   }
   return null;
 }
-const lockEntry = () => readJson(path.join(HOME, ".agents", ".skill-lock.json"), {}).skills?.[SKILL_ID];
+// Craftline first; otherwise a pre-3.0 install under its former ID, which update migrates.
+const installed = () => installedAs(SKILL_ID) || installedAs(RENAMED_ID);
+const lockEntry = (id = SKILL_ID) => readJson(path.join(HOME, ".agents", ".skill-lock.json"), {}).skills?.[id];
+// Claude Code gets Craftline from its plugin; a Skills CLI copy beside it would load twice.
+function pluginInstalled() {
+  const p = readJson(path.join(HOME, ".claude", "plugins", "installed_plugins.json"), {});
+  return Object.keys(p.plugins || {}).some((k) => k.startsWith(`${SKILL_ID}@`));
+}
 const oldSkillPresent = () => skillDirs(OLD_SKILL_ID).some((d) => fs.existsSync(d));
 function detectAgents() {
-  const [universal, claude] = skillDirs(SKILL_ID).map((d) => fs.existsSync(d));
+  const [universal, claude] = [0, 1].map((i) => [SKILL_ID, RENAMED_ID].some((id) => fs.existsSync(skillDirs(id)[i])));
   const agents = [];
-  if (claude) agents.push("claude-code");
+  if (claude && !pluginInstalled()) agents.push("claude-code");
   if (universal) agents.push(...ALL_AGENTS.filter((a) => a !== "claude-code"));
   return agents;
 }
@@ -173,13 +184,14 @@ async function checkStatus() {
   return {
     installed: local?.version ?? null,
     installedPath: local?.dir ?? null,
-    tracking: lockEntry()?.ref ?? (local ? "default branch" : null),
+    tracking: (local && lockEntry(local.id)?.ref) ?? (local ? "default branch" : null),
     latest: latest.version,
     tag: latest.tag,
     releaseUrl: latest.url,
     integrity: latest.integrity,
     treeSha: latest.treeSha,
-    updateAvailable: cmp !== null && cmp < 0,
+    updateAvailable: (cmp !== null && cmp < 0) || local?.id === RENAMED_ID,
+    migrateFrom: local?.id === RENAMED_ID ? RENAMED_ID : null,
     oldSkillInstalled: oldSkillPresent(),
     checkedAt: new Date().toISOString(),
   };
@@ -216,6 +228,17 @@ function skillsCommand(cfg) {
   return [cfg.npx || (PLATFORM === "win32" ? "npx.cmd" : "npx"), "-y", SKILLS_CLI];
 }
 
+function runSkills(cfg, args) {
+  const [cmd, ...pre] = skillsCommand(cfg);
+  log(`${cmd} ${[...pre, ...args].join(" ")}`);
+  return spawnSync(cmd, [...pre, ...args], {
+    encoding: "utf8",
+    shell: PLATFORM === "win32" && /\.cmd$/i.test(cmd),
+    env: { ...env, PATH: [path.dirname(process.execPath), env.PATH].join(path.delimiter), DISABLE_TELEMETRY: "1" },
+    timeout: 10 * 60 * 1000,
+  });
+}
+
 async function performUpdate(status, cfg) {
   const local = installed();
   if (!local) throw new UserError(`${SKILL_ID} isn't installed globally; install it first (see INSTALL.md)`);
@@ -227,29 +250,34 @@ async function performUpdate(status, cfg) {
   for (const old of fs.readdirSync(files.backups).sort().slice(0, -3)) {
     fs.rmSync(path.join(files.backups, old), { recursive: true, force: true });
   }
-  const [cmd, ...pre] = skillsCommand(cfg);
-  const args = [...pre, "add", `${OWNER}/${REPO}#${status.tag}`, "--skill", SKILL_ID, "-g", ...agents.flatMap((a) => ["-a", a]), "-y"];
-  log(`updating ${local.version} -> ${status.latest}: ${cmd} ${args.join(" ")}`);
-  const res = spawnSync(cmd, args, {
-    encoding: "utf8",
-    shell: PLATFORM === "win32" && /\.cmd$/i.test(cmd),
-    env: { ...env, PATH: [path.dirname(process.execPath), env.PATH].join(path.delimiter), DISABLE_TELEMETRY: "1" },
-    timeout: 10 * 60 * 1000,
-  });
+  const flags = agents.flatMap((a) => ["-a", a]);
+  const migrating = local.id === RENAMED_ID;
+  log(`updating ${local.id} ${local.version} -> ${SKILL_ID} ${status.latest}`);
+  const res = runSkills(cfg, ["add", `${OWNER}/${REPO}#${status.tag}`, "--skill", SKILL_ID, "-g", ...flags, "-y"]);
   const recovery = `Your previous version is backed up at ${backup}. To return to it, run: ` +
-    `npx skills add ${OWNER}/${REPO}#v${local.version} --skill ${SKILL_ID} -g ${agents.map((a) => `-a ${a}`).join(" ")} -y`;
+    (migrating ? `npx skills remove ${SKILL_ID} -g ${agents.map((a) => `-a ${a}`).join(" ")} -y, then ` : "") +
+    `npx skills add ${OWNER}/${REPO}#v${local.version} --skill ${local.id} -g ${agents.map((a) => `-a ${a}`).join(" ")} -y`;
   if (res.status !== 0) {
     throw new UserError(`Skills CLI failed (${res.error?.message || `exit ${res.status}`}): ${(res.stderr || "").slice(-400)}\n${recovery}`);
   }
-  const after = installed();
+  const after = installedAs(SKILL_ID);
   const entry = lockEntry();
   if (after?.version !== status.latest || entry?.ref !== status.tag ||
       (entry?.skillFolderHash && entry.skillFolderHash !== status.treeSha)) {
     throw new UserError(`post-update verification failed (installed ${after?.version}, ref ${entry?.ref}, ` +
       `hash ${entry?.skillFolderHash} vs ${status.treeSha})\n${recovery}`);
   }
+  if (migrating) {
+    // Craftline is installed and verified; only now remove the former ID, for the same agents.
+    const rm = runSkills(cfg, ["remove", RENAMED_ID, "-g", ...flags, "-y"]);
+    if (rm.status !== 0) {
+      throw new UserError(`${SKILL_ID} ${status.latest} is installed, but removing ${RENAMED_ID} failed ` +
+        `(${rm.error?.message || `exit ${rm.status}`}). Remove it with: npx skills remove ${RENAMED_ID} -g ${agents.map((a) => `-a ${a}`).join(" ")} -y`);
+    }
+  }
   log(`updated to ${status.latest}; backup ${backup}`);
-  return { updated: true, message: `updated ${local.version} -> ${status.latest} for ${agents.join(", ")}`, backup };
+  const what = migrating ? `migrated ${RENAMED_ID} ${local.version} -> ${SKILL_ID} ${status.latest}` : `updated ${local.version} -> ${status.latest}`;
+  return { updated: true, message: `${what} for ${agents.join(", ")}`, backup };
 }
 
 // --------------------------------------------------------------- scheduling
@@ -312,8 +340,8 @@ function scheduleSpec() {
     const unit = path.join(HOME, ".config", "systemd", "user", "uiuxabhishek-devkit-update");
     return {
       kind: "systemd", file: unit + ".service", timer: unit + ".timer",
-      content: `[Unit]\nDescription=UIUX Abhishek DevKit update check\n\n[Service]\nType=oneshot\nExecStart=${argv.map((a) => `"${a}"`).join(" ")}\n`,
-      timerContent: "[Unit]\nDescription=Daily UIUX Abhishek DevKit update check\n\n[Timer]\nOnCalendar=daily\nRandomizedDelaySec=1h\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n",
+      content: `[Unit]\nDescription=Craftline update check\n\n[Service]\nType=oneshot\nExecStart=${argv.map((a) => `"${a}"`).join(" ")}\n`,
+      timerContent: "[Unit]\nDescription=Daily Craftline update check\n\n[Timer]\nOnCalendar=daily\nRandomizedDelaySec=1h\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n",
     };
   }
   return { kind: "cron", line: `15 10 * * * ${argv.map(q).join(" ")} >> ${q(files.log)} 2>&1 ${MARKER}` };
@@ -386,7 +414,7 @@ function scheduleInstalled() {
 function notify(message) {
   log(message);
   if (env.DEVKIT_NOTIFY === "0" || DRY_SCHEDULER) return;
-  const title = "UIUX Abhishek DevKit";
+  const title = "Craftline";
   if (PLATFORM === "darwin") {
     spawnSync("osascript", ["-e", `display notification ${JSON.stringify(message)} with title ${JSON.stringify(title)}`]);
   } else if (PLATFORM === "linux" && which("notify-send")) {
@@ -481,6 +509,7 @@ const commands = {
       if (arg("--json")) return console.log(JSON.stringify(status, null, 2));
       if (scheduled) return;
       console.log(status.installed ? `Installed: ${status.installed} (tracking ${status.tracking})` : `${SKILL_ID} is not installed globally`);
+      if (status.migrateFrom) console.log(`Renamed: ${status.migrateFrom} is now ${SKILL_ID}; update installs ${SKILL_ID} for your agents, then removes ${status.migrateFrom}.`);
       console.log(`Latest stable: ${status.latest} ${status.releaseUrl}\nIntegrity: ${status.integrity}`);
       console.log(status.updateAvailable ? `Update available. To install it: node ${path.basename(SELF)} update --yes` : "No update needed.");
       if (status.oldSkillInstalled) {
@@ -537,7 +566,7 @@ const commands = {
       nodeLine,
       scheduleOn ? scheduleHealth(cfg, state) : null,
       `Agents: ${cfg?.agents?.join(", ") || "-"}`,
-      `Installed: ${local?.version ?? "not installed"}${local ? ` at ${local.dir}` : ""}`,
+      `Installed: ${local ? `${local.id === SKILL_ID ? "" : `${local.id} `}${local.version} at ${local.dir}` : "not installed"}`,
       `Last check: ${state.checkedAt ?? "never"}${state.latest ? `, latest ${state.latest}` : ""}${state.updateAvailable ? " (update available)" : ""}`,
       state.lastResult ? `Last result: ${state.lastResult}` : null,
       state.lastError ? `Last error: ${state.lastError}` : null,
