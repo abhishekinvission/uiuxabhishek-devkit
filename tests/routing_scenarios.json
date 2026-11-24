@@ -4,310 +4,478 @@
     {
       "id": "single-typography",
       "prompt": "Fix the typography on our pricing page, the headings and body text feel cramped.",
-      "caps": ["typography"], "mode": "implement",
+      "caps": ["typography"], "mode": "implement", "agent": "inline",
       "must": ["references/impeccable/reference/typeset.md", "references/impeccable/reference/craft-floor.md"],
-      "forbid": ["references/impeccable/SOURCE_SKILL.md", "references/apple-design/SOURCE_SKILL.md", "references/impeccable/reference/new-work.md", "references/frontend/pages-and-routing.md"]
+      "forbid": ["references/frontend/figma-to-code.md", "references/impeccable/SOURCE_SKILL.md", "references/apple-design/SOURCE_SKILL.md", "references/impeccable/reference/new-work.md", "references/frontend/pages-and-routing.md"]
     },
     {
       "id": "single-fluid-motion",
       "prompt": "Make the bottom sheet draggable with spring physics and velocity-aware dismissal.",
-      "caps": ["fluid-motion"], "mode": "implement",
+      "caps": ["fluid-motion"], "mode": "implement", "agent": "inline",
       "must": ["references/apple-design/SOURCE_SKILL.md", "references/impeccable/reference/craft-floor.md"],
       "forbid": ["references/impeccable/SOURCE_SKILL.md", "references/impeccable/reference/animate.md"]
     },
     {
       "id": "readonly-a11y-audit",
       "prompt": "Audit this checkout UI for accessibility, keyboard navigation and contrast. Read-only, report only.",
-      "caps": ["design-audit"], "mode": "audit",
+      "caps": ["design-audit"], "mode": "audit", "agent": "inline",
       "must": ["references/impeccable/reference/audit.md"],
       "forbid": ["references/impeccable/reference/craft-floor.md", "references/impeccable/reference/critique.md", "references/frontend/review-and-release.md"]
     },
     {
       "id": "multi-crud-reports",
       "prompt": "Add an admin users table with server-side pagination, filters, and create, edit and delete with confirmation.",
-      "caps": ["crud", "reports"], "mode": "implement",
+      "caps": ["crud", "reports"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/admin-crud.md", "references/frontend/data-reports.md"],
-      "forbid": ["references/impeccable/SOURCE_SKILL.md", "references/apple-design/SOURCE_SKILL.md", "references/impeccable/reference/craft-floor.md"]
+      "forbid": ["references/frontend/forms.md", "references/impeccable/SOURCE_SKILL.md", "references/apple-design/SOURCE_SKILL.md", "references/impeccable/reference/craft-floor.md"]
     },
     {
       "id": "single-api",
       "prompt": "Connect the orders screen to the REST API with typed errors and retry on timeouts.",
-      "caps": ["api"], "mode": "implement",
+      "caps": ["api"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/api-integration.md"],
       "forbid": ["references/frontend/admin-crud.md", "references/frontend/testing.md"]
     },
     {
       "id": "single-testing",
       "prompt": "Write Playwright end-to-end tests for the login flow.",
-      "caps": ["testing"], "mode": "implement",
+      "caps": ["testing"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/testing.md"],
       "forbid": ["references/frontend/review-and-release.md", "references/impeccable/reference/craft-floor.md"]
     },
     {
       "id": "unrelated-backend",
       "prompt": "Optimize this SQL query and add a database index for the reports table.",
-      "caps": [], "mode": "implement", "outcome": ["skip"],
+      "caps": [], "mode": "implement", "agent": "inline", "outcome": ["skip"],
       "must": [],
       "forbid": ["references/frontend/data-reports.md", "references/impeccable/reference/optimize.md"]
     },
     {
       "id": "ambiguous-better",
       "prompt": "Make this dashboard better.",
-      "caps": [], "mode": "implement", "outcome": ["clarify"],
+      "caps": [], "mode": "implement", "agent": "inline", "outcome": ["clarify"],
       "must": [],
       "forbid": ["references/impeccable/reference/operate.md", "references/impeccable/reference/critique.md"]
     },
     {
       "id": "discovery-guide",
       "prompt": "What can this skill do?",
-      "caps": [], "mode": "answer", "outcome": ["guide"],
+      "caps": [], "mode": "answer", "agent": "inline", "outcome": ["guide"],
       "must": ["GUIDE.md"],
       "forbid": ["references/impeccable/SOURCE_SKILL.md"]
     },
     {
       "id": "multi-new-landing-animate",
       "prompt": "Build a new landing page for our launch with a bold new visual identity and a subtle entrance animation.",
-      "caps": ["design-new", "animate"], "mode": "implement",
+      "caps": ["design-new", "animate"], "mode": "implement", "agent": "inline",
       "must": ["references/impeccable/SOURCE_SKILL.md", "references/impeccable/reference/new-work.md", "references/impeccable/reference/animate.md", "references/impeccable/reference/craft-floor.md"],
       "forbid": ["references/apple-design/SOURCE_SKILL.md", "references/impeccable/reference/visualize.md"]
     },
     {
       "id": "single-packages",
       "prompt": "Move our shared button and modal into a publishable npm package with theming.",
-      "caps": ["packages"], "mode": "implement",
+      "caps": ["packages"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/packages-and-components.md"],
       "forbid": ["references/impeccable/reference/extract.md", "references/frontend/microfrontends.md"]
     },
     {
       "id": "ado-dry-run",
       "prompt": "Here is Azure Boards work item 4521, tell me what it needs. Dry run only.",
-      "caps": ["ado"], "mode": "audit", "net": "no-fetch",
+      "caps": ["ado"], "mode": "audit", "agent": "inline", "net": "no-fetch",
       "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ticket-delivery-report.md"],
       "forbid": ["references/frontend/testing.md", "references/frontend/review-and-release.md", "templates/pr-description.md"]
     },
     {
       "id": "ado-bare-url",
       "prompt": "https://dev.azure.com/contoso/web/_workitems/edit/4521",
-      "caps": ["ado"], "mode": "audit",
+      "caps": ["ado"], "mode": "audit", "agent": "inline",
       "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"],
       "forbid": ["templates/pr-description.md", "references/frontend/testing.md"]
     },
     {
       "id": "ado-implement-local",
       "prompt": "Implement ADO work item 4521 on a local branch, but don't push or open a PR.",
-      "caps": ["ado"], "mode": "implement",
+      "caps": ["ado"], "mode": "implement", "agent": "inline",
       "must": ["references/workflows/azure-devops-delivery.md", "references/frontend/testing.md", "references/frontend/review-and-release.md"],
       "forbid": ["templates/pr-description.md"]
     },
     {
       "id": "ado-deliver-authorized",
       "prompt": "Deliver Azure DevOps work item 4521 end to end and open a draft PR. You are authorized to push the task branch.",
-      "caps": ["ado"], "mode": "deliver",
+      "caps": ["ado"], "mode": "deliver", "agent": "inline",
       "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "templates/pr-description.md", "templates/ticket-delivery-report.md"],
       "forbid": ["references/impeccable/SOURCE_SKILL.md", "references/apple-design/SOURCE_SKILL.md"]
     },
     {
       "id": "non-ado-ticket",
       "prompt": "Deliver the Jira ticket PROJ-12.",
-      "caps": ["tickets"], "mode": "deliver",
+      "caps": ["tickets"], "mode": "deliver", "agent": "inline",
       "must": ["references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md", "references/workflows/git-workflow.md", "templates/pr-description.md"],
       "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"]
     },
     {
       "id": "review-pr",
       "prompt": "Do a code review of this branch for release readiness and draft the PR description. Read-only.",
-      "caps": ["review"], "mode": "audit",
+      "caps": ["review"], "mode": "audit", "agent": "inline",
       "must": ["references/frontend/review-and-release.md", "templates/pr-description.md"],
       "forbid": ["references/frontend/testing.md", "references/impeccable/reference/audit.md"]
     },
     {
       "id": "single-microfrontends",
       "prompt": "Set up a microfrontend remote for the billing module with Module Federation.",
-      "caps": ["microfrontends"], "mode": "implement",
+      "caps": ["microfrontends"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/microfrontends.md"],
       "forbid": ["references/frontend/packages-and-components.md"]
     },
     {
       "id": "multi-page-state-responsive",
       "prompt": "Add a new settings page with its own route, keep the form state in the URL, and make it work across mobile breakpoints.",
-      "caps": ["pages", "state", "responsive"], "mode": "implement",
+      "caps": ["pages", "state", "responsive"], "mode": "implement", "agent": ["frontend-engineer", "ui-designer"],
       "must": ["references/frontend/pages-and-routing.md", "references/frontend/state-management.md", "references/impeccable/reference/adapt.md", "references/impeccable/reference/craft-floor.md"],
-      "forbid": ["references/impeccable/reference/adapt.native.md", "references/apple-design/SOURCE_SKILL.md"]
+      "forbid": ["references/frontend/seo-and-metadata.md", "references/frontend/cross-platform-native.md", "references/impeccable/reference/adapt.native.md", "references/apple-design/SOURCE_SKILL.md"]
     },
     {
       "id": "plan-onboarding",
       "prompt": "Plan the UX for a new onboarding flow before we build it.",
-      "caps": ["ux-shape", "onboarding"], "mode": "plan",
+      "caps": ["ux-shape", "onboarding"], "mode": "plan", "agent": "inline",
       "must": ["references/impeccable/reference/shape.md", "references/impeccable/reference/onboard.md"],
       "forbid": ["references/impeccable/reference/craft-floor.md", "references/impeccable/reference/new-work.md"]
     },
     {
       "id": "native-audit-ios",
       "prompt": "Review our iOS SwiftUI settings screen for accessibility. Read-only.",
-      "caps": ["design-audit", "ios"], "mode": "audit",
+      "caps": ["design-audit", "ios"], "mode": "audit", "agent": "inline",
       "must": ["references/impeccable/reference/audit.md", "references/impeccable/reference/audit.native.md", "references/impeccable/reference/ios.md"],
       "forbid": ["references/impeccable/reference/android.md", "references/impeccable/reference/craft-floor.md"]
     },
     {
       "id": "git-status-audit",
       "prompt": "Show me the git status and diff of this repo. Read-only.",
-      "caps": ["git"], "mode": "audit", "net": "no-fetch",
+      "caps": ["git"], "mode": "audit", "agent": "inline", "net": "no-fetch",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md", "references/workflows/azure-devops-delivery.md"]
     },
     {
       "id": "git-sync-branch",
       "prompt": "My feature branch is behind main; sync branch with the latest changes without losing my work.",
-      "caps": ["git"], "mode": "implement", "net": "fetch",
+      "caps": ["git"], "mode": "implement", "agent": "inline", "net": "fetch",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md"]
     },
     {
       "id": "git-safe-commit",
       "prompt": "Commit only the files I changed for the login fix and push the branch.",
-      "caps": ["git"], "mode": "deliver",
+      "caps": ["git"], "mode": "deliver", "agent": "inline",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md", "references/frontend/testing.md"]
     },
     {
       "id": "git-open-mr",
       "prompt": "Open a merge request on GitLab for this branch as a draft.",
-      "caps": ["git"], "mode": "deliver",
+      "caps": ["git"], "mode": "deliver", "agent": "inline",
       "must": ["references/workflows/git-workflow.md", "templates/pr-description.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md"]
     },
     {
       "id": "git-review-pr",
       "prompt": "Review pull request 42 on GitHub and summarize the risks. Don't change anything.",
-      "caps": ["git"], "mode": "audit",
+      "caps": ["git"], "mode": "audit", "agent": "inline",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md", "references/frontend/review-and-release.md"]
     },
     {
       "id": "git-conflict",
       "prompt": "Resolve the merge conflicts after rebasing my branch onto main.",
-      "caps": ["git"], "mode": "implement",
+      "caps": ["git"], "mode": "implement", "agent": "inline",
       "must": ["references/workflows/git-workflow.md", "references/workflows/git-recovery-and-release.md"],
       "forbid": ["templates/pr-description.md"]
     },
     {
       "id": "git-recover",
       "prompt": "I accidentally deleted a branch with unpushed work; recover it.",
-      "caps": ["git"], "mode": "implement",
+      "caps": ["git"], "mode": "implement", "agent": "inline",
       "must": ["references/workflows/git-workflow.md", "references/workflows/git-recovery-and-release.md"],
       "forbid": ["templates/pr-description.md"]
     },
     {
       "id": "git-release",
       "prompt": "Tag v2.1.0 and publish a GitHub release with the built ZIP. You are authorized to push the tag.",
-      "caps": ["git"], "mode": "deliver",
+      "caps": ["git"], "mode": "deliver", "agent": "inline",
       "must": ["references/workflows/git-workflow.md", "references/workflows/git-recovery-and-release.md"],
       "forbid": ["templates/pr-description.md"]
     },
     {
       "id": "git-rewrite-plan",
       "prompt": "Plan how to rewrite history to remove a leaked key and force push safely.",
-      "caps": ["git"], "mode": "plan",
+      "caps": ["git"], "mode": "plan", "agent": "inline",
       "must": ["references/workflows/git-workflow.md", "references/workflows/git-recovery-and-release.md"],
       "forbid": ["templates/pr-description.md"]
     },
     {
       "id": "git-plus-frontend",
       "prompt": "Fix the typography on the pricing page, then commit it.",
-      "caps": ["typography", "git"], "mode": "deliver",
+      "caps": ["typography", "git"], "mode": "deliver", "agent": ["delivery-agent", "ui-designer"],
       "must": ["references/impeccable/reference/typeset.md", "references/impeccable/reference/craft-floor.md", "references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md"]
     },
     {
       "id": "git-plus-backend",
       "prompt": "Commit the database migration and push the branch.",
-      "caps": ["git"], "mode": "deliver",
+      "caps": ["git"], "mode": "deliver", "agent": "inline",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/frontend/api-integration.md", "references/frontend/data-reports.md", "references/frontend/testing.md"]
     },
     {
       "id": "git-plus-ado",
       "prompt": "Implement Azure Boards work item 4521 locally and commit it, but don't push.",
-      "caps": ["ado"], "mode": "implement",
+      "caps": ["ado"], "mode": "implement", "agent": "inline",
       "must": ["references/workflows/azure-devops-delivery.md", "references/frontend/testing.md", "references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md"]
     },
     {
       "id": "git-excluded-push-notification",
       "prompt": "Add a push notification toggle to the settings screen.",
-      "caps": [], "mode": "implement", "outcome": ["clarify"],
+      "caps": [], "mode": "implement", "agent": "inline", "outcome": ["clarify"],
       "must": [],
       "forbid": ["references/workflows/git-workflow.md", "references/workflows/git-recovery-and-release.md"]
     },
     {
       "id": "git-excluded-api-fetch",
       "prompt": "Explain how the orders screen fetches data from the API.",
-      "caps": ["api"], "mode": "implement",
+      "caps": ["api"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/api-integration.md"],
       "forbid": ["references/workflows/git-workflow.md", "references/workflows/git-recovery-and-release.md"]
     },
     {
       "id": "ado-backend-only",
       "prompt": "Implement Azure Boards work item 7310 in our .NET backend: add a refund endpoint to the payments API with unit tests. Don't push or open a PR.",
-      "caps": ["ado"], "mode": "implement", "net": "fetch",
+      "caps": ["ado"], "mode": "implement", "agent": "inline", "net": "fetch",
       "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "templates/ticket-delivery-report.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "references/workflows/git-workflow.md"],
       "forbid": ["references/frontend/api-integration.md", "references/impeccable/reference/craft-floor.md", "references/impeccable/SOURCE_SKILL.md", "templates/pr-description.md"]
     },
     {
       "id": "ado-backend-dry-run",
       "prompt": "Azure Boards item 7311: what would the database migration for the billing microservice need? Dry run.",
-      "caps": ["ado"], "mode": "audit", "net": "no-fetch",
+      "caps": ["ado"], "mode": "audit", "agent": "inline", "net": "no-fetch",
       "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"],
       "forbid": ["references/frontend/testing.md", "references/frontend/data-reports.md", "references/workflows/git-workflow.md", "references/impeccable/reference/craft-floor.md"]
     },
     {
       "id": "fullstack-frontend-part-only",
       "prompt": "Full-stack task: add a Postgres migration for invoices on the backend, then build the invoices report page with filters and CSV export in the frontend.",
-      "caps": ["reports"], "mode": "implement",
+      "caps": ["reports"], "mode": "implement", "agent": "inline",
       "must": ["references/frontend/data-reports.md"],
       "forbid": ["references/frontend/api-integration.md", "references/workflows/git-workflow.md", "references/impeccable/reference/craft-floor.md", "references/frontend/admin-crud.md"]
     },
     {
       "id": "github-issue-not-ado",
       "prompt": "Fix GitHub issue #88 in this repo and open a draft pull request.",
-      "caps": ["tickets"], "mode": "deliver", "net": "fetch",
+      "caps": ["tickets"], "mode": "deliver", "agent": "inline", "net": "fetch",
       "must": ["references/workflows/ticket-delivery.md", "references/workflows/git-workflow.md", "templates/pr-description.md", "templates/ticket-delivery-report.md"],
       "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"]
     },
     {
       "id": "git-offline-status",
       "prompt": "We're offline: show the git status and how far this branch is behind main.",
-      "caps": ["git"], "mode": "audit", "net": "offline",
+      "caps": ["git"], "mode": "audit", "agent": "inline", "net": "offline",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md"]
     },
     {
       "id": "git-sync-no-fetch",
       "prompt": "Sync my feature branch with main, but do not fetch; use only what's already local.",
-      "caps": ["git"], "mode": "implement", "net": "no-fetch",
+      "caps": ["git"], "mode": "implement", "agent": "inline", "net": "no-fetch",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["references/workflows/git-recovery-and-release.md", "templates/pr-description.md"]
     },
     {
       "id": "git-review-pr-readonly-net",
       "prompt": "Review pull request 57 on GitHub, read-only; don't fetch its branch.",
-      "caps": ["git"], "mode": "audit", "net": "no-fetch",
+      "caps": ["git"], "mode": "audit", "agent": "inline", "net": "no-fetch",
       "must": ["references/workflows/git-workflow.md"],
       "forbid": ["templates/pr-description.md", "references/workflows/git-recovery-and-release.md"]
     },
     {
       "id": "ado-offline-implement",
       "prompt": "Implement Azure DevOps work item 4522 locally while offline, no network.",
-      "caps": ["ado"], "mode": "implement", "net": "offline",
+      "caps": ["ado"], "mode": "implement", "agent": "inline", "net": "offline",
       "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/git-workflow.md"],
       "forbid": ["templates/pr-description.md"]
     },
     {
       "id": "harden-offline-ui",
       "prompt": "Handle the offline state and network failure messages in the checkout screen.",
-      "caps": ["harden"], "mode": "implement", "net": "fetch",
+      "caps": ["harden"], "mode": "implement", "agent": "inline", "net": "fetch",
       "must": ["references/impeccable/reference/harden.md", "references/impeccable/reference/craft-floor.md"],
       "forbid": ["references/workflows/git-workflow.md"]
+    },
+    {
+      "id": "adapter-design-new",
+      "prompt": "Create a new landing page from scratch for our product launch.",
+      "caps": ["design-new"], "mode": "implement", "agent": "inline",
+      "must": ["references/impeccable/SOURCE_SKILL.md", "references/impeccable/reference/new-work.md", "references/adapters/impeccable-without-cli.md", "references/frontend/seo-and-metadata.md", "references/impeccable/reference/craft-floor.md"],
+      "forbid": ["references/impeccable/reference/visualize.md", "references/impeccable/reference/live.md"]
+    },
+    {
+      "id": "adapter-critique",
+      "prompt": "Give a heuristic review and design feedback on the checkout flow.",
+      "caps": ["critique"], "mode": "audit", "agent": "inline",
+      "must": ["references/impeccable/reference/critique.md", "references/adapters/impeccable-without-cli.md"],
+      "forbid": ["references/impeccable/reference/craft-floor.md", "references/impeccable/reference/live.md"]
+    },
+    {
+      "id": "adapter-not-loaded",
+      "prompt": "Switch the palette so the app supports dark mode.",
+      "caps": ["color"], "mode": "implement", "agent": "inline",
+      "must": ["references/impeccable/reference/colorize.md"],
+      "forbid": ["references/adapters/impeccable-without-cli.md", "references/impeccable/SOURCE_SKILL.md"]
+    },
+    {
+      "id": "tickets-github-dry-run",
+      "prompt": "GitHub issue acme/shop#88",
+      "caps": ["tickets"], "mode": "audit", "agent": "inline",
+      "must": ["references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md"],
+      "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/git-workflow.md", "templates/pr-description.md"]
+    },
+    {
+      "id": "tickets-jira-implement",
+      "prompt": "Implement Jira issue PROJ-31 locally, don't push.",
+      "caps": ["tickets"], "mode": "implement", "agent": "inline",
+      "must": ["references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md", "references/frontend/testing.md", "references/frontend/review-and-release.md", "references/workflows/git-workflow.md"],
+      "forbid": ["templates/pr-description.md", "references/workflows/ado-configuration.md"]
+    },
+    {
+      "id": "tickets-linear-url",
+      "prompt": "https://linear.app/acme/issue/ENG-42/fix-login-redirect",
+      "caps": ["tickets"], "mode": "audit", "agent": "inline",
+      "must": ["references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md"],
+      "forbid": ["references/workflows/azure-devops-delivery.md", "templates/pr-description.md"]
+    },
+    {
+      "id": "tickets-jira-url",
+      "prompt": "https://acme.atlassian.net/browse/PROJ-77",
+      "caps": ["tickets"], "mode": "audit", "agent": "inline",
+      "must": ["references/workflows/ticket-delivery.md"],
+      "forbid": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md"]
+    },
+    {
+      "id": "tickets-ask-tracker",
+      "prompt": "Pick up the ticket about the login bug.",
+      "caps": ["tickets"], "mode": "audit", "agent": "inline", "outcome": ["ask-tracker"],
+      "must": [],
+      "forbid": ["references/workflows/azure-devops-delivery.md"]
+    },
+    {
+      "id": "tickets-not-loaded",
+      "prompt": "Open a GitHub pull request for this branch.",
+      "caps": ["git"], "mode": "deliver", "agent": "inline",
+      "must": ["references/workflows/git-workflow.md", "templates/pr-description.md"],
+      "forbid": ["references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md"]
+    },
+    {
+      "id": "ado-wins-over-tickets",
+      "prompt": "Deliver Azure Boards ticket 4600 as a draft PR; you're authorized to open it.",
+      "caps": ["ado"], "mode": "deliver", "agent": "inline",
+      "must": ["references/workflows/azure-devops-delivery.md", "references/workflows/ado-configuration.md", "references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md", "templates/pr-description.md"],
+      "forbid": []
+    },
+    {
+      "id": "figma-implement",
+      "prompt": "Implement this Figma frame for pricing: https://www.figma.com/design/abc/Pricing?node-id=1-2",
+      "caps": ["figma-to-code"], "mode": "implement", "agent": "inline",
+      "must": ["references/frontend/figma-to-code.md"],
+      "forbid": ["references/impeccable/reference/craft-floor.md", "references/frontend/pages-and-routing.md"]
+    },
+    {
+      "id": "figma-plus-frontend",
+      "prompt": "Read the Figma frame, then build the settings page with its own route and form validation.",
+      "caps": ["figma-to-code", "pages", "forms"], "mode": "implement", "agent": ["figma-translator", "frontend-engineer"],
+      "must": ["references/frontend/figma-to-code.md", "references/frontend/pages-and-routing.md", "references/frontend/forms.md"],
+      "forbid": ["references/frontend/seo-and-metadata.md"]
+    },
+    {
+      "id": "figma-not-loaded",
+      "prompt": "Extract design tokens from our button styles.",
+      "caps": ["design-system"], "mode": "implement", "agent": "inline",
+      "must": ["references/impeccable/reference/extract.md"],
+      "forbid": ["references/frontend/figma-to-code.md"]
+    },
+    {
+      "id": "security-direct",
+      "prompt": "Find the XSS risk in the comment widget and add a CSP.",
+      "caps": ["frontend-security"], "mode": "implement", "agent": "inline",
+      "must": ["references/frontend/security.md"],
+      "forbid": ["references/frontend/review-and-release.md"]
+    },
+    {
+      "id": "review-loads-security",
+      "prompt": "Code review the login and token refresh changes, read-only.",
+      "caps": ["review"], "mode": "audit", "agent": "inline",
+      "must": ["references/frontend/review-and-release.md", "references/frontend/security.md"],
+      "forbid": ["templates/pr-description.md"]
+    },
+    {
+      "id": "review-without-security",
+      "prompt": "Code review the date picker styling, read-only.",
+      "caps": ["review"], "mode": "audit", "agent": "inline",
+      "must": ["references/frontend/review-and-release.md"],
+      "forbid": ["references/frontend/security.md"]
+    },
+    {
+      "id": "forms-direct",
+      "prompt": "Add a multi-step form with autosave and file upload for insurance claims.",
+      "caps": ["forms"], "mode": "implement", "agent": "inline",
+      "must": ["references/frontend/forms.md"],
+      "forbid": ["references/frontend/admin-crud.md", "references/frontend/state-management.md"]
+    },
+    {
+      "id": "cross-platform-direct",
+      "prompt": "Fix keyboard handling on the React Native login screen.",
+      "caps": ["cross-platform-native"], "mode": "implement", "agent": "inline",
+      "must": ["references/frontend/cross-platform-native.md"],
+      "forbid": ["references/impeccable/reference/adapt.native.md", "references/impeccable/reference/ios.md"]
+    },
+    {
+      "id": "cross-platform-responsive",
+      "prompt": "Make our Flutter app responsive across screen sizes.",
+      "caps": ["responsive", "cross-platform-native"], "mode": "implement", "agent": ["frontend-engineer", "ui-designer"],
+      "must": ["references/impeccable/reference/adapt.md", "references/impeccable/reference/adapt.native.md", "references/frontend/cross-platform-native.md"],
+      "forbid": []
+    },
+    {
+      "id": "cross-platform-audit",
+      "prompt": "Run an accessibility audit of our Expo app, read-only.",
+      "caps": ["design-audit", "cross-platform-native"], "mode": "audit", "agent": ["code-reviewer", "design-auditor"],
+      "must": ["references/impeccable/reference/audit.md", "references/impeccable/reference/audit.native.md", "references/frontend/cross-platform-native.md"],
+      "forbid": ["references/impeccable/reference/craft-floor.md"]
+    },
+    {
+      "id": "responsive-web-only",
+      "prompt": "Make the checkout page responsive on mobile breakpoints.",
+      "caps": ["responsive"], "mode": "implement", "agent": "inline",
+      "must": ["references/impeccable/reference/adapt.md"],
+      "forbid": ["references/impeccable/reference/adapt.native.md", "references/frontend/cross-platform-native.md"]
+    },
+    {
+      "id": "seo-direct",
+      "prompt": "Add Open Graph metadata, canonical URLs and a sitemap.",
+      "caps": ["seo-metadata"], "mode": "implement", "agent": "inline",
+      "must": ["references/frontend/seo-and-metadata.md"],
+      "forbid": ["references/frontend/pages-and-routing.md"]
+    },
+    {
+      "id": "pages-public-seo",
+      "prompt": "Add a public page route for pricing with a breadcrumb.",
+      "caps": ["pages"], "mode": "implement", "agent": "inline",
+      "must": ["references/frontend/pages-and-routing.md", "references/frontend/seo-and-metadata.md"],
+      "forbid": []
+    },
+    {
+      "id": "agents-test-and-review",
+      "prompt": "Add Playwright tests for checkout, then do a code review of the diff.",
+      "caps": ["testing", "review"], "mode": "implement", "agent": ["code-reviewer", "test-engineer"],
+      "must": ["references/frontend/testing.md", "references/frontend/review-and-release.md"],
+      "forbid": []
     }
   ]
 }

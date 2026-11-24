@@ -80,6 +80,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/adapters/impeccable-without-cli.md` | Manual substitutes for Impeccable's unbundled script steps, written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
+| `agents/` (8 agent files), `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -118,4 +119,11 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 
 Plugin agent files (paths relative to the repository root):
 
-
+- `agents/code-reviewer.md  689b694a38528bc51c26332c6db2fc35a070f40e807cb7c4b171ca5b289afc0b`
+- `agents/delivery-agent.md  b898d38d6cca1e6dcce59dd40c5b11e7419c7bbe0b698357f5f7e3ead97ea42c`
+- `agents/design-auditor.md  15192f9fe12307162f85119bd478af10a1bd35c90fc592bca667f5e9248fdb85`
+- `agents/figma-translator.md  ce4cb82a978e16818d86e4551b8d93a38f85ae526a261f97aa9419be521224d6`
+- `agents/frontend-engineer.md  5fba204243d9c1e847d9ffd69ffa2a498fe428cf94ba2d61065012dfd7bb06a0`
+- `agents/test-engineer.md  ff89d2b34c1331e28651a9903de552b534ee1e45e34def453582e1d24eed9d0b`
+- `agents/ui-designer.md  550e9c79b81c117b4676562a2bfa2d5a6327a7078a4a2252af58f64bca2c3c12`
+- `agents/ux-designer.md  e2e33e71165cd6faf25683d3186ebdc98e653c1b0aefdf2abd229cb5273fea3c`

@@ -187,13 +187,14 @@ def check_integrity():
     third, _, original = sources.partition("## Original project content")
     entries = [(os.path.join(SKILL, "references", p), h)
                for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", third, re.M)]
-    entries += [(os.path.join(SKILL, p), h)
+    entries += [(os.path.join(ROOT if p.startswith("agents/") else SKILL, p), h)
                 for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", original, re.M)]
     for path, digest in entries:
         if check(os.path.exists(path), f"SOURCES.md lists missing file {rel(path)}"):
             check(sha256(path) == digest, f"checksum mismatch {rel(path)}")
     on_disk = {os.path.join(r, f) for d in ("references", "templates")
                for r, _, fs in os.walk(os.path.join(SKILL, d)) for f in fs}
+    on_disk |= {os.path.join(ROOT, "agents", f) for f in os.listdir(os.path.join(ROOT, "agents"))}
     listed = {p for p, _ in entries}
     check(on_disk == listed, f"inventory drift: unlisted {sorted(rel(p) for p in on_disk - listed)}")
     for name in ("LICENSE", "NOTICE.md"):
@@ -335,8 +336,9 @@ def route(prompt, modes, caps, craft_floor, groups):
             selected.append(cap)
             files += [f for s in hit for f in s["files"]]
     if "ado" in selected and "tickets" in selected:
-        selected.remove("tickets")  # ado wins when both match
-        files = [f for f in files if f not in {f for s in caps["tickets"] for f in s["files"]}]
+        selected.remove("tickets")  # ado wins when both match; keep the lifecycle files ado loads itself
+        ado_files = {f for s in caps["ado"] for f in s["files"]}
+        files = [f for f in files if f in ado_files or f not in {f for s in caps["tickets"] for f in s["files"]}]
     if {"ado", "tickets"} & set(selected) and "git" in selected:
         selected.remove("git")  # ADO_OWNS_GIT: both load git themselves
         files = [f for f in files if f not in {f for s in caps["git"] for f in s["files"]}]
@@ -383,7 +385,7 @@ def baseline_tokens(old_skill_chars, files, selected):
     return old_skill_chars // 4 + tokens(sorted(base))
 
 
-def check_scenarios(modes, caps, never, craft_floor, groups, text):
+def check_scenarios(modes, caps, never, craft_floor, groups, text, roster):
     data = json.loads(read(os.path.join(ROOT, "tests", "routing_scenarios.json")))
     try:
         old = subprocess.run(["git", "show", f"{BASELINE_COMMIT}:skills/{OLD_ID}/SKILL.md"],
@@ -400,6 +402,9 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text):
         errs = []
         if "net" in sc and net != sc["net"]:
             errs.append(f"network {net} != {sc['net']}")
+        planned = plan_agents(selected, mode, roster, groups, caps)
+        if planned != sc.get("agent"):
+            errs.append(f"agent {planned} != {sc.get('agent')}")
         if selected != set(sc["caps"]):
             errs.append(f"caps {sorted(selected)} != {sorted(sc['caps'])}")
         if mode != sc["mode"]:
@@ -424,6 +429,96 @@ def check_scenarios(modes, caps, never, craft_floor, groups, text):
         print(f"{n} scenarios: ~{total_new // n} tokens/scenario vs ~{total_old // n} before "
               f"({abs(100 - 100 * total_new // total_old)}% "
               f"{'less' if total_new <= total_old else 'more'} context than the pre-router baseline)")
+
+
+# ------------------------------------------------------------------- agents
+AGENT_KEYS = {"name", "description", "tools", "disallowedTools", "model", "color", "maxTurns", "skills",
+              "memory", "background", "effort", "isolation"}  # documented for plugin agents (code.claude.com/docs/en/sub-agents)
+WRITE_TOOLS = {"Edit", "Write", "NotebookEdit", "MultiEdit"}
+AGENT_BODY_MAX_LINES = 45
+
+
+def parse_roster(text, caps):
+    """SKILL.md §5 table: agent -> (access, [capability IDs])."""
+    section = text.split("## 5.")[1] if "## 5." in text else ""
+    roster = {}
+    for name, access, cell in re.findall(r"^\| `([\w-]+)` \| ([^|]+) \| (.+) \|$", section, re.M):
+        roster[name] = (access.strip(), [c for c in re.findall(r"`([\w-]+)`", cell) if c in caps or c not in roster])
+    for name in roster:
+        roster[name] = (roster[name][0], [c for c in roster[name][1] if c not in roster])
+    return roster
+
+
+def frontmatter_fields(text):
+    m = re.match(r"---\n(.*?)\n---\n", text, re.S)
+    if not m:
+        return None, text
+    fields = {}
+    for line in m.group(1).splitlines():
+        km = re.match(r"^([A-Za-z]+): (.*)$", line)
+        if not km:
+            return None, text
+        key, value = km.groups()
+        if value.startswith('"'):
+            try:
+                value = json.loads(value)
+            except ValueError:
+                return None, text
+        elif re.search(r":\s|\s#", value):
+            return None, text  # unquoted YAML value with ": " or " #" doesn't parse
+        fields[key] = value
+    return fields, text[m.end():]
+
+
+def check_agents(text, caps, groups):
+    roster = parse_roster(text, caps)
+    agent_dir = os.path.join(ROOT, "agents")
+    files = sorted(f[:-3] for f in os.listdir(agent_dir) if f.endswith(".md")) if os.path.isdir(agent_dir) else []
+    check(files == sorted(roster), f"agents/ files {files} != SKILL.md §5 roster {sorted(roster)}")
+    owners = {}
+    for name, (_, owned) in roster.items():
+        for c in owned:
+            owners.setdefault(c, []).append(name)
+    check(not [c for c in owners if c not in caps], f"roster names unknown capabilities {[c for c in owners if c not in caps]}")
+    check(not [c for c in caps if len(owners.get(c, [])) != 1],
+          f"capabilities without exactly one agent: {[(c, owners.get(c, [])) for c in caps if len(owners.get(c, [])) != 1]}")
+    for name in files:
+        path = os.path.join(agent_dir, name + ".md")
+        fields, body = frontmatter_fields(read(path))
+        if not check(fields is not None, f"agents/{name}.md frontmatter doesn't parse"):
+            continue
+        check(set(fields) <= AGENT_KEYS, f"agents/{name}.md has undocumented keys {set(fields) - AGENT_KEYS}")
+        check(fields.get("name") == name and ":" not in name, f"agents/{name}.md name must match its file name")
+        check(0 < len(fields.get("description", "")) <= 1024, f"agents/{name}.md description missing or too long")
+        tools = {t.strip() for t in fields.get("tools", "").split(",") if t.strip()}
+        denied = {t.strip() for t in fields.get("disallowedTools", "").split(",") if t.strip()}
+        if tools:
+            check("Agent" not in tools, f"agents/{name}.md may start other agents")
+        else:
+            check("Agent" in denied, f"agents/{name}.md inherits tools, so it must disallow Agent")
+        if roster.get(name, ("",))[0] == "read-only":
+            ok = not (tools & WRITE_TOOLS) if tools else WRITE_TOOLS - {"MultiEdit"} <= denied
+            check(ok, f"read-only agent {name} has write tools")
+        lines = body.strip().splitlines()
+        check(len(lines) <= AGENT_BODY_MAX_LINES, f"agents/{name}.md body has {len(lines)} lines")
+        check(not re.search(r"references/|templates/", body), f"agents/{name}.md contains guidance paths")
+        check(not [l for l in lines if l.lstrip().startswith("|") or "→" in l], f"agents/{name}.md contains a routing table")
+    print(f"agents: {len(files)} agents, {len(owners)} capabilities each owned by exactly one agent")
+    return roster
+
+
+def plan_agents(selected, mode, roster, groups, caps):
+    """Agents the head would dispatch; "inline" when one responsibility covers the task (SKILL.md §5)."""
+    owner = {c: n for n, (_, owned) in roster.items() for c in owned}
+    read_only = {n for n, (access, _) in roster.items() if access == "read-only"}
+    workflows = (set(caps) - groups["Design"] - groups["Engineering"]) | {"ado"}
+    chosen = set()
+    for c in selected:
+        agent = owner.get(c)
+        if mode in ("answer", "audit", "plan") and agent not in read_only:
+            agent = "design-auditor" if c in groups["Design"] else "delivery-agent" if c in workflows else "code-reviewer"
+        chosen.add(agent)
+    return "inline" if len(chosen) <= 1 else sorted(chosen)
 
 
 # ------------------------------------------------------------------- budget
@@ -634,7 +729,8 @@ def main():
     check_git_sandbox()
     check_updater()
     check_old_id()
-    check_scenarios(modes, caps, never, craft_floor, groups, text)
+    roster = check_agents(text, caps, groups)
+    check_scenarios(modes, caps, never, craft_floor, groups, text, roster)
     if failures:
         print(f"\nFAILED ({len(failures)}):")
         for f in failures:
