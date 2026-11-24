@@ -9,6 +9,7 @@ How you install it depends on where your agent runs:
 | **Local coding agents:** Claude Code (terminal, IDE or the Claude Desktop **Code** tab, local sessions), Codex, Gemini CLI, GitHub Copilot, Antigravity | Skills CLI, installed on your computer | [Local agents](#local-coding-agents) |
 | **Cloud / account-based Chat:** Claude.ai, Claude Desktop **Chat** and Cowork, Claude Code cloud sessions | ZIP upload in your Claude account | [Claude Chat upload](#claudeai-and-claude-desktop-chat) |
 | **Claude Code with specialist agents** | Claude Code plugin from this repository's marketplace | [Claude Code plugin](#claude-code-plugin-skill-and-agents) |
+| **Claude app plugins** | The same marketplace, added and synced from GitHub | [Claude app](#claude-app-add-marketplace) |
 
 A local install doesn't reach cloud Chat, and an uploaded ZIP doesn't install anything for Codex, Gemini CLI, Copilot or Antigravity. Set up each environment you use.
 
@@ -83,11 +84,23 @@ In Claude Code:
 
 Or from a terminal: `claude plugin marketplace add abhishekinvission/uiuxabhishek-devkit`, then `claude plugin install uiuxabhishek-devkit@uiuxabhishek`.
 
-- **What it installs.** The marketplace entry points to the release asset `uiuxabhishek-devkit-plugin-v<version>.zip` and pins its SHA-256, so Claude Code refuses a download that doesn't match. The ZIP holds `.claude-plugin/plugin.json`, `agents/` and `skills/uiuxabhishek-devkit/` only. Maintainer files (`CLAUDE.md`, `.claude/`, `tests/`, `tools/`) are never installed.
+- **What it installs.** The marketplace entry's source is `./plugin`, the repository's `plugin/` folder: `.claude-plugin/plugin.json`, `agents/` and `skills/uiuxabhishek-devkit/` only. Maintainer files (`CLAUDE.md`, `.claude/`, `tests/`, `tools/`) are never installed.
 - **One copy only.** If you also installed the skill for Claude Code with `npx skills`, remove that copy so Claude Code doesn't load the skill twice: `npx skills remove uiuxabhishek-devkit -g -a claude-code -y`. Other agents keep their `npx` install.
-- **Update.** `/plugin marketplace update uiuxabhishek`, then update `uiuxabhishek-devkit` from `/plugin`. The updater below handles `npx` installs only.
+- **Update.** `/plugin marketplace update uiuxabhishek`, then update `uiuxabhishek-devkit` from `/plugin`. Claude Code compares the `version` in `plugin.json`: a new release reaches you only after that string changes, however many commits land on `main` in between ([Claude Code docs](https://code.claude.com/docs/en/plugins/host-marketplace)). Auto-update is off for third-party marketplaces unless you turn it on under **Marketplaces** in `/plugin`. The updater below handles `npx` installs only.
 - **Check.** Run `/agents` and look for the `uiuxabhishek-devkit:` agents. Then ask for a task that spans two areas; the head should show a plan and wait for your approval before starting any agent.
 - **Without the plugin**, every agent, including Claude Code, runs the same plan itself, one step at a time.
+
+### Claude app: Add marketplace
+
+The same marketplace works in the Claude app's plugin settings, where it's synced from GitHub:
+
+1. Choose **Add marketplace**, pick the GitHub repository option and enter `abhishekinvission/uiuxabhishek-devkit`.
+2. Leave **Sync automatically** on. The app then re-syncs whenever `main` changes, so every push to `main` reaches the Claude app without a version bump.
+3. Install **uiuxabhishek-devkit** from the **uiuxabhishek** marketplace.
+
+GitHub-synced marketplaces accept fewer plugin sources than Claude Code: `github`, `url`, `git-subdir` or a relative path starting with `./`, not `archive` or `npm` ([organization sync docs](https://claude.com/docs/plugins/org-sync)). That's why the entry points at `./plugin`; releases before 2.1.1 pinned a release ZIP and fail there with "1 plugin failed validation".
+
+**Team and Enterprise organization sync** also requires the marketplace repository on github.com to be private or internal. This repository is public, so an organization admin needs a private or internal copy of it to sync for the whole organization.
 
 ## Migrate from `uiuxabhishek-design`
 
@@ -213,7 +226,8 @@ After `setup`, run the installed copy, for example `node ~/.uiuxabhishek-devkit/
 | `npx skills update` warns that `uiuxabhishek-design` "appears to have been deleted upstream" | The skill was renamed in 2.0.0. The CLI keeps your old copy, so nothing breaks, but it stays on the old version. [Migrate](#migrate-from-uiuxabhishek-design) instead of updating. |
 | Installed into the wrong project | Project installs (without `-g`) only apply to the folder you ran them in. Reinstall with `-g` or from the right project. |
 | The skill appears twice | It's installed both globally and in the project, by the CLI and through your Claude account, or by the CLI for Claude Code and as the Claude Code plugin. Remove one copy. |
-| `/plugin install` fails to download or reports a checksum mismatch | The release for that version, or its `uiuxabhishek-devkit-plugin-v<version>.zip`, isn't published yet, or the ZIP was replaced after release. Run `/plugin marketplace update uiuxabhishek` and try again; if it persists, use the `npx` install until the release is fixed. |
+| The Claude app reports "1 plugin failed validation" | The app read a `marketplace.json` from before 2.1.1, whose source was a release ZIP. Sync the marketplace again (or remove and re-add it) so it reads the current `main`, whose source is `./plugin`. |
+| Claude Code doesn't offer a plugin update | It updates only when `version` in `plugin/.claude-plugin/plugin.json` changes. Run `/plugin marketplace update uiuxabhishek`, then update the plugin from `/plugin`. |
 | The agents don't appear in Claude Code | They come only with the plugin, not with `npx skills`. Install the [plugin](#claude-code-plugin-skill-and-agents), restart Claude Code and check `/agents`. |
 | Claude upload rejected | Upload the release ZIP unchanged. Re-zipping the folder contents loose, or using the repository's own `SKILL.md`, whose description is longer than 200 characters, fails. Check that code execution is on and that your organization allows skills. |
 | The skill shows in Chat but can't edit your code | That's expected. Chat has no access to your local repository. Use a local coding agent for implementation, Git and Azure DevOps delivery. |
@@ -221,6 +235,6 @@ After `setup`, run the installed copy, for example `node ~/.uiuxabhishek-devkit/
 | The updater reports a verification failure | It didn't update. Check `status` and keep your current version, or reinstall a known tag with the command it prints. |
 | `status` says the scheduled check is overdue | No scheduled check has run for about 48 hours. The computer may have been off or asleep for days, or the schedule isn't loaded. Run `check` to check now, then `setup` to recreate the schedule. A failing check shows **Last error** instead. |
 | `status` shows the Node path as missing or not runnable | Node was removed or moved, so the scheduler can't start the check. Run `setup` again to pick a working Node, or set `DEVKIT_NODE` (see above). |
-| Azure DevOps steps stop at a dry run | That's intended without write authorization. You also need an approved, signed-in Azure DevOps connector or `az devops` CLI, and you have to say **implement** or **deliver** and grant the permissions. See [GUIDE.md](skills/uiuxabhishek-devkit/GUIDE.md). |
+| Azure DevOps steps stop at a dry run | That's intended without write authorization. You also need an approved, signed-in Azure DevOps connector or `az devops` CLI, and you have to say **implement** or **deliver** and grant the permissions. See [GUIDE.md](plugin/skills/uiuxabhishek-devkit/GUIDE.md). |
 
 Licensing and credits travel with every install in `NOTICE.md` and `LICENSES/`. See the [README](README.md#third-party-licenses--credits).

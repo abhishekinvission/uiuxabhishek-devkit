@@ -34,14 +34,14 @@ Or install for a single agent:
 
 ### Claude Code plugin (skill plus agents)
 
-`npx skills` installs the skill only. To also get the specialist agents in Claude Code, install the plugin from this repository's marketplace instead:
+`npx skills` installs the skill only. To also get the specialist agents in Claude Code, install the plugin from this repository's marketplace instead (the Claude app can add the same marketplace; see [INSTALL.md](INSTALL.md#claude-app-add-marketplace)):
 
 ```text
 /plugin marketplace add abhishekinvission/uiuxabhishek-devkit
 /plugin install uiuxabhishek-devkit@uiuxabhishek
 ```
 
-The plugin is the release's `uiuxabhishek-devkit-plugin-v<version>.zip`, pinned by SHA-256: `.claude-plugin/`, `agents/` and `skills/` only, without the repository's maintainer files. Use the plugin or the Claude Code `npx` install, not both, so Claude Code doesn't load two copies of the skill.
+The plugin is the repository's `plugin/` folder: `.claude-plugin/plugin.json`, `agents/` and `skills/` only, without the repository's maintainer files. Use the plugin or the Claude Code `npx` install, not both, so Claude Code doesn't load two copies of the skill.
 
 The bundled capabilities belong to this one skill. Install only `uiuxabhishek-devkit`. **[INSTALL.md](INSTALL.md)** covers requirements, project installs, verification, updates, removal, reloading, migration, Chat uploads and troubleshooting.
 
@@ -84,7 +84,7 @@ Merges, destructive resets, force-pushes, branch or tag deletion, published-hist
 
 ## Using it
 
-Describe the task in plain language. Naming the skill is optional, but you can start with *"Use uiuxabhishek-devkit to…"*. To see everything it can do, ask *"What can uiuxabhishek-devkit do?"*, which shows the built-in [capability guide](skills/uiuxabhishek-devkit/GUIDE.md).
+Describe the task in plain language. Naming the skill is optional, but you can start with *"Use uiuxabhishek-devkit to…"*. To see everything it can do, ask *"What can uiuxabhishek-devkit do?"*, which shows the built-in [capability guide](plugin/skills/uiuxabhishek-devkit/GUIDE.md).
 
 | Area | Example prompt |
 | --- | --- |
@@ -111,7 +111,7 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 
 - **Stable releases** are tagged `vX.Y.Z` on GitHub with a Claude upload ZIP and its SHA-256 checksum. See [CHANGELOG.md](CHANGELOG.md).
 - **Update a local install:** `npx skills update uiuxabhishek-devkit -g -y`. An install made with the commands above follows `main`, which only receives validated changes. To stay on stable releases only, install a tag (`abhishekinvission/uiuxabhishek-devkit#v2.1.0`) or use the optional updater.
-- **Update the Claude Code plugin:** `/plugin marketplace update uiuxabhishek`, then update the plugin from `/plugin`.
+- **Update the Claude Code plugin:** `/plugin marketplace update uiuxabhishek`, then update the plugin from `/plugin`. Claude Code offers an update only when `plugin.json`'s `version` changes; a Claude app marketplace with **Sync automatically** on picks up every push to `main`.
 - **Update notifications (optional):** the [updater](INSTALL.md#optional-update-notifications-and-automatic-updates) checks GitHub once a day for a newer stable release and notifies you. It never changes anything unless you opt in with `enable-auto-update --yes`. It runs on macOS, Linux and Windows and touches only `uiuxabhishek-devkit`.
 - **Claude Chat uploads** are always updated by hand: delete the old skill and upload the new ZIP.
 - **Remove:** `npx skills remove uiuxabhishek-devkit -g -y`.
@@ -119,20 +119,22 @@ Describe the task in plain language. Naming the skill is optional, but you can s
 ## Repository layout
 
 ```text
-skills/uiuxabhishek-devkit/
-├── SKILL.md            # Single entry point: intent, mode and capability router
-├── GUIDE.md            # User-facing capability and usage guide
-├── NOTICE.md, LICENSE  # In-skill attribution and license (travel with installs)
-├── LICENSES/           # In-skill copies of required third-party licenses and notices
-├── templates/          # PR description and ticket delivery report templates
-└── references/         # Guidance, loaded only when relevant
-    ├── impeccable/     # Visual craft (third-party)
-    ├── apple-design/   # Interaction and motion (third-party)
-    ├── adapters/       # Manual substitutes for Impeccable's unbundled scripts (original)
-    ├── frontend/       # Frontend engineering guides (original)
-    └── workflows/      # Git workflow and ticket delivery, including Azure DevOps (original)
-agents/                 # Claude Code plugin agents (plugin only)
-.claude-plugin/         # plugin.json and marketplace.json
+plugin/                     # The Claude Code plugin; the only thing marketplaces install
+├── .claude-plugin/plugin.json
+├── agents/                 # Claude Code plugin agents (plugin only)
+└── skills/uiuxabhishek-devkit/
+    ├── SKILL.md            # Single entry point: intent, mode and capability router
+    ├── GUIDE.md            # User-facing capability and usage guide
+    ├── NOTICE.md, LICENSE  # In-skill attribution and license (travel with installs)
+    ├── LICENSES/           # In-skill copies of required third-party licenses and notices
+    ├── templates/          # PR description and ticket delivery report templates
+    └── references/         # Guidance, loaded only when relevant
+        ├── impeccable/     # Visual craft (third-party)
+        ├── apple-design/   # Interaction and motion (third-party)
+        ├── adapters/       # Manual substitutes for Impeccable's unbundled scripts (original)
+        ├── frontend/       # Frontend engineering guides (original)
+        └── workflows/      # Git workflow and ticket delivery, including Azure DevOps (original)
+.claude-plugin/marketplace.json  # Marketplace "uiuxabhishek"; its one plugin's source is ./plugin
 INSTALL.md              # Installation, migration, updates, removal and troubleshooting
 CHANGELOG.md            # Versions and releases
 tools/                  # ZIP builder (Chat upload and plugin) and the optional updater (not installed)
@@ -148,13 +150,13 @@ This is a **guidance-only** skill. The installed skill doesn't include CLIs, bin
   - discovery and routing scenarios;
   - the Git and updater sandboxes;
   - links, checksums, license mirrors and the security scan;
-  - both ZIPs, `plugin.json` and the marketplace pin;
+  - the `plugin/` layout, both ZIPs, `plugin.json` and the `./plugin` marketplace source;
   - the agents and their capability mapping;
   - leftover references to the old skill ID.
 - **Release:**
   1. Bump `metadata.version` in `SKILL.md` and add a `CHANGELOG.md` entry.
-  2. Set the same version in `.claude-plugin/plugin.json`.
-  3. Run `python3 tools/package_skill.py --update-marketplace` and commit the updated `marketplace.json` before tagging.
+  2. Set the same version in `plugin/.claude-plugin/plugin.json`. Claude Code users get the update only when this string changes.
+  3. Run `python3 tools/package_skill.py` to build `dist/`.
   4. Attach the files from `dist/` (both ZIPs, the updater and their `.sha256` files) to a `v<version>` GitHub Release.
 - **Add a source:** follow [CLAUDE.md](CLAUDE.md). Every bundled third-party file is checksummed in [SOURCES.md](SOURCES.md).
 

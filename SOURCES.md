@@ -21,11 +21,11 @@ The initial import came from locally installed copies of Impeccable and Apple De
 | `LICENSES/PLATFORM_DESIGN_SKILLS_MIT.txt` | platform-design-skills `LICENSE` (`main`) | 2026-11-03 |
 | `LICENSES/APPLE_DESIGN_MIT.txt` | emilkowalski/skills license | Initial import |
 
-The same files are mirrored in `skills/uiuxabhishek-devkit/LICENSES/` so they travel with installed copies.
+The same files are mirrored in `plugin/skills/uiuxabhishek-devkit/LICENSES/` so they travel with installed copies.
 
 ## Included third-party files (SHA-256)
 
-Paths are relative to `skills/uiuxabhishek-devkit/references/`.
+Paths are relative to `plugin/skills/uiuxabhishek-devkit/references/`.
 
 All files below stay in the repository and in Skills CLI installs. The release ZIPs (Claude Chat upload and Claude Code plugin), built by `tools/package_skill.py`, leave out the nine "Never load" files from `SKILL.md`: `impeccable/reference/live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md` and `degraded/` (four files). They only drive Impeccable tooling that isn't bundled. Shipping a subset of an Apache-2.0 work is permitted (Section 4), and every ZIP keeps `LICENSE`, `NOTICE.md` and `LICENSES/`, including Impeccable's NOTICE.
 
@@ -81,7 +81,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
 | `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
-| `agents/` (8 agent files), `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `plugin/agents/` (8 agent files), `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -93,7 +93,7 @@ The pack describes itself as framework-independent guides written for this proje
 - 2026-11-24 (2.1.0): the provider-neutral lifecycle moved from `azure-devops-delivery.md` to `ticket-delivery.md`, which now also covers GitHub Issues, Jira and Linear; the ADO file keeps only Azure specifics. `templates/ado-delivery-report.md` became `templates/ticket-delivery-report.md`.
 - Not imported: the pack's `PACKAGE_MANIFEST.json`, `README.md` and `integration/` instructions (installer metadata, merged into `SKILL.md` routing instead).
 
-Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
+Checksums (paths relative to `plugin/skills/uiuxabhishek-devkit/`):
 
 - `references/adapters/impeccable-without-cli.md  13232107300aeadcc051fecbcc8dae8c84d483c0c3b15ca2cf3385b599d01571`
 - `references/frontend/admin-crud.md  d5eb94fb9a001761a8daf6c2c73f289f3443666ed2382a6057655e9c1c6c080c`
@@ -119,7 +119,7 @@ Checksums (paths relative to `skills/uiuxabhishek-devkit/`):
 - `templates/pr-description.md  ed01966273e1e72cdc6c76c8d93a63060fdb3fb8b1e4a0ae0bfd1ab0fa9d3b94`
 - `templates/ticket-delivery-report.md  e13d9e63036843bba0696325f184812d7301a211ad5b34becfe3aac132528b87`
 
-Plugin agent files (paths relative to the repository root):
+Plugin agent files (paths relative to `plugin/`):
 
 - `agents/code-reviewer.md  689b694a38528bc51c26332c6db2fc35a070f40e807cb7c4b171ca5b289afc0b`
 - `agents/delivery-agent.md  b898d38d6cca1e6dcce59dd40c5b11e7419c7bbe0b698357f5f7e3ead97ea42c`

@@ -1,7 +1,7 @@
 """Build the release ZIPs for UIUX Abhishek DevKit.
 
 Standard library only. Run from anywhere:
-    python3 tools/package_skill.py [out_dir] [--update-marketplace]
+    python3 tools/package_skill.py [out_dir]
 
 Two ZIPs, both deterministic (sorted entries, fixed timestamps and permissions):
 
@@ -9,10 +9,10 @@ Two ZIPs, both deterministic (sorted entries, fixed timestamps and permissions):
   (Customize > Skills). One root folder, uiuxabhishek-devkit/, with the skill only:
   no agents. Claude's upload form limits the description to 200 characters, so the
   packaged SKILL.md swaps its description for UPLOAD_DESCRIPTION.
-- uiuxabhishek-devkit-plugin-v<version>.zip: the Claude Code plugin, with exactly
-  .claude-plugin/plugin.json, agents/ and skills/uiuxabhishek-devkit/ at its top level.
-  .claude-plugin/marketplace.json installs it from the GitHub release; with
-  --update-marketplace this script writes the release URL and SHA-256 into it.
+- uiuxabhishek-devkit-plugin-v<version>.zip: the plugin/ folder for manual uploads,
+  with exactly .claude-plugin/plugin.json, agents/ and skills/uiuxabhishek-devkit/
+  at its top level. Marketplaces don't use it: .claude-plugin/marketplace.json
+  points at ./plugin in the repository itself.
 
 Both leave out the "Never load" files listed in SKILL.md (they need upstream
 Impeccable tooling that isn't bundled); the repository keeps them. Every other file
@@ -21,19 +21,18 @@ docs) are never packaged. The optional updater (tools/updater/devkit-update.mjs)
 is copied beside the ZIPs as a separate release asset with its own checksum.
 """
 import hashlib
-import json
 import os
 import re
 import sys
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SKILL = os.path.join(ROOT, "skills", "uiuxabhishek-devkit")
-AGENTS = os.path.join(ROOT, "agents")
-PLUGIN_MANIFEST = os.path.join(ROOT, ".claude-plugin", "plugin.json")
+PLUGIN = os.path.join(ROOT, "plugin")
+SKILL = os.path.join(PLUGIN, "skills", "uiuxabhishek-devkit")
+AGENTS = os.path.join(PLUGIN, "agents")
+PLUGIN_MANIFEST = os.path.join(PLUGIN, ".claude-plugin", "plugin.json")
 MARKETPLACE = os.path.join(ROOT, ".claude-plugin", "marketplace.json")
 NAME = "uiuxabhishek-devkit"
-REPO = "abhishekinvission/uiuxabhishek-devkit"
 UPLOAD_DESCRIPTION = ("UIUX Abhishek DevKit router for UI/UX design, accessibility, motion, frontend, "
                       "Figma to code, security, tests, Git, PRs and ticket-to-PR delivery. Loads only "
                       "what a task needs.")
@@ -138,21 +137,6 @@ def plugin_zip_name(ver=None):
     return f"{NAME}-plugin-v{ver or version()}.zip"
 
 
-def plugin_release_url(ver=None):
-    ver = ver or version()
-    return f"https://github.com/{REPO}/releases/download/v{ver}/{plugin_zip_name(ver)}"
-
-
-def update_marketplace(digest):
-    with open(MARKETPLACE, encoding="utf-8") as f:
-        data = json.load(f)
-    entry = next(p for p in data["plugins"] if p["name"] == NAME)
-    entry["source"] = {"source": "archive", "url": plugin_release_url(), "sha256": digest}
-    with open(MARKETPLACE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-        f.write("\n")
-
-
 def sha256(path):
     return hashlib.sha256(read_bytes(path)).hexdigest()
 
@@ -163,11 +147,7 @@ def write_checksum(path):
 
 
 if __name__ == "__main__":
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    out_dir = args[0] if args else os.path.join(ROOT, "dist")
+    out_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "dist")
     skill_zip, skill_digest = build(out_dir)
     plugin_zip, plugin_digest = build_plugin(out_dir)
     print(f"{skill_zip}\nsha256 {skill_digest}\n{plugin_zip}\nsha256 {plugin_digest}")
-    if "--update-marketplace" in sys.argv:
-        update_marketplace(plugin_digest)
-        print(f"marketplace.json now installs {plugin_release_url()}")

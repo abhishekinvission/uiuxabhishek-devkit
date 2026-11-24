@@ -56,6 +56,7 @@ class Mock:
         self.skill_version = tag.lstrip("v")
         self.checksum = "b" * 64
         self.digest = "sha256:" + "b" * 64
+        self.root = "plugin/skills"  # tags up to v2.1.0 keep the skill under skills/
         self.down = False
         for k, v in kw.items():
             setattr(self, k, v)
@@ -68,8 +69,8 @@ class Mock:
         return {
             f"/api/repos/{OWNER}/{REPO}": self.repo,
             f"/api/repos/{OWNER}/{REPO}/releases/latest": rel,
-            f"/api/repos/{OWNER}/{REPO}/contents/skills?ref={self.tag}": [{"name": SKILL, "type": "dir", "sha": TREE}],
-            f"/raw/{OWNER}/{REPO}/{self.tag}/skills/{SKILL}/SKILL.md":
+            f"/api/repos/{OWNER}/{REPO}/contents/{self.root}?ref={self.tag}": [{"name": SKILL, "type": "dir", "sha": TREE}],
+            f"/raw/{OWNER}/{REPO}/{self.tag}/{self.root}/{SKILL}/SKILL.md":
                 f'---\nname: {SKILL}\nmetadata:\n  version: "{self.skill_version}"\n---\n',
             f"/dl/{zip_name}.sha256": f"{self.checksum}  {zip_name}\n",
         }
@@ -290,6 +291,10 @@ def run_checks():
         st = json.loads(h.run("check", "--json").stdout)
         check("check --json compares installed and latest", st["installed"] == "2.0.0" and st["latest"] == "2.1.0"
               and st["updateAvailable"] and st["tracking"] == "v2.0.0")
+        mock.reset("v2.1.0", root="skills")
+        st = json.loads(new().run("check", "--json").stdout)
+        check("check reads a tag that keeps the skill under skills/ (v2.1.0 and earlier)",
+              st["latest"] == "2.1.0" and st["updateAvailable"] and st["treeSha"] == TREE)
         mock.reset("v2.0.0")
         check("check: up to date", "No update needed" in new().run("check").stdout)
 

@@ -30,6 +30,7 @@ const REPO_ID = 1442633889; // GitHub's numeric ID survives renames; a look-alik
 const SKILL_ID = "uiuxabhishek-devkit";
 const OLD_SKILL_ID = "uiuxabhishek-design";
 const SKILLS_CLI = "skills@1.7.6"; // the CLI version these docs were verified with
+const SKILL_ROOTS = ["plugin/skills", "skills"]; // where a release tag keeps the skill: 2.1.1 and later, then earlier tags
 const ALL_AGENTS = ["claude-code", "codex", "gemini-cli", "github-copilot", "antigravity"];
 const LABEL = "com.uiuxabhishek.devkit-update";
 const TASK = "UIUXAbhishekDevKitUpdate";
@@ -135,7 +136,16 @@ async function latestRelease() {
   if (!String(rel.html_url).startsWith(`https://github.com/${OWNER}/${REPO}/releases/tag/`)) {
     throw new UserError(`release URL ${rel.html_url} is not from ${OWNER}/${REPO}; not updating`);
   }
-  const skill = frontmatter(await getText(`${RAW}/${OWNER}/${REPO}/${rel.tag_name}/skills/${SKILL_ID}/SKILL.md`));
+  let skill, root;
+  for (const r of SKILL_ROOTS) {
+    try {
+      skill = frontmatter(await getText(`${RAW}/${OWNER}/${REPO}/${rel.tag_name}/${r}/${SKILL_ID}/SKILL.md`));
+      root = r;
+      break;
+    } catch (e) {
+      if (r === SKILL_ROOTS.at(-1)) throw e;
+    }
+  }
   if (skill.name !== SKILL_ID || skill.version !== version.join(".")) {
     throw new UserError(`${rel.tag_name} contains ${skill.name}@${skill.version}, not ${SKILL_ID}@${version.join(".")}`);
   }
@@ -150,9 +160,9 @@ async function latestRelease() {
     }
     integrity = zip.digest ? "release ZIP checksum matches GitHub's digest" : "release checksum published (no GitHub digest)";
   }
-  const tree = await getJson(`${API}/repos/${OWNER}/${REPO}/contents/skills?ref=${encodeURIComponent(rel.tag_name)}`);
+  const tree = await getJson(`${API}/repos/${OWNER}/${REPO}/contents/${root}?ref=${encodeURIComponent(rel.tag_name)}`);
   const folder = Array.isArray(tree) ? tree.find((e) => e.name === SKILL_ID && e.type === "dir") : null;
-  if (!folder) throw new UserError(`${rel.tag_name} has no skills/${SKILL_ID} folder; not updating`);
+  if (!folder) throw new UserError(`${rel.tag_name} has no ${root}/${SKILL_ID} folder; not updating`);
   return { tag: rel.tag_name, version: version.join("."), url: rel.html_url, treeSha: folder.sha, integrity };
 }
 

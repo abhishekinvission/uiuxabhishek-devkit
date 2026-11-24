@@ -4,6 +4,20 @@ All notable changes to UIUX Abhishek DevKit (formerly UIUX Abhishek Design) are 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [2.1.1] — Unreleased
+
+Fixes the plugin marketplace for the Claude app. The skill ID, capabilities, routing and install commands are unchanged.
+
+### Fixes
+- **Claude app marketplace.** Adding `abhishekinvission/uiuxabhishek-devkit` under the Claude app's **Add marketplace** failed with "1 plugin failed validation": GitHub-synced marketplaces accept `github`, `url`, `git-subdir` or `./` sources, not the `archive` source 2.1.0 used. The plugin now lives in one self-contained folder, `plugin/` (`.claude-plugin/plugin.json`, `agents/`, `skills/uiuxabhishek-devkit/`), moved with history and with no duplicate copies, and `.claude-plugin/marketplace.json` points at `"source": "./plugin"`. The archive URL and SHA-256 pin are gone, along with `package_skill.py --update-marketplace`.
+- **Skill path.** The skill moved from `skills/uiuxabhishek-devkit/` to `plugin/skills/uiuxabhishek-devkit/`. `npx skills add abhishekinvission/uiuxabhishek-devkit --skill uiuxabhishek-devkit` still finds exactly one skill (checked with Skills CLI 1.7.6 and 1.9.0).
+- **Updater.** It looks for the skill under `plugin/skills/` at the release tag, then under `skills/` for tags up to v2.1.0. Updater copies from 2.1.0 or earlier look only under `skills/`, so they fail their check for v2.1.1 and later; download the updater again from the release.
+
+### Docs and tooling
+- INSTALL.md explains adding the marketplace in the Claude app with **Sync automatically** on, the organization-sync limits, and that Claude Code offers a plugin update only when `plugin.json`'s `version` changes.
+- `package_skill.py` builds both release ZIPs from `plugin/`: the Chat upload ZIP and the plugin ZIP, now for manual uploads only.
+- `validate.py` checks the `plugin/` layout, that the marketplace source is `./plugin` and resolves to the plugin, that the entry name matches `plugin.json`, and that there are no symlinks.
+
 ## [2.1.0] — stable release
 
 New capabilities, a Claude Code agent layer and fixes. The skill ID, install commands and existing routes are unchanged.

@@ -31,7 +31,9 @@ import tempfile
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SKILL = os.path.join(ROOT, "skills", "uiuxabhishek-devkit")
+PLUGIN = os.path.join(ROOT, "plugin")  # the Claude Code plugin; marketplace.json points at ./plugin
+SKILL = os.path.join(PLUGIN, "skills", "uiuxabhishek-devkit")
+AGENT_DIR = os.path.join(PLUGIN, "agents")
 THIRD_PARTY = ("references/impeccable/", "references/apple-design/")
 BASELINE_COMMIT = "036b394"  # last commit before the router rewrite
 FRONTMATTER_KEYS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
@@ -39,7 +41,7 @@ REPO = "abhishekinvission/uiuxabhishek-devkit"
 OLD_ID = "uiuxabhishek-design"  # skill ID before v2.0.0
 OLD_ID_COMMIT = "82f5367"  # last commit that shipped the old ID
 OLD_ID_ALLOWED = ("CHANGELOG.md", "README.md", "INSTALL.md", "NOTICE.md", "SOURCES.md", "CLAUDE.md",
-                  "skills/uiuxabhishek-devkit/NOTICE.md", "tests/", "tools/updater/")
+                  "plugin/skills/uiuxabhishek-devkit/NOTICE.md", "tests/", "tools/updater/")
 AGENTS = ("claude-code", "codex", "gemini-cli", "github-copilot", "antigravity")
 SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater pins; newer CLIs change install paths
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
@@ -77,7 +79,7 @@ def md_files(base=ROOT):
 # ---------------------------------------------------------------- discovery
 def check_discovery():
     found = [p for p in md_files() if os.path.basename(p).lower() == "skill.md"]
-    check([rel(p, ROOT) for p in found] == ["skills/uiuxabhishek-devkit/SKILL.md"],
+    check([rel(p, ROOT) for p in found] == ["plugin/skills/uiuxabhishek-devkit/SKILL.md"],
           f"expected exactly one SKILL.md, found {[rel(p, ROOT) for p in found]}")
     text = read(os.path.join(SKILL, "SKILL.md"))
     m = re.match(r"---\n(.*?)\n---\n", text, re.S)
@@ -192,14 +194,14 @@ def check_integrity():
     third, _, original = sources.partition("## Original project content")
     entries = [(os.path.join(SKILL, "references", p), h)
                for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", third, re.M)]
-    entries += [(os.path.join(ROOT if p.startswith("agents/") else SKILL, p), h)
+    entries += [(os.path.join(PLUGIN if p.startswith("agents/") else SKILL, p), h)
                 for p, h in re.findall(r"^- `(\S+)  ([0-9a-f]{64})`$", original, re.M)]
     for path, digest in entries:
         if check(os.path.exists(path), f"SOURCES.md lists missing file {rel(path)}"):
             check(sha256(path) == digest, f"checksum mismatch {rel(path)}")
     on_disk = {os.path.join(r, f) for d in ("references", "templates")
                for r, _, fs in os.walk(os.path.join(SKILL, d)) for f in fs}
-    on_disk |= {os.path.join(ROOT, "agents", f) for f in os.listdir(os.path.join(ROOT, "agents"))}
+    on_disk |= {os.path.join(AGENT_DIR, f) for f in os.listdir(AGENT_DIR)}
     listed = {p for p, _ in entries}
     check(on_disk == listed, f"inventory drift: unlisted {sorted(rel(p) for p in on_disk - listed)}")
     for name in ("LICENSE", "NOTICE.md"):
@@ -491,8 +493,7 @@ def frontmatter_fields(text):
 
 def check_agents(text, caps, groups):
     roster = parse_roster(text, caps)
-    agent_dir = os.path.join(ROOT, "agents")
-    files = sorted(f[:-3] for f in os.listdir(agent_dir) if f.endswith(".md")) if os.path.isdir(agent_dir) else []
+    files = sorted(f[:-3] for f in os.listdir(AGENT_DIR) if f.endswith(".md")) if os.path.isdir(AGENT_DIR) else []
     check(files == sorted(roster), f"agents/ files {files} != SKILL.md §5 roster {sorted(roster)}")
     owners = {}
     for name, (_, owned) in roster.items():
@@ -502,7 +503,7 @@ def check_agents(text, caps, groups):
     check(not [c for c in caps if len(owners.get(c, [])) != 1],
           f"capabilities without exactly one agent: {[(c, owners.get(c, [])) for c in caps if len(owners.get(c, [])) != 1]}")
     for name in files:
-        path = os.path.join(agent_dir, name + ".md")
+        path = os.path.join(AGENT_DIR, name + ".md")
         fields, body = frontmatter_fields(read(path))
         if not check(fields is not None, f"agents/{name}.md frontmatter doesn't parse"):
             continue
@@ -648,21 +649,35 @@ def check_package():
             check(".claude-plugin/plugin.json" in pnames and ".claude-plugin/marketplace.json" not in pnames,
                   "plugin ZIP must carry plugin.json and not marketplace.json")
             agents_in = sorted(n for n in pnames if n.startswith("agents/"))
-            check(agents_in == sorted(f"agents/{f}" for f in os.listdir(os.path.join(ROOT, "agents"))
+            check(agents_in == sorted(f"agents/{f}" for f in os.listdir(AGENT_DIR)
                                      if f.endswith(".md")), "plugin ZIP agents differ from agents/")
             skill_in = {n[len("skills/uiuxabhishek-devkit/"):] for n in pnames if n.startswith("skills/")}
             check(skill_in == {r for _, r in pkg.files()}, "plugin ZIP skill files differ from the shipped set")
             check(z.read("skills/uiuxabhishek-devkit/SKILL.md") == open(os.path.join(SKILL, "SKILL.md"), "rb").read(),
                   "plugin ZIP SKILL.md must be the repository copy (full description)")
             for n in pnames:
-                src = os.path.join(ROOT, n) if not n.startswith("skills/") else os.path.join(SKILL, n.split("/", 2)[2])
+                src = os.path.join(PLUGIN, n) if not n.startswith("skills/") else os.path.join(SKILL, n.split("/", 2)[2])
                 with open(src, "rb") as f:
                     check(f.read() == z.read(n), f"plugin ZIP copy of {n} differs")
         print(f"package: {os.path.basename(ppath)}, {len(pnames)} files, {len(agents_in)} agents, top level {sorted(tops)}")
-    check_plugin_manifests(pkg, pdigest)
+    check_plugin_manifests(pkg)
 
 
-def check_plugin_manifests(pkg, plugin_digest):
+def check_plugin_layout():
+    """plugin/ is the single, self-contained copy that marketplaces and the Skills CLI read."""
+    ls = lambda *p: sorted(n for n in os.listdir(os.path.join(PLUGIN, *p)) if n not in (".DS_Store", "Thumbs.db"))
+    check(ls() == [".claude-plugin", "agents", "skills"], f"plugin/ must hold only .claude-plugin, agents and skills, found {ls()}")
+    check(ls(".claude-plugin") == ["plugin.json"], "plugin/.claude-plugin must hold only plugin.json")
+    check(ls("skills") == ["uiuxabhishek-devkit"], "plugin/skills must hold only the one skill")
+    for stale in ("skills", "agents", ".claude-plugin/plugin.json"):
+        check(not os.path.exists(os.path.join(ROOT, stale)), f"{stale} must live under plugin/, not the repository root")
+    links = [os.path.join(r, n) for r, ds, fs in os.walk(ROOT) if ".git" not in r.split(os.sep)
+             for n in ds + fs if os.path.islink(os.path.join(r, n))]
+    check(not links, f"symlinks aren't allowed: {[rel(p, ROOT) for p in links]}")
+    print("plugin layout: plugin/ holds .claude-plugin/plugin.json, agents/ and skills/uiuxabhishek-devkit/ only")
+
+
+def check_plugin_manifests(pkg):
     try:
         manifest = json.loads(read(pkg.PLUGIN_MANIFEST))
         market = json.loads(read(pkg.MARKETPLACE))
@@ -682,14 +697,15 @@ def check_plugin_manifests(pkg, plugin_digest):
     entries = [p for p in market.get("plugins", []) if p.get("name") == "uiuxabhishek-devkit"]
     if not check(len(entries) == 1 and len(market["plugins"]) == 1, "marketplace.json must list exactly this plugin"):
         return
-    src = entries[0].get("source", {})
+    src = entries[0].get("source")
     check("version" not in entries[0], "marketplace entry must not set version (plugin.json owns it)")
-    check(isinstance(src, dict) and src.get("source") == "archive", "marketplace source must be the release archive")
-    check(src.get("url") == pkg.plugin_release_url(), f"marketplace URL {src.get('url')} != {pkg.plugin_release_url()}")
-    check(src.get("sha256") == plugin_digest,
-          "marketplace sha256 doesn't match the plugin ZIP; run python3 tools/package_skill.py --update-marketplace")
-    print(f"plugin: manifest {manifest.get('version')}, marketplace pins {os.path.basename(src.get('url', ''))} "
-          f"sha256 {str(src.get('sha256'))[:12]}")
+    check(entries[0]["name"] == manifest.get("name"), "marketplace entry name must equal the plugin.json name")
+    # Organization sync in the Claude app accepts github, url, git-subdir or a ./ path; not archive or npm.
+    check(src == "./plugin", f"marketplace source must be the relative path ./plugin, got {src!r}")
+    check(os.path.realpath(os.path.join(ROOT, str(src))) == os.path.realpath(PLUGIN)
+          and os.path.isfile(os.path.join(PLUGIN, ".claude-plugin", "plugin.json")), "./plugin doesn't resolve to the plugin")
+    check("pluginRoot" not in market.get("metadata", {}), "organization sync rejects bare names under metadata.pluginRoot")
+    print(f"plugin: manifest {manifest.get('version')}, marketplace source {src}")
 
 
 # -------------------------------------------------------------- git sandbox
@@ -744,6 +760,7 @@ def main():
     check_budget(text)
     check_security()
     check_install_docs()
+    check_plugin_layout()
     check_package()
     check_git_sandbox()
     check_updater()
