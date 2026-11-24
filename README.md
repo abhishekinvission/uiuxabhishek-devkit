@@ -145,6 +145,7 @@ INSTALL.md              # Installation, migration, updates, removal and troubles
 CHANGELOG.md            # Versions and releases
 tools/                  # ZIP builder (Chat upload and plugin) and the optional updater (not installed)
 tests/                  # Validation, routing, Git, updater and migration tests (not installed)
+PRIVACY.md              # Privacy policy (the plugin's privacyPolicyUrl)
 LICENSE, NOTICE.md, SOURCES.md, LICENSES/, CLAUDE.md
 ```
 

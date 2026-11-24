@@ -761,7 +761,15 @@ def check_plugin_manifests(pkg):
         check(manifest.get(key), f"plugin.json lacks {key}")
     check(manifest.get("name") == SKILL_ID, f"plugin.json name must be {SKILL_ID}")
     check(manifest.get("displayName") == "Craftline", "plugin.json displayName must be Craftline")
-    for key in ("documentationUrl", "supportUrl"):
+    check(manifest.get("privacyPolicyUrl") == f"https://github.com/{REPO}/blob/main/PRIVACY.md",
+          "plugin.json privacyPolicyUrl must be PRIVACY.md on main")
+    privacy = read(os.path.join(ROOT, "PRIVACY.md")) if os.path.isfile(os.path.join(ROOT, "PRIVACY.md")) else ""
+    for phrase in ("telemetry", "under 18", "/issues"):
+        check(phrase in privacy, f"PRIVACY.md lacks {phrase!r}")
+    plugin_readme = read(os.path.join(PLUGIN, "README.md"))
+    check("## What it reads and sends" in plugin_readme and manifest.get("privacyPolicyUrl", "-") in plugin_readme,
+          "plugin/README.md needs 'What it reads and sends' and a link to the privacy policy")
+    for key in ("documentationUrl", "supportUrl", "privacyPolicyUrl"):
         check(str(manifest.get(key, "")).startswith(f"https://github.com/{REPO}/"), f"plugin.json {key} must be a repository URL")
     check(not manifest.get("documentationUrl", "").endswith("GUIDE.md")
           or os.path.isfile(os.path.join(SKILL, "GUIDE.md")), "plugin.json documentationUrl points at a missing GUIDE.md")

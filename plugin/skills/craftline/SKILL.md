@@ -5,7 +5,7 @@ license: MIT for Craftline original work; bundled references keep their upstream
 metadata:
   author: "Abhishek Rampal (uiuxAbhishek)"
   repository: https://github.com/abhishekinvission/uiuxabhishek-devkit
-  version: "3.0.3"
+  version: "3.0.4"
 ---
 # Craftline
 

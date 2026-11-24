@@ -4,6 +4,25 @@ All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [3.0.4] — 2026-11-24 (stable release)
+
+Data-handling disclosure for the Claude plugin directory. No routing or guidance changes.
+
+### Added
+- `PRIVACY.md` at the repository root, a plain-language privacy policy. Craftline collects, stores and transmits no data to its author or any service of its own, and has no analytics or telemetry. It runs inside the user's Claude session under Anthropic's terms. It reads only what that session can already access, and sends only through the user's own authorized tools. It retains nothing, and isn't intended for anyone under 18. Questions go to GitHub Issues.
+- `plugin.json` `privacyPolicyUrl`, pointing to PRIVACY.md on main.
+
+### Changed
+- `plugin/README.md`: "What it runs and sends" is now "What it reads and sends". It lists:
+  - what Craftline reads: repository files and Git history, including commit author names and emails; ticket content from GitHub Issues, Jira, Linear or Azure Boards; and Figma files through the user's Figma tools;
+  - what it can send, only with authorization for that exact action and through the user's own signed-in `git`, `gh`, `glab`, `az` or connectors: commits and branch pushes to GitHub, GitLab, Bitbucket or Azure Repos, draft pull or merge requests, and links or comments on tickets.
+
+  Ticket state never changes unless the user asks. A privacy link was added.
+- README layout and CLAUDE.md list PRIVACY.md among the maintained root documents.
+
+### Tests
+- The manifest check requires `privacyPolicyUrl` to point to PRIVACY.md on main. It also checks that PRIVACY.md covers telemetry, the under-18 rule and the Issues contact, and that the plugin README has the new section and the privacy link.
+
 ## [3.0.3] — 2026-11-24 (stable release)
 
 Second fix for the Claude plugin directory's RUNTIME_FETCH_EXEC warning ("Contains a download-and-run command") on `references/frontend/security.md`. No routing changes, and every security recommendation is kept.
@@ -175,6 +194,7 @@ Tag `v1.0.0` (commit `dbb612c`), with the GitHub Release asset `uiuxabhishek-des
 - `f0b098f`: branding, ownership and licensing policy for integrating sources.
 - `8c7c9e5`, `93b5815`, `72d0bbf`: initial skill with Impeccable and Apple Design, the integration workflow and corrected install commands.
 
+[3.0.4]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.4
 [3.0.3]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.3
 [3.0.2]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.2
 [3.0.1]: https://github.com/abhishekinvission/uiuxabhishek-devkit/releases/tag/v3.0.1

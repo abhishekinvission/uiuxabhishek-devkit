@@ -51,9 +51,25 @@ Claude Chat on claude.ai doesn't load plugin agents. There, the same skill runs 
 - Merging, deploying, force-pushing, deleting branches and changing ticket state each need you to name that exact operation.
 - For larger tasks it shows a plan and waits for your approval before any agent starts.
 
-## What it runs and sends
+## What it reads and sends
 
-Craftline is Markdown guidance only. It has no hooks, MCP servers, scripts or executables, and makes no network calls of its own. When a task needs them, and within the limits above, it asks Claude to use tools you already have: your Git client, your provider's CLI, and connectors you've set up, such as Figma or your issue tracker.
+**Craftline itself** is guidance files and agents only. It has no hooks, MCP servers, scripts or network calls of its own. It retains nothing and sends nothing to its author.
+
+**What it reads** in your workspace:
+
+- Your repository's files and Git history, including commit author names and emails.
+- When you ask: ticket content from GitHub Issues, Jira, Linear or Azure Boards.
+- When you ask: Figma files, through your connected Figma tools.
+
+**What it can send.** It sends only when you authorize that exact action, and only through your own signed-in tools (`git`, `gh`, `glab`, `az`, or your connectors):
+
+- Commits and branch pushes to your Git host: GitHub, GitLab, Bitbucket or Azure Repos.
+- Draft pull requests or merge requests.
+- Links or comments on tickets.
+
+It never changes a ticket's state unless you ask.
+
+Privacy: [PRIVACY.md](https://github.com/abhishekinvission/uiuxabhishek-devkit/blob/main/PRIVACY.md)
 
 ## Credits and licenses
 
@@ -67,4 +83,5 @@ They remain the work of their authors. Craftline is an independent project, not 
 - Repository: <https://github.com/abhishekinvission/uiuxabhishek-devkit>
 - License: [LICENSE](skills/craftline/LICENSE) and third-party licenses in [LICENSES/](skills/craftline/LICENSES/)
 - Notice and full attribution: [NOTICE.md](skills/craftline/NOTICE.md)
+- Privacy: [PRIVACY.md](https://github.com/abhishekinvission/uiuxabhishek-devkit/blob/main/PRIVACY.md)
 - Issues: <https://github.com/abhishekinvission/uiuxabhishek-devkit/issues>
