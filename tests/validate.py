@@ -1,17 +1,20 @@
-"""Repository validation for the uiuxabhishek-devkit skill.
+"""Repository validation for the uiuxabhishek-devkit skill and its Claude Code plugin.
 
 Standard library only. Run from anywhere:  python3 tests/validate.py [--cli]
 
 Checks: single-skill discovery and frontmatter, Markdown links, SOURCES.md
-checksums and inventory, license/notice mirrors, router parsing and
-reference coverage, routing scenarios, context budget, a basic
-secret/executable scan, README install commands, the Claude upload ZIP
-(built to a temporary folder), the Git workflow commands against throwaway
-repositories with a mock remote (tests/git_sandbox.py), the optional updater
-against a mock GitHub API and mock Skills CLI (tests/updater_sandbox.py), and
-leftover references to the pre-2.0 skill ID. --cli also migrates an isolated
-HOME from the old skill ID and installs, updates and removes per agent. --cli also runs `npx skills add . --list` and
-a real global install for every documented agent into a throwaway HOME.
+checksums and inventory (skill and agents), license/notice mirrors, router
+parsing and reference coverage, script-calling files routed with the Impeccable
+adapter, routing scenarios with their expected agent plan, the plugin agents
+(frontmatter, one agent per capability, read-only tools, no guidance copies),
+context budget, a basic secret/executable scan, README install commands, both
+release ZIPs and the plugin and marketplace manifests (built to a temporary
+folder), the Git workflow commands against throwaway repositories with a mock
+remote (tests/git_sandbox.py), the optional updater against a mock GitHub API
+and mock Skills CLI (tests/updater_sandbox.py), and leftover references to the
+pre-2.0 skill ID. --cli also runs `npx skills add . --list`, a real global
+install for every documented agent into a throwaway HOME, and a migration from
+the old skill ID.
 
 Routing scenarios use a deterministic keyword simulation of SKILL.md's
 signal tables. It checks that the router's signals, conditions and file
@@ -40,7 +43,7 @@ OLD_ID_ALLOWED = ("CHANGELOG.md", "README.md", "INSTALL.md", "NOTICE.md", "SOURC
 AGENTS = ("claude-code", "codex", "gemini-cli", "github-copilot", "antigravity")
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
 SKILL_MD_MAX_CHARS = 16000  # raised in 2.1.0 for the tickets row and the §5 agent roster
-GUIDE_MAX_CHARS = 5000
+GUIDE_MAX_CHARS = 8000  # raised in 2.1.0 for the new capabilities and the agents section
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 
 failures = []
