@@ -41,6 +41,7 @@ OLD_ID_COMMIT = "82f5367"  # last commit that shipped the old ID
 OLD_ID_ALLOWED = ("CHANGELOG.md", "README.md", "INSTALL.md", "NOTICE.md", "SOURCES.md", "CLAUDE.md",
                   "skills/uiuxabhishek-devkit/NOTICE.md", "tests/", "tools/updater/")
 AGENTS = ("claude-code", "codex", "gemini-cli", "github-copilot", "antigravity")
+SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater pins; newer CLIs change install paths
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
 SKILL_MD_MAX_CHARS = 16000  # raised in 2.1.0 for the tickets row and the §5 agent roster
 GUIDE_MAX_CHARS = 8000  # raised in 2.1.0 for the new capabilities and the agents section
@@ -93,7 +94,7 @@ def check_discovery():
 
 def check_cli():
     try:
-        out = subprocess.run(["npx", "--yes", "skills", "add", ".", "--list"], cwd=ROOT,
+        out = subprocess.run(["npx", "--yes", SKILLS_CLI, "add", ".", "--list"], cwd=ROOT,
                              capture_output=True, text=True, timeout=180).stdout
     except (OSError, subprocess.TimeoutExpired) as e:
         check(False, f"skills CLI unavailable: {e}")
@@ -105,7 +106,7 @@ def check_cli():
         env = dict(os.environ, HOME=home, DISABLE_TELEMETRY="1", DO_NOT_TRACK="1")
         env.pop("CLAUDE_CONFIG_DIR", None)
         env.pop("CODEX_HOME", None)
-        cmd = ["npx", "--yes", "skills", "add", ROOT, "--skill", "uiuxabhishek-devkit", "-g", "-y"]
+        cmd = ["npx", "--yes", SKILLS_CLI, "add", ROOT, "--skill", "uiuxabhishek-devkit", "-g", "-y"]
         for a in AGENTS:
             cmd += ["-a", a]
         try:
@@ -139,7 +140,7 @@ def check_migration():
         agents = [x for a in AGENTS for x in ("-a", a)]
 
         def cli(*args):
-            r = subprocess.run(["npx", "--yes", "skills", *args], cwd=home, env=env,
+            r = subprocess.run(["npx", "--yes", SKILLS_CLI, *args], cwd=home, env=env,
                                capture_output=True, text=True, timeout=300)
             return r.returncode
         other = os.path.join(home, ".agents", "skills", "other-skill", "SKILL.md")
