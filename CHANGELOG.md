@@ -18,11 +18,14 @@ Craftforce: a process layer for long, multi-step builds in any stack. Original w
 - `task-implementer` agent (edits): one plan task at a time, test first, for stacks the other agents don't cover.
 - Craftforce helper agents, both read-only and dispatched only by Craftforce playbooks (listed in `using-craftforce.md`, not SKILL.md §5, so the router doesn't grow): `spec-reviewer` (per-task spec check before `code-reviewer`'s quality review) and `session-diagnostician` (reads a session transcript so it stays out of the head's context).
 
+- SonarQube: `references/workflows/sonarqube.md`, an original guide for failing quality gates in any stack (detect, work order, behavior-preserving fix patterns from a real project, coverage import and CI wiring, verification, and user-side server steps), routed by a new `sonar` row. Checked against SonarQube Server 2026.4–2026.5 documentation on 2026-11-25. `sonar` owns its tests, so `testing` isn't selected with it.
+- `sonar-engineer` agent (edits) owning `sonar`.
+
 ### Changed
-- Scope: `craftforce` joins `git`, `tickets` and `ado` as stack-independent.
+- Scope: `craftforce` and `sonar` join `git`, `tickets` and `ado` as stack-independent.
 - `agent-plans.md`: editing agents may run in parallel only on disjoint files, each in its own worktree.
 - `tests/validate.py`: the coverage check follows the Craftforce index as a sub-router; 6 routing scenarios added, including one that must not load it.
-- `tests/validate.py`: context-growth budget raised from +10% to +13% (maintainer decision). The `craftforce` row adds about 80 tokens to every task's router load; measured growth is +12.6%.
+- `tests/validate.py`: context-growth budget raised from +10% to +14% and the SKILL.md limit from 12,000 to 12,250 characters (maintainer decision), for the `craftforce` and `sonar` rows that every task's router load now carries. The simulator applies "`sonar` owns its tests".
 
 ### Not included
 - A session-start hook and the browser "visual companion" from the outline: both need runtime code outside Craftline's Markdown-only design.

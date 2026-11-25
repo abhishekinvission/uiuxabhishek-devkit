@@ -14,11 +14,11 @@ Craftline runs inside your own Claude session: Claude Code, Cowork or Claude Cha
 
 ## What it reads
 
-It reads only what your session can already access: your repository's files and Git history, including commit author names and emails. When you ask, it also reads ticket content and Figma files through tools you've connected, and, to diagnose a session, that session's local transcript files. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists exactly what it reads.
+It reads only what your session can already access: your repository's files and Git history, including commit author names and emails. When you ask, it also reads ticket content and Figma files through tools you've connected, SonarQube results through your configured scanner, token or connector, and, to diagnose a session, that session's local transcript files. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists exactly what it reads.
 
 ## What it sends
 
-Craftline only sends data through your own signed-in tools, and only when you authorize that exact action. Examples are commits, branch pushes, draft pull requests and ticket comments. It never sends anything to its author. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists every kind of write.
+Craftline only sends data through your own signed-in tools, and only when you authorize that exact action. Examples are commits, branch pushes, draft pull requests, ticket comments and SonarQube analysis runs to your own server. It never sends anything to its author. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists every kind of write.
 
 ## Retention
 

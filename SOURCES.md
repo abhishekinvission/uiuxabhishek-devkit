@@ -83,6 +83,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
 | `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
+| `references/workflows/sonarqube.md`, `plugin/agents/sonar-engineer.md` | SonarQube quality-gate guide and agent, written for this project on 2026-11-25 from the maintainer's own project experience and checked against SonarQube Server 2026.4–2026.5 documentation (facts only; no Sonar documentation text copied) | MIT (© Abhishek Rampal) |
 | `references/craftforce/` (15 playbooks), `plugin/agents/task-implementer.md`, `plugin/agents/spec-reviewer.md`, `plugin/agents/session-diagnostician.md` | Craftforce process layer (brainstorm → worktree → plan → agent or inline execution with review → verified finish, plus debugging, review handling, parallel agents, skill writing and session diagnosis), written for this project on 2026-11-24 from the maintainer's outline of the 15 capabilities (no third-party text). The outline's session-start hook and browser visual companion were deliberately not built (Markdown only) | MIT (© Abhishek Rampal) |
 | `plugin/agents/` (agent files), `plugin/README.md`, `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents, directory README and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
@@ -133,6 +134,7 @@ Checksums (paths relative to `plugin/skills/craftline/`):
 - `references/workflows/azure-devops-delivery.md  5c43d9edb1416222bb3a0c17644273cb8d3da72ef6265c240c6baf1807a0d7bb`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
 - `references/workflows/git-workflow.md  a581debca4a298fb45e65b73cdc47507d2b665d32bb4fe22ad09633e63e53d10`
+- `references/workflows/sonarqube.md  fa58ea8ee367a8133ad386fce5e13e1365d6bde1bcb92a23a223d2c373e12dd0`
 - `references/workflows/ticket-delivery.md  7a8425cacc821082db3f01ee57210b39c8cf2291b4aa808a0a2d7051172d8095`
 - `templates/pr-description.md  ed01966273e1e72cdc6c76c8d93a63060fdb3fb8b1e4a0ae0bfd1ab0fa9d3b94`
 - `templates/ticket-delivery-report.md  e13d9e63036843bba0696325f184812d7301a211ad5b34becfe3aac132528b87`
@@ -145,6 +147,7 @@ Plugin agent files (paths relative to `plugin/`):
 - `agents/figma-translator.md  a1e43172d3f6b39296d7fe27ac139dbdd02b9a5ecac78621c93fc9a2254d9b71`
 - `agents/frontend-engineer.md  0bcef591c9076979c19d7f079404ce8a4ccb102c06737dbfe9a0234c10c7d62a`
 - `agents/session-diagnostician.md  0f60b5192cec00a37b8310e5ed6a689bb93251ac883281d0371be48da13023de`
+- `agents/sonar-engineer.md  f235b4f01bd377064b5b7a42d230463a574edcca9225ac20007300cdef9119a1`
 - `agents/spec-reviewer.md  8f8c3027f632b49453a360a5c8984131e750eac7fbe12e6accd193e9e50e76e9`
 - `agents/task-implementer.md  8f1489752b7ab965d621a971467c9ba39126b8cd80ef8dcc2f9706011854cb80`
 - `agents/test-engineer.md  b06b0a3989e2c0e4f9362bdabee47170fb3aa7de79707b71a6437ee702fcb973`

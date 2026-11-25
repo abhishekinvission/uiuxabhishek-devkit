@@ -482,6 +482,9 @@
     {"id": "craftforce-tdd", "prompt": "Use tdd to fix the date parser.", "caps": ["craftforce"], "mode": "implement", "agent": "inline", "must": ["references/craftforce/using-craftforce.md"], "forbid": []},
     {"id": "craftforce-backend-root-cause", "prompt": "Find the root cause of the failing database migration.", "caps": ["craftforce"], "mode": "implement", "agent": "inline", "must": ["references/craftforce/using-craftforce.md"], "forbid": []},
     {"id": "craftforce-with-testing", "prompt": "Systematic debugging please: the playwright e2e test for checkout is flaky.", "caps": ["craftforce", "testing"], "mode": "implement", "agent": ["task-implementer", "test-engineer"], "must": ["references/craftforce/using-craftforce.md", "references/frontend/testing.md"], "forbid": []},
-    {"id": "craftforce-not-loaded", "prompt": "Add autosave to the profile form.", "caps": ["forms"], "mode": "implement", "agent": "inline", "must": ["references/frontend/forms.md"], "forbid": ["references/craftforce/using-craftforce.md"]}
+    {"id": "craftforce-not-loaded", "prompt": "Add autosave to the profile form.", "caps": ["forms"], "mode": "implement", "agent": "inline", "must": ["references/frontend/forms.md"], "forbid": ["references/craftforce/using-craftforce.md"]},
+    {"id": "sonar-coverage-zero", "prompt": "SonarQube shows 0% coverage on the server project and the quality gate fails.", "caps": ["sonar"], "mode": "implement", "agent": "inline", "must": ["references/workflows/sonarqube.md"], "forbid": []},
+    {"id": "sonar-hotspots-audit", "prompt": "Audit the security hotspot and code smell list from SonarCloud, read-only.", "caps": ["sonar"], "mode": "audit", "agent": "inline", "must": ["references/workflows/sonarqube.md"], "forbid": []},
+    {"id": "sonar-not-loaded", "prompt": "Add unit tests for the cart reducer.", "caps": ["testing"], "mode": "implement", "agent": "inline", "must": ["references/frontend/testing.md"], "forbid": ["references/workflows/sonarqube.md"]}
   ]
 }

@@ -56,8 +56,8 @@ AGENTS = ("codex", "gemini-cli", "github-copilot", "antigravity")
 SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater pins; newer CLIs change install paths
 SKILLS_CLI_LATEST = "skills@1.9.0"  # discovery must also work with the newest CLI checked
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
-SKILL_MD_MAX_CHARS = 12000
-MAX_CONTEXT_GROWTH = 13  # percent over the pre-router baseline, averaged over all scenarios (raised from 10 in 3.1.0 for the stack-independent craftforce route)
+SKILL_MD_MAX_CHARS = 12250  # raised from 12000 in 3.1.0 for the sonar route
+MAX_CONTEXT_GROWTH = 14  # percent over the pre-router baseline, averaged over all scenarios (raised from 10 in 3.1.0 for the craftforce and sonar routes)
 GUIDE_MAX_CHARS = 5000
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 
@@ -352,6 +352,7 @@ LIMIT_IMPLEMENT = "don't push, no pr, locally"
 LIMIT_NO_FETCH = "don't fetch, do not fetch"
 LIMIT_OFFLINE = "offline, no network"
 ADO_OWNS_GIT = "when either is selected, don't select `git` separately"
+SONAR_OWNS_TESTING = "`sonar` owns its tests: don't also select `testing`"
 BACKEND_RULE = "the backend part of a full-stack or `ado` task"
 STRICT_AUDIT = "`audit` and `plan` never fetch or write refs"
 # Prompts that name backend work and no UI select no Design or Engineering row (SKILL.md §1 Scope)
@@ -389,6 +390,9 @@ def route(prompt, modes, caps, craft_floor, groups):
     if {"ado", "tickets"} & set(selected) and "git" in selected:
         selected.remove("git")  # ADO_OWNS_GIT: both load git themselves
         files = [f for f in files if f not in {f for s in caps["git"] for f in s["files"]}]
+    if "sonar" in selected and "testing" in selected:
+        selected.remove("testing")  # SONAR_OWNS_TESTING: sonarqube.md routes to its own test guidance
+        files = [f for f in files if f not in {f for s in caps["testing"] for f in s["files"]}]
     if {"ado", "tickets"} & set(selected) and mode is None:
         mode = "audit"  # a bare ticket or work-item ID or URL is a dry run
     mode = mode or "implement"
@@ -895,6 +899,7 @@ def main():
     for phrase in ",".join((LIMIT_AUDIT, LIMIT_IMPLEMENT, LIMIT_NO_FETCH, LIMIT_OFFLINE)).split(","):
         check(phrase.strip() in limits, f"limit phrase {phrase.strip()!r} not documented in SKILL.md")
     check(ADO_OWNS_GIT in limits, "SKILL.md must say ado owns git")
+    check(SONAR_OWNS_TESTING.lower() in limits, "SKILL.md must say sonar owns its tests")
     check(BACKEND_RULE in limits, "SKILL.md must keep frontend rows out of the backend part of a task")
     check(STRICT_AUDIT in limits, "SKILL.md must say audit and plan never fetch")
     git_guide = read(os.path.join(SKILL, "references", "workflows", "git-workflow.md")).lower().replace("’", "'")

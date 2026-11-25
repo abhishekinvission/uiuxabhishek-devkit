@@ -1,6 +1,6 @@
 ---
 name: craftline
-description: Craftline router by uiuxAbhishek. Use for UI/UX design, accessibility, motion, native and cross-platform UI, Figma to code, frontend engineering (pages, APIs, forms, state, SEO, security, tests, review), Git on any provider, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. Loads only what a task needs. Not for other backend-only or infrastructure tasks.
+description: Craftline router by uiuxAbhishek. Use for UI/UX design, accessibility, motion, native and cross-platform UI, Figma to code, frontend engineering (pages, APIs, forms, state, SEO, security, tests, review), Git on any provider, SonarQube quality gates, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. Loads only what a task needs. Not for other backend-only or infrastructure tasks.
 license: MIT for Craftline original work; bundled references keep their upstream licenses (see NOTICE.md)
 metadata:
   author: "Abhishek Rampal (uiuxAbhishek)"
@@ -13,7 +13,7 @@ metadata:
 
 ## 1. Classify
 
-1. **Scope.** UI and frontend work, plus `git`, `tickets`, `ado` and `craftforce` for any repository and stack. Other backend-only, database or infrastructure work loads nothing. In a mixed task, Design and Engineering rows cover the UI part only: the backend part of a full-stack or `ado` task selects none of them.
+1. **Scope.** UI and frontend work, plus `git`, `tickets`, `ado`, `sonar` and `craftforce` for any repository and stack. Other backend-only, database or infrastructure work loads nothing. In a mixed task, Design and Engineering rows cover the UI part only: the backend part of a full-stack or `ado` task selects none of them.
 2. **Mode** (table) caps what you may change.
 3. **Capabilities** (§2): one owns the deliverable; add others only for a distinct responsibility (§3).
 4. **Project facts** (stack, design system, conventions, tests, repo rules) beat examples.
@@ -84,9 +84,10 @@ Routes are `signals → files`; a `+` item loads only when its condition also ho
 | `git` | git, repo, repository, commit, push the branch, pull request, merge request, merge conflict, rebase, cherry-pick, stash, revert commit, reflog, force push, deleted branch, create branch, sync branch, sync fork, branch protection, behind main, github, gitlab, bitbucket, azure repos, git tag → `git-workflow.md` · +conflict, revert, recover, reflog, reset, rebase, cherry-pick, force push, rewrite history, deleted branch, tag, release → `git-recovery-and-release.md` · +open a pr, open a pull request, open a merge request, create a pull request, pr description → [PR template](templates/pr-description.md) |
 | `tickets` | github issue, jira, linear issue, linear.app, atlassian.net, ticket → `ticket-delivery.md` + [report](templates/ticket-delivery-report.md) · +implement or deliver → [testing](references/frontend/testing.md) + [review](references/frontend/review-and-release.md) + `git-workflow.md` · +deliver → [PR template](templates/pr-description.md) |
 | `ado` | azure devops, azure boards, ado, work item, dev.azure.com → `azure-devops-delivery.md` + `ado-configuration.md` + all of `tickets` |
+| `sonar` | sonarqube, sonarcloud, quality gate, code smell → `sonarqube.md` |
 | `craftforce` | brainstorm, implementation plan, subagent, tdd, root cause, systematic debugging, worktree, finish branch, long-running, parallel agents, reviewer feedback, write a skill, craftforce → [index](references/craftforce/using-craftforce.md) |
 
-`git` covers repository operations, not code that mentions Git. `ado` and `tickets` load it themselves: when either is selected, don't select `git` separately. Azure Boards → `ado` (wins over `tickets`); GitHub Issues, Jira, Linear → `tickets`; no tracker named → ask. A bare ticket ID or URL is a dry run. Both add capabilities per phase, never change ticket state unless asked, and never infer organization, project, repository or base branch.
+`git` covers repository operations, not code that mentions Git. `ado` and `tickets` load it themselves: when either is selected, don't select `git` separately. Azure Boards → `ado` (wins over `tickets`); GitHub Issues, Jira, Linear → `tickets`; no tracker named → ask. A bare ticket ID or URL is a dry run. `sonar` owns its tests: don't also select `testing`. Both add capabilities per phase, never change ticket state unless asked, and never infer organization, project, repository or base branch.
 
 **Never load** (need unbundled Impeccable tooling): `live.md`, `live-setup.md`, `hooks.md`, `doctor.md`, `visualize.md`, `routing.md`, `init.md`, `craft.md`, `degraded/*`.
 
@@ -94,7 +95,7 @@ Routes are `signals → files`; a `+` item loads only when its condition also ho
 
 - **Phases.** Load supporting references as their phase starts; over three at once means phasing.
 - **Ownership.** Impeccable: look, copy, states; `animate`: whether motion appears; `fluid-motion`: its physics; frontend guides: contracts, state, routing; `testing`: gate order; `review`: release checks; `git`: publishing gates; `tickets`/`ado`: ticket lifecycle; `craftforce`: work order, evidence.
-- **Shared baseline** (apply once, however often restated): user scope and repository rules; existing conventions and dependencies; server-side authorization; no secrets or personal data in code, logs or bundles; report exact commands and results, never unrun checks.
+- **Shared baseline** (apply once): user scope and repository rules; existing conventions and dependencies; server-side authorization; no secrets or personal data in code, logs or bundles; report exact commands and results, never unrun checks.
 - **Precedence.** User scope and repository rules > design system and product requirements > security, accessibility and performance > reference guidance > embellishment.
 
 ## 4. Reference adapters
@@ -116,5 +117,6 @@ The main session is the **head**; agents never start agents. Small or single-cap
 - `code-reviewer` (read-only): review, frontend-security
 - `delivery-agent` (writes when authorized): git, tickets, ado
 - `task-implementer` (edits): craftforce
+- `sonar-engineer` (edits): sonar
 
 Credits: [NOTICE.md](NOTICE.md) (Impeccable © Paul Bakaus, Apache-2.0; Apple Design © Emil Kowalski, MIT).
