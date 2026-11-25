@@ -15,7 +15,8 @@ Craftforce: a process layer for long, multi-step builds in any stack. Original w
   - agents: dispatching parallel agents;
   - meta: the index itself, writing skills, diagnosing Craftforce sessions.
 - Long-running work: the plan file in the user's project is an on-disk ledger, ticked after every task, with a resume protocol for compaction or a new session.
-- `task-implementer` agent (edits): one plan task at a time, test first, for stacks the other agents don't cover. Spec and quality reviews reuse `code-reviewer`.
+- `task-implementer` agent (edits): one plan task at a time, test first, for stacks the other agents don't cover.
+- Craftforce helper agents, both read-only and dispatched only by Craftforce playbooks (listed in `using-craftforce.md`, not SKILL.md §5, so the router doesn't grow): `spec-reviewer` (per-task spec check before `code-reviewer`'s quality review) and `session-diagnostician` (reads a session transcript so it stays out of the head's context).
 
 ### Changed
 - Scope: `craftforce` joins `git`, `tickets` and `ado` as stack-independent.

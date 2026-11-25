@@ -2,6 +2,8 @@
 
 **Use for:** a session where the process went wrong — a playbook or agent didn't load, work was repeated or lost after compaction, an agent ignored its handoff, or tokens and time ran unusually high. Read-only: this produces a diagnosis, not fixes.
 
+**With the plugin:** once the transcript path is confirmed, dispatch the read-only `session-diagnostician` with it, the workspace and the symptom, so the transcript stays out of the head's context; otherwise follow the steps below yourself.
+
 ## Gather evidence
 1. **Ask for the session** if it isn't obvious: which project and roughly when. Claude Code usually keeps session transcripts as JSONL files under `~/.claude/projects/` in a folder named after the project path; if they aren't there, ask the user for the path or an export. Never search the user's home directory broadly.
 2. **Read only what's needed:** the user's request, which reference files were read, agent dispatches and their returns, tool errors, compaction or resume points, and the final claims.

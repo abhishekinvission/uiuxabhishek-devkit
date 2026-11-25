@@ -41,7 +41,7 @@ It never merges, deploys, force-pushes, deletes or moves branches and tags, rewr
 
 ## Agents (Claude Code)
 
-With the Claude Code plugin, the main session can hand parts of a larger task to `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer`, `delivery-agent` and `task-implementer`. Small tasks stay direct. Long plans run one fresh agent per task, tracked in a plan file so work resumes after compaction. Bigger ones get a plan first (who does what, in what order, which writes need your authorization), and nothing starts until you approve it. Read-only checks may run in parallel; delivery always runs last. Other tools run the same plan one step at a time.
+With the Claude Code plugin, the main session can hand parts of a larger task to `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer`, `delivery-agent`, `task-implementer`, `spec-reviewer` and `session-diagnostician`. Small tasks stay direct. Long plans run one fresh agent per task, tracked in a plan file so work resumes after compaction. Bigger ones get a plan first (who does what, in what order, which writes need your authorization), and nothing starts until you approve it. Read-only checks may run in parallel; delivery always runs last. Other tools run the same plan one step at a time.
 
 ## Good to know
 

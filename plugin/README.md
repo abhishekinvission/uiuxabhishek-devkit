@@ -29,7 +29,7 @@ On earlier versions, add the marketplace first:
 
 ## Agents
 
-In Claude Code and Cowork, the main session plans larger tasks and hands parts to 9 specialist agents:
+In Claude Code and Cowork, the main session plans larger tasks and hands parts to 11 specialist agents:
 
 | Agent | Role |
 | --- | --- |
@@ -42,8 +42,10 @@ In Claude Code and Cowork, the main session plans larger tasks and hands parts t
 | `code-reviewer` | Read-only correctness, release-readiness and frontend security review |
 | `delivery-agent` | Git and ticket work: branches, commits, pushes, draft PRs |
 | `task-implementer` | Edits code for one plan task at a time, test first, in any stack |
+| `spec-reviewer` | Read-only: checks each Craftforce task does exactly what its plan says |
+| `session-diagnostician` | Read-only: reads a session transcript to explain what went wrong |
 
-For long Craftforce plans, each task gets a fresh agent and two reviews (spec, then quality), and progress is ticked in a plan file in your project, so the work picks up where it stopped after compaction or in a new session.
+For long Craftforce plans, each task gets a fresh agent and two reviews (`spec-reviewer`, then `code-reviewer`), and progress is ticked in a plan file in your project, so the work picks up where it stopped after compaction or in a new session.
 
 Claude Chat on claude.ai doesn't load plugin agents. There, the same skill runs every step itself in the conversation, one step at a time, with the same guidance.
 

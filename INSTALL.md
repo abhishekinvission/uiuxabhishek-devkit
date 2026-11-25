@@ -29,7 +29,7 @@ Or from a terminal: `claude plugin marketplace add abhishekinvission/uiuxabhishe
 - **What it installs.** The marketplace entry's source is `./plugin`, the repository's `plugin/` folder: `.claude-plugin/plugin.json`, `agents/` and `skills/craftline/` only. Maintainer files (`CLAUDE.md`, `.claude/`, `tests/`, `tools/`) are never installed.
 - **One copy only.** If you also installed the skill for Claude Code with `npx skills`, remove that copy: `npx skills remove craftline -g -a claude-code -y`. Other agents keep their `npx` install.
 - **Update.** `claude plugin marketplace update uiuxabhishek`, then `claude plugin update craftline@uiuxabhishek` (or update it from `/plugin`). Claude Code compares the `version` in `plugin.json`: a new release reaches you only after that string changes, however many commits land on `main` in between ([Claude Code docs](https://code.claude.com/docs/en/plugins/host-marketplace)). Auto-update is off for third-party marketplaces unless you turn it on under **Marketplaces** in `/plugin`. The updater below handles `npx` installs only.
-- **Check.** `claude plugin details craftline` lists 1 skill and 9 agents. In a session, run `/agents` and look for the `craftline:` agents. Then ask for a task that spans two areas; the head should show a plan and wait for your approval before starting any agent.
+- **Check.** `claude plugin details craftline` lists 1 skill and 11 agents. In a session, run `/agents` and look for the `craftline:` agents. Then ask for a task that spans two areas; the head should show a plan and wait for your approval before starting any agent.
 - **Remove.** `claude plugin uninstall craftline@uiuxabhishek`.
 - **Without the plugin**, other agents run the same plan themselves, one step at a time.
 
@@ -119,7 +119,7 @@ claude plugin install craftline@uiuxabhishek
 claude plugin details craftline
 ```
 
-The last command should show 1 skill and 9 agents, now under the `craftline:` namespace. If you had also installed the skill for Claude Code with the Skills CLI, remove that copy: `npx skills remove uiuxabhishek-devkit -g -a claude-code -y`. Restart Claude Code.
+The last command should show 1 skill and 11 agents, now under the `craftline:` namespace. If you had also installed the skill for Claude Code with the Skills CLI, remove that copy: `npx skills remove uiuxabhishek-devkit -g -a claude-code -y`. Restart Claude Code.
 
 ### Codex, Gemini CLI, GitHub Copilot and Antigravity (Skills CLI)
 

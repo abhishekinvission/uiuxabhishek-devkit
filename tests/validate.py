@@ -523,10 +523,20 @@ def frontmatter_fields(text):
     return fields, text[m.end():]
 
 
+def parse_helpers():
+    """Helper agents listed in the Craftforce index: dispatched only by its playbooks, owning no capability."""
+    text = read(os.path.join(SKILL, SUB_ROUTERS[0]))
+    section = text.split("## Helper agents")[1].split("\n## ")[0] if "## Helper agents" in text else ""
+    return {name: (access.strip(), []) for name, access, _ in re.findall(r"^- `([\w-]+)` \(([^)]+)\): (.+)$", section, re.M)}
+
+
 def check_agents(text, caps, groups):
     roster = parse_roster(text, caps)
+    helpers = parse_helpers()
+    check(not set(helpers) & set(roster), f"helper agents also in the SKILL.md §5 roster: {sorted(set(helpers) & set(roster))}")
+    check(all(access == "read-only" for access, _ in helpers.values()), "helper agents must be read-only")
     files = sorted(f[:-3] for f in os.listdir(AGENT_DIR) if f.endswith(".md")) if os.path.isdir(AGENT_DIR) else []
-    check(files == sorted(roster), f"agents/ files {files} != SKILL.md §5 roster {sorted(roster)}")
+    check(files == sorted({**roster, **helpers}), f"agents/ files {files} != SKILL.md §5 roster + Craftforce helpers {sorted({**roster, **helpers})}")
     owners = {}
     for name, (_, owned) in roster.items():
         for c in owned:
@@ -548,14 +558,14 @@ def check_agents(text, caps, groups):
             check("Agent" not in tools, f"agents/{name}.md may start other agents")
         else:
             check("Agent" in denied, f"agents/{name}.md inherits tools, so it must disallow Agent")
-        if roster.get(name, ("",))[0] == "read-only":
+        if {**roster, **helpers}.get(name, ("",))[0] == "read-only":
             ok = not (tools & WRITE_TOOLS) if tools else WRITE_TOOLS - {"MultiEdit"} <= denied
             check(ok, f"read-only agent {name} has write tools")
         lines = body.strip().splitlines()
         check(len(lines) <= AGENT_BODY_MAX_LINES, f"agents/{name}.md body has {len(lines)} lines")
         check(not re.search(r"references/|templates/", body), f"agents/{name}.md contains guidance paths")
         check(not [l for l in lines if l.lstrip().startswith("|") or "→" in l], f"agents/{name}.md contains a routing table")
-    print(f"agents: {len(files)} agents, {len(owners)} capabilities each owned by exactly one agent")
+    print(f"agents: {len(files)} agents ({len(helpers)} Craftforce helpers), {len(owners)} capabilities each owned by exactly one agent")
     return roster
 
 

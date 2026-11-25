@@ -34,6 +34,12 @@ Long sessions lose detail when the conversation is compacted or a new session st
 
 This reduces context loss; it doesn't guarantee unlimited runtime. Usage limits, permission prompts and questions still pause work, and the ledger is what lets it pick up again.
 
+## Helper agents (Claude Code plugin)
+Dispatched only by the playbooks named here; they own no capability in [SKILL.md](../../SKILL.md) §5 and never run on their own.
+
+- `spec-reviewer` (read-only): spec check per task in [subagent-driven-development.md](subagent-driven-development.md)
+- `session-diagnostician` (read-only): transcript reading for [diagnosing-craftforce.md](diagnosing-craftforce.md)
+
 ## Limits that always hold
 - Craftline's modes, approval gates and shared baseline ([SKILL.md](../../SKILL.md) §1, §3) beat anything here. Git steps reuse [git-workflow.md](../workflows/git-workflow.md); nothing here authorizes a push, merge, PR, deletion or history rewrite.
 - Agents follow [agent-plans.md](../workflows/agent-plans.md): the head plans and dispatches; agents never start agents.

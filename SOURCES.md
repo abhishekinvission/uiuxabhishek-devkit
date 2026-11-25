@@ -83,7 +83,7 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
 | `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
-| `references/craftforce/` (15 playbooks), `plugin/agents/task-implementer.md` | Craftforce process layer (brainstorm → worktree → plan → agent or inline execution with review → verified finish, plus debugging, review handling, parallel agents, skill writing and session diagnosis), written for this project on 2026-11-24 from the maintainer's outline of the 15 capabilities (no third-party text). The outline's session-start hook and browser visual companion were deliberately not built (Markdown only) | MIT (© Abhishek Rampal) |
+| `references/craftforce/` (15 playbooks), `plugin/agents/task-implementer.md`, `plugin/agents/spec-reviewer.md`, `plugin/agents/session-diagnostician.md` | Craftforce process layer (brainstorm → worktree → plan → agent or inline execution with review → verified finish, plus debugging, review handling, parallel agents, skill writing and session diagnosis), written for this project on 2026-11-24 from the maintainer's outline of the 15 capabilities (no third-party text). The outline's session-start hook and browser visual companion were deliberately not built (Markdown only) | MIT (© Abhishek Rampal) |
 | `plugin/agents/` (agent files), `plugin/README.md`, `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents, directory README and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
@@ -100,16 +100,16 @@ Checksums (paths relative to `plugin/skills/craftline/`):
 
 - `references/adapters/impeccable-without-cli.md  13232107300aeadcc051fecbcc8dae8c84d483c0c3b15ca2cf3385b599d01571`
 - `references/craftforce/brainstorming.md  5b5b192cdb17d2605ea9d3ea82858569068f93c0ee39cf81e3947dcbae735258`
-- `references/craftforce/diagnosing-craftforce.md  b9eaa649f83f730c0ef70bfcd74c0c2b75c76e9b399a1f5d6f0602bef03df047`
+- `references/craftforce/diagnosing-craftforce.md  798841e33aba2e7a66373bbc249835a92e9eef368017adeaf60a5a263dc3d30a`
 - `references/craftforce/dispatching-parallel-agents.md  d564e483d4562fe82800c4fea7d85e4278c24aba8ae6dbc08a49dafaa4ea4aae`
 - `references/craftforce/executing-plans.md  a9a7c1aae49a0d1fedec3561032e40d7f0a6f47c0d0ed0c89cab52eea38c7298`
 - `references/craftforce/finishing-a-development-branch.md  35a3bef60992922ffdf2175b65e2da635b586fc2cb32acbf68ebfeffdefac5b5`
 - `references/craftforce/receiving-code-review.md  0112397e7fe261d63c110fd22817c150bfad69ba94325a080221f189ede2345f`
 - `references/craftforce/requesting-code-review.md  34b4a1030b1ab23247d7945ec77aaa4d747f8b5c5a6371f0a4326def6c29b841`
-- `references/craftforce/subagent-driven-development.md  d2eeb9800733408b3d1d1d57c29e5a457acaeb49fa10ec9f62e4b74147d7b489`
+- `references/craftforce/subagent-driven-development.md  ce271ac6a11c6232aae205c70a54eb4fe8724bd10665748c8008c44b8d53eb96`
 - `references/craftforce/systematic-debugging.md  373643b8c9648e837c44665e54c30d61610b0baaf98d6b0f7478b50bca9e4957`
 - `references/craftforce/test-driven-development.md  6ebbf74b191929601aeb5f4f1bbdcf81d418c1c1827fbe9ac83962f4422c4eaf`
-- `references/craftforce/using-craftforce.md  f90042b7b32e64d0e53536a2fe37ab5866dfc42c4f585e1c41dbb2c6018c0069`
+- `references/craftforce/using-craftforce.md  53f0c6821ef6279e0152d6141a74c44653bc7691bb7265fbd663894dd2fff355`
 - `references/craftforce/using-git-worktrees.md  a314d878032866d6af7e4a683c95dd940e5b207d5851d1611afd935e0991c8c3`
 - `references/craftforce/verification-before-completion.md  6092220badc76f9e52c5e5716d7269fc59bb36845e252d1d21af049340250789`
 - `references/craftforce/writing-plans.md  47727e26395f55cfaeb99d1b274e044e212e7efa80952a5a15a134043c2a617f`
@@ -144,6 +144,8 @@ Plugin agent files (paths relative to `plugin/`):
 - `agents/design-auditor.md  099481bd6f4a4306710ad71a646d46463168e0d40e61837880bb6a7d029dea0d`
 - `agents/figma-translator.md  a1e43172d3f6b39296d7fe27ac139dbdd02b9a5ecac78621c93fc9a2254d9b71`
 - `agents/frontend-engineer.md  0bcef591c9076979c19d7f079404ce8a4ccb102c06737dbfe9a0234c10c7d62a`
+- `agents/session-diagnostician.md  0f60b5192cec00a37b8310e5ed6a689bb93251ac883281d0371be48da13023de`
+- `agents/spec-reviewer.md  8f8c3027f632b49453a360a5c8984131e750eac7fbe12e6accd193e9e50e76e9`
 - `agents/task-implementer.md  8f1489752b7ab965d621a971467c9ba39126b8cd80ef8dcc2f9706011854cb80`
 - `agents/test-engineer.md  b06b0a3989e2c0e4f9362bdabee47170fb3aa7de79707b71a6437ee702fcb973`
 - `agents/ui-designer.md  b747fdb31a98abae3cdfe776cc44c5122947891f076d9b88941901224d3f6a92`
