@@ -20,12 +20,13 @@ Craftforce: a process layer for long, multi-step builds in any stack. Original w
 
 - SonarQube: `references/workflows/sonarqube.md`, an original guide for failing quality gates in any stack (detect, work order, behavior-preserving fix patterns from a real project, coverage import and CI wiring, verification, and user-side server steps), routed by a new `sonar` row. Checked against SonarQube Server 2026.4–2026.5 documentation on 2026-11-25. `sonar` owns its tests, so `testing` isn't selected with it.
 - `sonar-engineer` agent (edits) owning `sonar`.
+- SonarQube lookups and setup: `references/workflows/sonarqube-lookup-and-setup.md` (gate status, issues, coverage gaps, duplication, dependency risks and rule details through SonarQube MCP tools or the `sonar` CLI; analysing a few files; installing, logging in to and connecting the `sonar` CLI; troubleshooting), loaded by a `+` condition on the `sonar` row. `sonarqube.md` gains a single-finding fix, a coverage-parameter table for seven stacks and a failing-test-first rule for real bugs. `sonar-engineer` reads results through the `sonar` CLI, never installs, updates or logs in, and checks keys, branches and pull-request IDs before use. Taken from the maintainer's own SonarQube skill and checked against the SonarQube CLI and MCP server documentation on 2026-11-25.
 
 ### Changed
 - Scope: `craftforce` and `sonar` join `git`, `tickets` and `ado` as stack-independent.
 - `agent-plans.md`: editing agents may run in parallel only on disjoint files, each in its own worktree.
 - `tests/validate.py`: the coverage check follows the Craftforce index as a sub-router; 6 routing scenarios added, including one that must not load it.
-- `tests/validate.py`: context-growth budget raised from +10% to +14% and the SKILL.md limit from 12,000 to 12,250 characters (maintainer decision), for the `craftforce` and `sonar` rows that every task's router load now carries. The simulator applies "`sonar` owns its tests".
+- `tests/validate.py`: context-growth budget raised from +10% to +15% and the SKILL.md limit from 12,000 to 12,250 characters (maintainer decision), for the `craftforce` and `sonar` rows that every task's router load now carries; the last point (+14% to +15%) is for the `sonar` lookup-and-setup condition, measured at +14.7%. The simulator applies "`sonar` owns its tests".
 
 ### Not included
 - A session-start hook and the browser "visual companion" from the outline: both need runtime code outside Craftline's Markdown-only design.

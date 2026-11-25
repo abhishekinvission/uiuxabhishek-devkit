@@ -485,6 +485,10 @@
     {"id": "craftforce-not-loaded", "prompt": "Add autosave to the profile form.", "caps": ["forms"], "mode": "implement", "agent": "inline", "must": ["references/frontend/forms.md"], "forbid": ["references/craftforce/using-craftforce.md"]},
     {"id": "sonar-coverage-zero", "prompt": "SonarQube shows 0% coverage on the server project and the quality gate fails.", "caps": ["sonar"], "mode": "implement", "agent": "inline", "must": ["references/workflows/sonarqube.md"], "forbid": []},
     {"id": "sonar-hotspots-audit", "prompt": "Audit the security hotspot and code smell list from SonarCloud, read-only.", "caps": ["sonar"], "mode": "audit", "agent": "inline", "must": ["references/workflows/sonarqube.md"], "forbid": []},
+    {"id": "sonar-lookup-gate", "prompt": "Look up the SonarQube quality gate status for the main branch.", "caps": ["sonar"], "mode": "audit", "agent": "inline", "must": ["references/workflows/sonarqube.md", "references/workflows/sonarqube-lookup-and-setup.md"], "forbid": []},
+    {"id": "sonar-analyse-files", "prompt": "Analyse src/cart.ts with SonarQube after the fix.", "caps": ["sonar"], "mode": "implement", "agent": "inline", "must": ["references/workflows/sonarqube.md", "references/workflows/sonarqube-lookup-and-setup.md"], "forbid": []},
+    {"id": "sonar-cli-setup", "prompt": "Set up the sonar CLI and connect SonarQube to Claude Code.", "caps": ["sonar"], "mode": "implement", "agent": "inline", "must": ["references/workflows/sonarqube.md", "references/workflows/sonarqube-lookup-and-setup.md"], "forbid": []},
+    {"id": "sonar-single-rule", "prompt": "Fix SonarQube rule java:S1481 in OrderService.java.", "caps": ["sonar"], "mode": "implement", "agent": "inline", "must": ["references/workflows/sonarqube.md"], "forbid": ["references/workflows/sonarqube-lookup-and-setup.md"]},
     {"id": "sonar-not-loaded", "prompt": "Add unit tests for the cart reducer.", "caps": ["testing"], "mode": "implement", "agent": "inline", "must": ["references/frontend/testing.md"], "forbid": ["references/workflows/sonarqube.md"]}
   ]
 }

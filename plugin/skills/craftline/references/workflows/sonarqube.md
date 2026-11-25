@@ -5,7 +5,7 @@
 ## 1. Detect before changing anything
 - **Product and version:** SonarQube Server (self-hosted, with a version) or SonarQube Cloud. Menus, defaults and features differ by version; when a step depends on it, check the documentation for that version.
 - **How analysis runs:** CI step (e.g. a scan action), `sonar-scanner`, or the Maven, Gradle or .NET scanner. Find `sonar-project.properties` or the build-file equivalent and the CI file.
-- **Access you have, without exposing secrets** (reading results through the API or a connector is read-only; running an analysis uploads to the server and needs the user's request): whether `sonar-scanner` is installed and `SONAR_TOKEN`/`SONAR_HOST_URL` are already set (check presence only, e.g. `test -n "$SONAR_TOKEN"`; never print, request or type a token), or whether a SonarQube connector is available. Neither: ask the user to paste the gate result, issue list or a screenshot.
+- **Access you have, without exposing secrets** (reading results through the API or a connector is read-only; running an analysis uploads to the server and needs the user's request): SonarQube MCP tools, then the logged-in `sonar` CLI, then `sonar-scanner` with `SONAR_TOKEN`/`SONAR_HOST_URL` already set (check presence only, e.g. `test -n "$SONAR_TOKEN"`; never print, request or type a token). Say which one you use. None: ask the user to paste the gate result, issue list or a screenshot. Lookups, file analysis and setup: [sonarqube-lookup-and-setup.md](sonarqube-lookup-and-setup.md).
 - **The gate:** which quality gate the project uses and which conditions failed. The built-in **Sonar way** gate (SonarQube Server 2026.5 docs) checks new code only: no new issues, all new security hotspots reviewed, coverage ≥ 80%, duplication ≤ 3%. Projects often use a custom gate (e.g. 95% coverage); use the real one.
 
 ## 2. Work order
@@ -16,7 +16,13 @@ Fix in this order, one condition at a time, re-running the tests after each chan
 4. **Duplication.**
 5. **Code smells**, in bulk but mechanically safe batches.
 
-Every change must keep behavior identical unless the finding is itself a real bug. Write or extend a test before refactoring code that has none ([test-driven-development.md](../craftforce/test-driven-development.md); runners and layers: [testing.md](../frontend/testing.md)).
+Every change must keep behavior identical unless the finding is itself a real bug; for a real bug, write the failing test first. Write or extend a test before refactoring code that has none ([test-driven-development.md](../craftforce/test-driven-development.md); runners and layers: [testing.md](../frontend/testing.md)).
+
+**A single finding** (a rule key such as `java:S1481` and a file), not the whole gate:
+1. Pin down the rule and file (and line). Only a description: find the issue through a lookup; still unclear: ask.
+2. Read the rule's description and compliant example before touching code, then the whole file around the line.
+3. Make the smallest change that clears the rule and keeps behavior identical; leave other issues alone unless asked.
+4. Explain in three lines: what was wrong, why the rule flags it, what changed. Offer to re-check the file.
 
 ## 3. Fix patterns (real cases)
 | Finding | Behavior-preserving fix |
@@ -37,7 +43,18 @@ Prefer fixing over marking findings as false positives or "won't fix". When a fi
 
 ## 4. Coverage
 SonarQube doesn't run tests or produce coverage; it imports a report your test run writes.
-- **0% coverage checklist:** the test command writes a report (JS/TS: LCOV, e.g. `coverage/lcov.info`); it runs **before** the scanner, in the same job and workspace; the scanner gets the path (JS/TS: `sonar.javascript.lcov.reportPaths`, for both JavaScript and TypeScript; other languages: the version's "Test coverage parameters" page); paths inside the report match the analyzed files. Monorepos analyzed as one project: generate coverage from the repository root so paths don't collide.
+- **0% coverage checklist:** the test command writes a report; it runs **before** the scanner, in the same job and workspace; the scanner gets the path (table); paths inside the report match the analyzed files. Monorepos analyzed as one project: generate coverage from the repository root so paths don't collide.
+- **Report parameters** (SonarQube Server 2026.5 "Test coverage parameters"; confirm for the user's version):
+
+  | Stack | Report | Property |
+  | --- | --- | --- |
+  | JavaScript, TypeScript | LCOV (e.g. `coverage/lcov.info`) | `sonar.javascript.lcov.reportPaths` (both languages) |
+  | Java, Kotlin | JaCoCo XML | `sonar.coverage.jacoco.xmlReportPaths` |
+  | Python | Cobertura XML | `sonar.python.coverage.reportPaths` |
+  | C#, .NET | OpenCover/Coverlet, Visual Studio XML, dotCover | `sonar.cs.opencover.reportsPaths`, `sonar.cs.vscoveragexml.reportsPaths`, `sonar.cs.dotcover.reportsPaths` |
+  | Go | cover profile | `sonar.go.coverage.reportPaths` |
+  | PHP | Clover XML | `sonar.php.coverage.reportPaths` |
+  | Ruby | SimpleCov JSON | `sonar.ruby.coverage.reportPaths` |
 - **Wire it permanently:** make the project's normal test command (e.g. `npm test`) write the report, so CI feeds coverage on every run, not only when someone remembers a flag.
 - **Scope:** `sonar.sources` and `sonar.tests` (plain paths, no wildcards) separate code from tests; test code doesn't count toward coverage, duplication or security issues. Use `sonar.coverage.exclusions` only for generated code, configuration or entry stubs, each with a reason; never to hide untested logic. The .NET scanner detects sources and tests itself.
 - **Meaningful tests:** cover behavior, branches and error paths with real assertions. No assertion-free tests, snapshot dumps or excluding code to reach the number.
@@ -47,6 +64,7 @@ SonarQube doesn't run tests or produce coverage; it imports a report your test r
 - Full test suite, lint and build after each batch; report exact commands and results.
 - Refactors and rewrites: compare old and new behavior on the same inputs (existing tests, or a temporary side-by-side check run against the previous version) and remove any temporary harness afterwards.
 - Secret scan when one is available (e.g. Gitleaks); never print found secrets.
+- Changed files can be re-checked with a file analysis when the user asks ([sonarqube-lookup-and-setup.md](sonarqube-lookup-and-setup.md) §3); compare what disappeared and what is new.
 - Re-run analysis only when the user asks and their scanner and token are already configured (an analysis uploads results to their SonarQube server), then read the gate result; otherwise give the user the command or CI step to run and say what is still unverified.
 
 ## 6. Steps the user does (give them, don't do them)
@@ -54,7 +72,7 @@ Give numbered steps for the user's product and version, and say which permission
 - **Token:** create it in the user's own SonarQube account, store it as a CI secret or environment variable (`SONAR_TOKEN`), never in the repository or the chat.
 - **Security hotspots:** review status is set in the UI. Give a verdict per hotspot (fixed in code, or safe with a reason to paste). Recent SonarQube Server versions are phasing hotspots out in favor of vulnerabilities or security issues; follow the instance's version.
 - **Quality gate, rules, new-code definition, project settings:** changed in the UI by users with the matching permission (e.g. Administer Quality Gates). Recommend a change only with a reason; lowering a gate to pass is the user's decision, not a fix.
-- **CI:** add or order the coverage step before the scan, check out full history when the docs require it, and pass `SONAR_TOKEN`/`SONAR_HOST_URL` from secrets. Editing the pipeline file in the repository is an `implement` change; pushing it follows [git-workflow.md](git-workflow.md).
+- **CI:** add or order the coverage step before the scan, check out full history when the docs require it (e.g. `fetch-depth: 0` in GitHub Actions), and pass `SONAR_TOKEN`/`SONAR_HOST_URL` from secrets. Editing the pipeline file in the repository is an `implement` change; pushing it follows [git-workflow.md](git-workflow.md).
 
 ## Report
 Gate before → after per condition, findings fixed by category with counts, files changed, tests added, commands run with results, anything left for the user (§6) and what wasn't verified.

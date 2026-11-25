@@ -57,7 +57,7 @@ SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater 
 SKILLS_CLI_LATEST = "skills@1.9.0"  # discovery must also work with the newest CLI checked
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
 SKILL_MD_MAX_CHARS = 12250  # raised from 12000 in 3.1.0 for the sonar route
-MAX_CONTEXT_GROWTH = 14  # percent over the pre-router baseline, averaged over all scenarios (raised from 10 in 3.1.0 for the craftforce and sonar routes)
+MAX_CONTEXT_GROWTH = 15  # percent over the pre-router baseline, averaged over all scenarios (raised from 10 in 3.1.0 for the craftforce and sonar routes, then to 15 for the sonar lookup-and-setup condition)
 GUIDE_MAX_CHARS = 5000
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 

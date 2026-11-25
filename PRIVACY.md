@@ -18,7 +18,7 @@ It reads only what your session can already access: your repository's files and 
 
 ## What it sends
 
-Craftline only sends data through your own signed-in tools, and only when you authorize that exact action. Examples are commits, branch pushes, draft pull requests, ticket comments and SonarQube analysis runs to your own server. It never sends anything to its author. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists every kind of write.
+Craftline only sends data through your own signed-in tools, and only when you authorize that exact action. Examples are commits, branch pushes, draft pull requests, ticket comments, SonarQube analysis runs to your own server, and the content of files you ask SonarQube to analyse. It never sends anything to its author. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists every kind of write.
 
 ## Retention
 

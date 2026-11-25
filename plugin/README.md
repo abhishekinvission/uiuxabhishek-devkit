@@ -45,7 +45,7 @@ In Claude Code and Cowork, the main session plans larger tasks and hands parts t
 | `task-implementer` | Edits code for one plan task at a time, test first, in any stack |
 | `spec-reviewer` | Read-only: checks each Craftforce task does exactly what its plan says |
 | `session-diagnostician` | Read-only: reads a session transcript to explain what went wrong |
-| `sonar-engineer` | Fixes SonarQube quality-gate failures: bugs, hotspots, code smells, coverage and its wiring |
+| `sonar-engineer` | Fixes SonarQube quality-gate failures and single findings: bugs, hotspots, code smells, coverage and its wiring; reads results through the `sonar` CLI |
 
 For long Craftforce plans, each task gets a fresh agent and two reviews (`spec-reviewer`, then `code-reviewer`), and progress is ticked in a plan file in your project, so the work picks up where it stopped after compaction or in a new session.
 
@@ -77,6 +77,7 @@ Claude Chat on claude.ai doesn't load plugin agents. There, the same skill runs 
 - Draft pull requests or merge requests.
 - Links or comments on tickets.
 - A SonarQube analysis run with your own configured scanner, which uploads results to your SonarQube server.
+- The content of files you ask SonarQube to analyse, sent to your own SonarQube service.
 
 It never changes a ticket's state unless you ask.
 
