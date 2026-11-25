@@ -1,6 +1,6 @@
 # Craftline
 
-**Design. Build. Automate. Deliver.** Craftline by uiuxAbhishek (Abhishek Rampal) is one router skill for UI/UX design, accessibility, motion, frontend engineering, Figma to code, frontend security, tests, Git on any provider, ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards, and Craftpowers: a brainstorm → plan → build → review → verified-finish process for any stack. It reads your request, picks the matching guide and loads only that, so a small task stays small.
+**Design. Build. Automate. Deliver.** Craftline by uiuxAbhishek (Abhishek Rampal) is one router skill for UI/UX design, accessibility, motion, frontend engineering, Figma to code, frontend security, tests, Git on any provider, ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards, and Craftforce: a brainstorm → plan → build → review → verified-finish process for any stack. It reads your request, picks the matching guide and loads only that, so a small task stays small.
 
 ## Install
 
@@ -43,7 +43,7 @@ In Claude Code and Cowork, the main session plans larger tasks and hands parts t
 | `delivery-agent` | Git and ticket work: branches, commits, pushes, draft PRs |
 | `task-implementer` | Edits code for one plan task at a time, test first, in any stack |
 
-For long Craftpowers plans, each task gets a fresh agent and two reviews (spec, then quality), and progress is ticked in a plan file in your project, so the work picks up where it stopped after compaction or in a new session.
+For long Craftforce plans, each task gets a fresh agent and two reviews (spec, then quality), and progress is ticked in a plan file in your project, so the work picks up where it stopped after compaction or in a new session.
 
 Claude Chat on claude.ai doesn't load plugin agents. There, the same skill runs every step itself in the conversation, one step at a time, with the same guidance.
 

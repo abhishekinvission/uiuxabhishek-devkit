@@ -1,4 +1,4 @@
-# Diagnosing Craftpowers
+# Diagnosing Craftforce
 
 **Use for:** a session where the process went wrong — a playbook or agent didn't load, work was repeated or lost after compaction, an agent ignored its handoff, or tokens and time ran unusually high. Read-only: this produces a diagnosis, not fixes.
 
@@ -10,7 +10,7 @@
 ## Look for
 | Symptom | Check |
 | --- | --- |
-| Playbook didn't load | Did the request match a signal in SKILL.md §2 or [using-craftpowers.md](using-craftpowers.md)? Was the skill installed and current? |
+| Playbook didn't load | Did the request match a signal in SKILL.md §2 or [using-craftforce.md](using-craftforce.md)? Was the skill installed and current? |
 | Work repeated or lost | Was the ledger updated after each task? Was the resume protocol followed after compaction? |
 | Agent went off-script | Handoff missing files, paths or authorizations? Agent loaded guidance it wasn't given? |
 | High tokens | Whole files or logs pasted into chat; many references loaded at once; review loops without new findings; the head doing task work instead of dispatching |

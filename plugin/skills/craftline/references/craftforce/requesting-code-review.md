@@ -15,10 +15,9 @@ With the plugin, dispatch the read-only `code-reviewer` with this handoff; other
 2. **Quality:** correctness and edge cases, error handling, tests that test behavior, naming and readability, consistency with project conventions, security and performance where relevant.
 
 ## Severity and what happens next
-| Severity | Meaning | Action |
-| --- | --- | --- |
-| Critical | Wrong behavior, data loss, security hole, broken build or tests | Stop. Fix before any further task |
-| Important | Spec gap, missing test or edge case, maintainability problem likely to bite | Fix before moving on |
-| Minor | Style, naming, small cleanup | Note in the ledger; fix now if cheap |
+Use Craftline's one scale, defined in [review-and-release.md](../frontend/review-and-release.md) (Blocker, Major, Minor, Nit). A spec gap or a missing failing-first test counts as **Major**. Between tasks:
+- **Blocker:** stop; fix before any further task.
+- **Major:** fix before moving on.
+- **Minor / Nit:** note in the ledger; fix now if cheap.
 
-Re-review after fixes until no Critical or Important findings remain. Evaluate each finding with [receiving-code-review.md](receiving-code-review.md) before acting on it.
+Re-review after fixes until no Blocker or Major findings remain. Evaluate each finding with [receiving-code-review.md](receiving-code-review.md) before acting on it.

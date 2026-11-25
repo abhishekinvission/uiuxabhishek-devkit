@@ -477,11 +477,11 @@
       "must": ["references/frontend/testing.md", "references/frontend/review-and-release.md"],
       "forbid": []
     },
-    {"id": "craftpowers-brainstorm", "prompt": "Brainstorm a new notifications feature with me before we write any code.", "caps": ["craftpowers"], "mode": "implement", "agent": "inline", "must": ["references/craftpowers/using-craftpowers.md"], "forbid": []},
-    {"id": "craftpowers-plan-subagents", "prompt": "Write an implementation plan for the billing service and run it with a subagent per task.", "caps": ["craftpowers"], "mode": "plan", "agent": "inline", "must": ["references/craftpowers/using-craftpowers.md"], "forbid": []},
-    {"id": "craftpowers-tdd", "prompt": "Use tdd to fix the date parser.", "caps": ["craftpowers"], "mode": "implement", "agent": "inline", "must": ["references/craftpowers/using-craftpowers.md"], "forbid": []},
-    {"id": "craftpowers-backend-root-cause", "prompt": "Find the root cause of the failing database migration.", "caps": ["craftpowers"], "mode": "implement", "agent": "inline", "must": ["references/craftpowers/using-craftpowers.md"], "forbid": []},
-    {"id": "craftpowers-with-testing", "prompt": "Systematic debugging please: the playwright e2e test for checkout is flaky.", "caps": ["craftpowers", "testing"], "mode": "implement", "agent": ["task-implementer", "test-engineer"], "must": ["references/craftpowers/using-craftpowers.md", "references/frontend/testing.md"], "forbid": []},
-    {"id": "craftpowers-not-loaded", "prompt": "Add autosave to the profile form.", "caps": ["forms"], "mode": "implement", "agent": "inline", "must": ["references/frontend/forms.md"], "forbid": ["references/craftpowers/using-craftpowers.md"]}
+    {"id": "craftforce-brainstorm", "prompt": "Brainstorm a new notifications feature with me before we write any code.", "caps": ["craftforce"], "mode": "implement", "agent": "inline", "must": ["references/craftforce/using-craftforce.md"], "forbid": []},
+    {"id": "craftforce-plan-subagents", "prompt": "Write an implementation plan for the billing service and run it with a subagent per task.", "caps": ["craftforce"], "mode": "plan", "agent": "inline", "must": ["references/craftforce/using-craftforce.md"], "forbid": []},
+    {"id": "craftforce-tdd", "prompt": "Use tdd to fix the date parser.", "caps": ["craftforce"], "mode": "implement", "agent": "inline", "must": ["references/craftforce/using-craftforce.md"], "forbid": []},
+    {"id": "craftforce-backend-root-cause", "prompt": "Find the root cause of the failing database migration.", "caps": ["craftforce"], "mode": "implement", "agent": "inline", "must": ["references/craftforce/using-craftforce.md"], "forbid": []},
+    {"id": "craftforce-with-testing", "prompt": "Systematic debugging please: the playwright e2e test for checkout is flaky.", "caps": ["craftforce", "testing"], "mode": "implement", "agent": ["task-implementer", "test-engineer"], "must": ["references/craftforce/using-craftforce.md", "references/frontend/testing.md"], "forbid": []},
+    {"id": "craftforce-not-loaded", "prompt": "Add autosave to the profile form.", "caps": ["forms"], "mode": "implement", "agent": "inline", "must": ["references/frontend/forms.md"], "forbid": ["references/craftforce/using-craftforce.md"]}
   ]
 }

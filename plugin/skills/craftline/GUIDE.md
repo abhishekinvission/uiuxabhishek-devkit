@@ -20,7 +20,7 @@
 | SEO and metadata | titles, canonical URLs, social cards, structured data, sitemaps, hreflang | "Add Open Graph metadata and a sitemap." |
 | Git | status, sync, branches, commits, PRs/MRs, conflicts, recovery, tags and releases on any host | "My branch is behind main; sync it without losing my work." |
 | Ticket delivery | GitHub Issues, Jira, Linear, Azure Boards: ticket → change → draft PR | "Dry-run GitHub issue acme/shop#88." |
-| Craftpowers (any stack) | brainstorm → worktree → task plan → agent or inline build with TDD and reviews → verified finish; root-cause debugging | "Brainstorm the export feature, then plan it for subagents." |
+| Craftforce (any stack) | brainstorm → worktree → task plan → agent or inline build with TDD and reviews → verified finish; root-cause debugging | "Brainstorm the export feature, then plan it for subagents." |
 
 ## Control what it may do
 

@@ -3,7 +3,7 @@
 **Use for:** turning an approved design into a plan that someone with no memory of this conversation (a fresh subagent, or you after compaction) can execute task by task.
 
 ## Plan file
-Save to `docs/craftpowers/plans/<yyyy-mm-dd>-<topic>.md` (or the user's path). The file is also the progress ledger ([using-craftpowers.md](using-craftpowers.md)).
+In `plan` mode Craftline writes nothing, so show the plan in the reply. Save it to `docs/craftforce/plans/<yyyy-mm-dd>-<topic>.md` (or the user's path) when the mode is `implement` or the user asks for the file; at the latest, save it when execution starts, because the file is also the progress ledger ([using-craftforce.md](using-craftforce.md)).
 
 ```markdown
 # <Feature> plan

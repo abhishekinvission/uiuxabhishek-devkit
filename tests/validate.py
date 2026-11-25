@@ -57,7 +57,7 @@ SKILLS_CLI = "skills@1.7.6"  # the version INSTALL.md documents and the updater 
 SKILLS_CLI_LATEST = "skills@1.9.0"  # discovery must also work with the newest CLI checked
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024  # Claude API skill upload limit
 SKILL_MD_MAX_CHARS = 12000
-MAX_CONTEXT_GROWTH = 13  # percent over the pre-router baseline, averaged over all scenarios (raised from 10 in 3.1.0 for the stack-independent craftpowers route)
+MAX_CONTEXT_GROWTH = 13  # percent over the pre-router baseline, averaged over all scenarios (raised from 10 in 3.1.0 for the stack-independent craftforce route)
 GUIDE_MAX_CHARS = 5000
 UI_WORDS = {"ui", "page", "screen", "dashboard", "component", "frontend", "design", "interface", "view"}
 
@@ -299,7 +299,7 @@ def is_never(path, never):
 
 CLI_ADAPTER = "references/adapters/impeccable-without-cli.md"
 AGENT_PLANS = "references/workflows/agent-plans.md"
-SUB_ROUTERS = ("references/craftpowers/using-craftpowers.md",)  # Craftpowers process index (SKILL.md §2)
+SUB_ROUTERS = ("references/craftforce/using-craftforce.md",)  # Craftforce process index (SKILL.md §2)
 SHARED_COMPANIONS = ("references/adapters/",  # loaded beside several capabilities' primary files
                      "references/workflows/ticket-delivery.md", "templates/ticket-delivery-report.md")  # tickets + ado
 
@@ -307,7 +307,7 @@ SHARED_COMPANIONS = ("references/adapters/",  # loaded beside several capabiliti
 def check_coverage(caps, never):
     routed = {f for segs in caps.values() for s in segs for f in s["files"]}
     expected = set()
-    for d in ("references/frontend", "references/workflows", "references/craftpowers", "references/adapters", "templates",
+    for d in ("references/frontend", "references/workflows", "references/craftforce", "references/adapters", "templates",
               "references/impeccable/reference"):
         for r, _, fs in os.walk(os.path.join(SKILL, d)):
             expected |= {rel(os.path.join(r, f)) for f in fs if f.endswith(".md")}

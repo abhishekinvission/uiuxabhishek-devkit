@@ -13,6 +13,6 @@
 5. **Final review:** after the last task, review the full diff against the plan and design ([requesting-code-review.md](requesting-code-review.md)), fix findings, then go to [finishing-a-development-branch.md](finishing-a-development-branch.md).
 
 ## Context hygiene
-- Follow the resume protocol in [using-craftpowers.md](using-craftpowers.md) if the conversation was compacted or you're unsure of progress.
+- Follow the resume protocol in [using-craftforce.md](using-craftforce.md) if the conversation was compacted or you're unsure of progress.
 - Don't paste large files or full logs into replies; summarize and point to paths.
 - If context is getting heavy on a long plan, suggest switching to subagent-driven development or continuing in a new session from the ledger.

@@ -1,6 +1,6 @@
 # Test-driven development
 
-**Use for:** every behavior change and bug fix written under Craftpowers. Test layer, runners and style come from the project and, for frontend code, [testing.md](../frontend/testing.md).
+**Use for:** every behavior change and bug fix written under Craftforce. Test layer, runners and style come from the project and, for frontend code, [testing.md](../frontend/testing.md).
 
 ## The cycle
 1. **RED.** Write one test for one behavior, named for what it proves. Run it. It must **fail, for the expected reason** (assertion about the missing behavior — not a typo, import error or broken setup). A test that passes immediately proves nothing: fix the test.
