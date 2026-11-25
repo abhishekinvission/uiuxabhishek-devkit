@@ -83,7 +83,8 @@ All files below stay in the repository and in Skills CLI installs. The release Z
 | `references/frontend/forms.md`, `security.md`, `seo-and-metadata.md`, `figma-to-code.md`, `cross-platform-native.md` | Frontend capability guides written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 | `references/workflows/ticket-delivery.md`, `templates/ticket-delivery-report.md` | Provider-neutral ticket lifecycle and report, split out of `azure-devops-delivery.md` and generalized from `ado-delivery-report.md` on 2026-11-24 | MIT (© Abhishek Rampal) |
 | `references/workflows/agent-plans.md` | Head-only rules for planning and dispatching Claude Code agents, moved out of SKILL.md §5 on 2026-11-24 | MIT (© Abhishek Rampal) |
-| `plugin/agents/` (8 agent files), `plugin/README.md`, `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents, directory README and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
+| `references/craftpowers/` (15 playbooks), `plugin/agents/task-implementer.md` | Craftpowers process layer (brainstorm → worktree → plan → agent or inline execution with review → verified finish, plus debugging, review handling, parallel agents, skill writing and session diagnosis), written for this project on 2026-11-24 from the maintainer's outline of the 15 capabilities (no third-party text). The outline's session-start hook and browser visual companion were deliberately not built (Markdown only) | MIT (© Abhishek Rampal) |
+| `plugin/agents/` (agent files), `plugin/README.md`, `plugin/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | Claude Code plugin agents, directory README and manifests written for this project on 2026-11-24 (no third-party text) | MIT (© Abhishek Rampal) |
 
 The pack describes itself as framework-independent guides written for this project, with application-specific files from an earlier private archive excluded. It contains no third-party text, source code, URLs or credentials. Changes made during integration:
 
@@ -98,6 +99,21 @@ The pack describes itself as framework-independent guides written for this proje
 Checksums (paths relative to `plugin/skills/craftline/`):
 
 - `references/adapters/impeccable-without-cli.md  13232107300aeadcc051fecbcc8dae8c84d483c0c3b15ca2cf3385b599d01571`
+- `references/craftpowers/brainstorming.md  efe60411d3e648dcb42bb5739837769d2efe9a6d459331dfbdaa7fb913e00cef`
+- `references/craftpowers/diagnosing-craftpowers.md  68e069ae95b63d6a75e3fd274034af1ecd5c381c27494737a972fc78f63f2fdd`
+- `references/craftpowers/dispatching-parallel-agents.md  d564e483d4562fe82800c4fea7d85e4278c24aba8ae6dbc08a49dafaa4ea4aae`
+- `references/craftpowers/executing-plans.md  c8e8507434007beb4d2d59333543cd49bf2f31a2e7dd38924c2eadbebf9d3299`
+- `references/craftpowers/finishing-a-development-branch.md  35a3bef60992922ffdf2175b65e2da635b586fc2cb32acbf68ebfeffdefac5b5`
+- `references/craftpowers/receiving-code-review.md  0112397e7fe261d63c110fd22817c150bfad69ba94325a080221f189ede2345f`
+- `references/craftpowers/requesting-code-review.md  3cf5d722dae76a0c243917c349e8d393bc39cb76519e766af0b0990a1365cfd5`
+- `references/craftpowers/subagent-driven-development.md  67ca742e66fdcc3a6f4254dbc0d87c03817bbe7863284abb909d9399f43adf9f`
+- `references/craftpowers/systematic-debugging.md  373643b8c9648e837c44665e54c30d61610b0baaf98d6b0f7478b50bca9e4957`
+- `references/craftpowers/test-driven-development.md  b599a80f8c9233bb1f09e00af3539b79bcf0a929ea101b30f8685c9ef6da4141`
+- `references/craftpowers/using-craftpowers.md  4df3c8d3f512a9eee93fde916b252a89561617e1971d86ee472d200da2d58fa0`
+- `references/craftpowers/using-git-worktrees.md  a314d878032866d6af7e4a683c95dd940e5b207d5851d1611afd935e0991c8c3`
+- `references/craftpowers/verification-before-completion.md  6092220badc76f9e52c5e5716d7269fc59bb36845e252d1d21af049340250789`
+- `references/craftpowers/writing-plans.md  96e8903e3b142c887e953c46f38fe1644943e327e8fc1341e2ce7ba5e9b85a32`
+- `references/craftpowers/writing-skills.md  56ef7c43b299e79eda6c22cad97721e43ceb4ebe6e02825e3d6ca8435637f835`
 - `references/frontend/admin-crud.md  d5eb94fb9a001761a8daf6c2c73f289f3443666ed2382a6057655e9c1c6c080c`
 - `references/frontend/api-integration.md  34a6fc614750eba44ca81d02be6fc935ea8265407e3b297353b4ec19f69f0c62`
 - `references/frontend/cross-platform-native.md  44a75bd6184e557f6974af45939fc2bc3862fe8ca0977153136f768d5ce89281`
@@ -113,7 +129,7 @@ Checksums (paths relative to `plugin/skills/craftline/`):
 - `references/frontend/state-management.md  812d5717a212bb62bb231fd0268240e9741548ca6bc55a169fc95ea90d66e858`
 - `references/frontend/testing.md  a64e9fe97d8de875a9dce02ad22cbfbdc647b59a7286200d709cf3ec00d6498c`
 - `references/workflows/ado-configuration.md  ff8cce8c406c5be539aa4af69301f4508c14dc6a306d0ef13713d626868464ac`
-- `references/workflows/agent-plans.md  d19c680d18dc1b387554057aaa260549b26488aff131af4a3819bb26d0aacfde`
+- `references/workflows/agent-plans.md  71dc65907dbb924ed144301d3e31540b20c5550c8d89988cd90e11a6bec45623`
 - `references/workflows/azure-devops-delivery.md  5c43d9edb1416222bb3a0c17644273cb8d3da72ef6265c240c6baf1807a0d7bb`
 - `references/workflows/git-recovery-and-release.md  360437c2addb9c9a9759cea5fc007e741fe2cf618ca52eca5495d935c6b1ddda`
 - `references/workflows/git-workflow.md  a581debca4a298fb45e65b73cdc47507d2b665d32bb4fe22ad09633e63e53d10`
@@ -128,6 +144,7 @@ Plugin agent files (paths relative to `plugin/`):
 - `agents/design-auditor.md  099481bd6f4a4306710ad71a646d46463168e0d40e61837880bb6a7d029dea0d`
 - `agents/figma-translator.md  a1e43172d3f6b39296d7fe27ac139dbdd02b9a5ecac78621c93fc9a2254d9b71`
 - `agents/frontend-engineer.md  0bcef591c9076979c19d7f079404ce8a4ccb102c06737dbfe9a0234c10c7d62a`
+- `agents/task-implementer.md  092e594b9b80a65bab5f9a3bacd03df8abb2a49863035997e48cd5539e68141e`
 - `agents/test-engineer.md  b06b0a3989e2c0e4f9362bdabee47170fb3aa7de79707b71a6437ee702fcb973`
 - `agents/ui-designer.md  b747fdb31a98abae3cdfe776cc44c5122947891f076d9b88941901224d3f6a92`
 - `agents/ux-designer.md  ba9deaad18820d81d01cfec75ca50edf40ba4d1b29e11446702fb5f7b4a6427d`

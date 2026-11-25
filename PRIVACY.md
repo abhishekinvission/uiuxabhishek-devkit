@@ -14,7 +14,7 @@ Craftline runs inside your own Claude session: Claude Code, Cowork or Claude Cha
 
 ## What it reads
 
-It reads only what your session can already access: your repository's files and Git history, including commit author names and emails. When you ask, it also reads ticket content and Figma files through tools you've connected. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists exactly what it reads.
+It reads only what your session can already access: your repository's files and Git history, including commit author names and emails. When you ask, it also reads ticket content and Figma files through tools you've connected, and, to diagnose a session, that session's local transcript files. The [plugin README](plugin/README.md#what-it-reads-and-sends) lists exactly what it reads.
 
 ## What it sends
 

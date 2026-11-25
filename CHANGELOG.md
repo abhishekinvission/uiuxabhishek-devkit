@@ -4,6 +4,28 @@ All notable changes to Craftline by uiuxAbhishek (formerly UIUX Abhishek DevKit 
 
 **Stable releases** are Git tags with a GitHub Release, a Claude upload ZIP and its SHA-256 checksum. These are what the optional updater installs. **Development versions** were set in `SKILL.md` on `main` but never tagged or released.
 
+## [3.1.0] — 2026-11-24 (development version)
+
+Craftpowers: a process layer for long, multi-step builds in any stack. Original work, MIT.
+
+### Added
+- `references/craftpowers/`: 15 playbooks, routed lazily through one index (`using-craftpowers.md`) from a new `craftpowers` row in SKILL.md §2:
+  - main flow: brainstorming, using Git worktrees, writing plans, subagent-driven development, executing plans inline, test-driven development, requesting code review, finishing a development branch;
+  - quality: systematic debugging, verification before completion, receiving code review;
+  - agents: dispatching parallel agents;
+  - meta: the index itself, writing skills, diagnosing Craftpowers sessions.
+- Long-running work: the plan file in the user's project is an on-disk ledger, ticked after every task, with a resume protocol for compaction or a new session.
+- `task-implementer` agent (edits): one plan task at a time, test first, for stacks the other agents don't cover. Spec and quality reviews reuse `code-reviewer`.
+
+### Changed
+- Scope: `craftpowers` joins `git`, `tickets` and `ado` as stack-independent.
+- `agent-plans.md`: editing agents may run in parallel only on disjoint files, each in its own worktree.
+- `tests/validate.py`: the coverage check follows the Craftpowers index as a sub-router; 6 routing scenarios added, including one that must not load it.
+- `tests/validate.py`: context-growth budget raised from +10% to +13% (maintainer decision). The `craftpowers` row adds about 80 tokens to every task's router load; measured growth is +12.6%.
+
+### Not included
+- A session-start hook and the browser "visual companion" from the outline: both need runtime code outside Craftline's Markdown-only design.
+
 ## [3.0.4] — 2026-11-24 (stable release)
 
 Data-handling disclosure for the Claude plugin directory. No routing or guidance changes.

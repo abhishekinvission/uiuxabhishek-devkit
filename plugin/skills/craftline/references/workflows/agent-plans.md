@@ -7,7 +7,7 @@ Before starting any agent, show a short plan: each agent's job, the order, what 
 
 ## Order
 - Read-only agents (`design-auditor`, `code-reviewer`, `figma-translator`, and `delivery-agent` doing reads) may run in parallel.
-- Editing agents run one at a time, in plan order. `delivery-agent` writes last, after every edit and review.
+- Editing agents run one at a time, in plan order, except independent tasks on disjoint files that each run in their own Git worktree ([dispatching-parallel-agents.md](../craftpowers/dispatching-parallel-agents.md)). `delivery-agent` writes last, after every edit and review.
 - In `audit` and `plan`, only read-only work runs: design capabilities go to `design-auditor`, engineering ones to `code-reviewer`, and `git`, `tickets` and `ado` reads to `delivery-agent` with no writes.
 - In `implement` or `deliver`, a read-only agent's capability that needs edits goes, with its files, to the editing agent for that code.
 

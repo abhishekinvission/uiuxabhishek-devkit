@@ -74,7 +74,8 @@ Still on `uiuxabhishek-design`? Run `npx skills remove uiuxabhishek-design -g -y
 | **Frontend security** | XSS sinks and sanitization, CSP, token storage, CSRF, third-party scripts and SRI, secrets in bundles, open redirects, `postMessage`, dependency audits |
 | **Git and repositories** | Status and diff, clone, fetch/pull, branches and sync, safe commits, push, PR/MR creation and review, merges, conflicts, revert and recovery, tags and releases on GitHub, GitLab, Azure Repos, Bitbucket or plain Git |
 | **Ticket delivery** | GitHub Issues, Jira, Linear and Azure Boards: live ticket read → existing-PR check → clarification and dependency gates → safe Git preflight → implementation → ordered verification → authorized **draft** PR → structured report, for frontend, backend, full-stack or infrastructure work |
-| **Agents (Claude Code plugin)** | `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer` and `delivery-agent`, planned by the main session and started only after you approve the plan |
+| **Craftpowers process** | Any stack: brainstorming to an agreed design, isolated Git worktrees, 2–5 minute task plans, subagent-driven or inline execution with spec and quality review, test-driven development, systematic root-cause debugging, verification before completion, handling review feedback, parallel agents for independent work, writing skills and diagnosing sessions. The plan file is an on-disk ledger, so long runs resume after compaction or a new session |
+| **Agents (Claude Code plugin)** | `ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer`, `delivery-agent` and `task-implementer`, planned by the main session and started only after you approve the plan |
 
 ### How it picks what to load
 
@@ -139,6 +140,7 @@ plugin/                     # The Claude Code plugin; the only thing marketplace
         ├── apple-design/   # Interaction and motion (third-party)
         ├── adapters/       # Manual substitutes for Impeccable's unbundled scripts (original)
         ├── frontend/       # Frontend engineering guides (original)
+        ├── craftpowers/    # Process playbooks: plan, build, review, debug, finish (original)
         └── workflows/      # Git workflow and ticket delivery, including Azure DevOps (original)
 .claude-plugin/marketplace.json  # Marketplace "uiuxabhishek"; its one plugin's source is ./plugin
 INSTALL.md              # Installation, migration, updates, removal and troubleshooting
@@ -169,7 +171,7 @@ This is a **guidance-only** skill. The installed skill doesn't include CLIs, bin
 
 ## Third-Party Licenses & Credits
 
-Craftline's original work is © Abhishek Rampal and licensed under the [MIT License](LICENSE). That covers the routing, architecture, documentation, frontend, Git and ticket-delivery guides, the Impeccable adapter, the plugin agents, templates and tooling. Bundled third-party material is **not** owned by Abhishek Rampal. It stays the work of its authors and is redistributed under its original licenses:
+Craftline's original work is © Abhishek Rampal and licensed under the [MIT License](LICENSE). That covers the routing, architecture, documentation, frontend, Git and ticket-delivery guides, the Impeccable adapter, the Craftpowers playbooks, the plugin agents, templates and tooling. Bundled third-party material is **not** owned by Abhishek Rampal. It stays the work of its authors and is redistributed under its original licenses:
 
 - **[Impeccable](https://github.com/pbakaus/impeccable)** by Paul Bakaus: [Apache License 2.0](LICENSES/IMPECCABLE_APACHE-2.0.txt), with its [upstream NOTICE](LICENSES/IMPECCABLE_NOTICE.md). Modified for Craftline: the YAML front matter of its entry file, `SOURCE_SKILL.md`, was removed (see [NOTICE.md](NOTICE.md)).
 - **[platform-design-skills](https://github.com/ehmo/platform-design-skills)** by ehmo: [MIT](LICENSES/PLATFORM_DESIGN_SKILLS_MIT.txt). Impeccable's iOS and Android references are derived from it.
