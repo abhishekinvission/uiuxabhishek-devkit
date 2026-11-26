@@ -2,7 +2,7 @@
 
 > **Design. Build. Automate. Deliver.**
 
-Craftline by uiuxAbhishek (Abhishek Rampal) is one installable Agent Skill, `craftline`, that gives AI coding agents senior-level judgment for UI/UX design, motion, frontend engineering, Figma to code, frontend security, Git and repository workflows, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. It works with Claude Code, Codex, Gemini CLI, GitHub Copilot and Antigravity, and loads only the guidance each task needs. In Claude Code it comes as a plugin that also adds specialist agents the main session can plan and dispatch.
+Craftline by uiuxAbhishek (Abhishek Rampal) is one installable Agent Skill, `craftline`, that gives AI coding agents senior-level judgment for UI/UX design, motion, frontend engineering, Figma to code, frontend security, Git and repository workflows, SonarQube quality gates, and ticket-to-draft-PR delivery from GitHub Issues, Jira, Linear or Azure Boards. It works with Claude Code, Codex, Gemini CLI, GitHub Copilot and Antigravity, and loads only the guidance each task needs. In Claude Code it comes as a plugin that also adds specialist agents the main session can plan and dispatch.
 
 Created and maintained by **Abhishek Rampal ([uiuxAbhishek](https://github.com/abhishekinvission))**.
 

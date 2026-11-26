@@ -15,7 +15,7 @@ A local install doesn't reach cloud Chat, and an uploaded ZIP doesn't install an
 
 ## Claude Code plugin (skill and agents)
 
-The plugin gives Claude Code the skill and the specialist agents (`ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer`, `delivery-agent`), which work only in Claude Code.
+The plugin gives Claude Code the skill and 12 specialist agents (`ui-designer`, `ux-designer`, `design-auditor`, `figma-translator`, `frontend-engineer`, `test-engineer`, `code-reviewer`, `delivery-agent`, `task-implementer`, `sonar-engineer`, and the Craftforce helpers `spec-reviewer` and `session-diagnostician`), which work only in Claude Code.
 
 In Claude Code:
 
